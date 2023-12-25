@@ -1,10 +1,13 @@
 package raidone.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+
 public final class Constants {
 
     public static final class SwerveConstants {
 
-        // SwerveModule motor IDs
+        // SwerveModule motor ID, throttle, CANcoder, and offset angle for each module
         public static final int kLeftFrontRotorID = 1;
         public static final int kLeftFrontThrottleID = 2;
         public static final int kLeftFrontCANCoderID = 3;
@@ -24,6 +27,14 @@ public final class Constants {
         public static final int kRightRearThrottleID = 11;
         public static final int kRightRearCANCoderID = 12;
         public static final double kRightRearRotorOffsetAngle = 0.0;
+
+        // Swerve kinematics (order: left front, right front, left rear, right rear)
+        public static final SwerveDriveKinematics kSwerveKinematics = new SwerveDriveKinematics(
+            new Translation2d(0.0, 0.0),
+            new Translation2d(0.0, 0.0),
+            new Translation2d(0.0, 0.0),
+            new Translation2d(0.0, 0.0)
+        );
 
         // IMU ID
         public static final int kImuID = 13;
@@ -56,6 +67,7 @@ public final class Constants {
 
     }
 
+    // Teleop constants
     public static final class TeleopConstants {
 
     }
