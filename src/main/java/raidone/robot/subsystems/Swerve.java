@@ -13,14 +13,13 @@ import raidone.robot.Constants.SwerveConstants;
 
 public class Swerve extends SubsystemBase {
 
-    // Initialize IMU
     private final WPI_PigeonIMU imu = new WPI_PigeonIMU(SwerveConstants.kImuID);
 
     private final SwerveModule leftFrontModule, rightFrontModule, leftRearModule, rightRearModule;
     private final SwerveDriveOdometry odometry;
     
     public Swerve() {
-        // Instantiate each of the swerve modules
+
         leftFrontModule = new SwerveModule(
             SwerveConstants.kLeftFrontThrottleID, 
             SwerveConstants.kLeftFrontRotorID, 
@@ -49,8 +48,11 @@ public class Swerve extends SubsystemBase {
             SwerveConstants.kRightRearRotorOffsetAngle
         );
 
-        // Instatiate odometry which is used for tracking position
-        odometry = new SwerveDriveOdometry(SwerveConstants.kSwerveKinematics, imu.getRotation2d(), getModulePositions());
+        odometry = new SwerveDriveOdometry(
+            SwerveConstants.kSwerveKinematics,
+            imu.getRotation2d(),
+            getModulePositions()
+        );
 
     }
 
@@ -64,17 +66,17 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-    * Drives the swerve - Input range: [-1, 1]
-    * @param xSpeed percent power for X-axis
-    * @param ySpeed percent power for Y-axis
-    * @param zSpeed percent power for rotation 
-    * @param fieldOriented configure robot movement style (true = field oriented, false = robot oriented)
-    */
+     * Drives the swerve (Input range: [-1, 1] )
+     * 
+     * @param xSpeed Percent power for X-axis
+     * @param ySpeed Percent power for Y-axis
+     * @param zSpeed Percent percent power for rotation
+     * @param fieldOriented Drive orientation (true = field oriented, false = robot oriented)
+     */
     public void drive(double xSpeed, double ySpeed, double zSpeed, boolean fieldOriented) {
         SwerveModuleState[] states = null;
-        if(fieldOriented) {
+        if (fieldOriented) {
             states = SwerveConstants.kSwerveKinematics.toSwerveModuleStates(
-                // IMU used for field oriented control
                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, imu.getRotation2d())
             );
         } else {
@@ -86,36 +88,35 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
-    * Get current swerve module states
-    * @return swerve module states
-    */
+     * Get swerve module states
+     * @return Swerve module states
+     */
     public SwerveModuleState[] getModuleStates() {
-        return new SwerveModuleState[]{
-            leftFrontModule.getState(), 
-            rightFrontModule.getState(), 
-            leftRearModule.getState(), 
+        return new SwerveModuleState[] {
+            leftFrontModule.getState(),
+            rightFrontModule.getState(),
+            leftRearModule.getState(),
             rightRearModule.getState()
         };
     }
 
     /**
-    * Get current swerve module positions
-    * @return swerve module positions 
-    */
+     * Get swerve module positions
+     * @return Swerve module positions
+     */
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
-            leftFrontModule.getPosition(), 
-            rightFrontModule.getPosition(), 
-            leftRearModule.getPosition(), 
+            leftFrontModule.getPosition(),
+            rightFrontModule.getPosition(),
+            leftRearModule.getPosition(),
             rightRearModule.getPosition()
         };
     }
 
     /**
-    * Sets swerve module states
-    * @param desiredStates array of desired states, order: 
-    *    [leftFront, leftRear, rightFront, rightRear]
-    */
+     * Set swerve module states
+     * @param desiredStates Array of desired states (Order: leftFront, leftRear, rightFront, rightRear)
+     */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 1);
         leftFrontModule.setState(desiredStates[0]);

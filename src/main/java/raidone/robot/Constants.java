@@ -7,7 +7,7 @@ public final class Constants {
 
     public static final class SwerveConstants {
 
-        // SwerveModule motor ID, throttle, CANcoder, and offset angle for each module
+        // SwerveModule IDs & offset angle
         public static final int kLeftFrontRotorID = 1;
         public static final int kLeftFrontThrottleID = 2;
         public static final int kLeftFrontCANCoderID = 3;
@@ -28,7 +28,7 @@ public final class Constants {
         public static final int kRightRearCANCoderID = 12;
         public static final double kRightRearRotorOffsetAngle = 0.0;
 
-        // Swerve kinematics (order: left front, right front, left rear, right rear)
+        // Swerve kinematics (Order: leftFront, leftRear, rightFront, rightRear)
         public static final SwerveDriveKinematics kSwerveKinematics = new SwerveDriveKinematics(
             new Translation2d(0.0, 0.0),
             new Translation2d(0.0, 0.0),
@@ -59,15 +59,14 @@ public final class Constants {
         public static final double kThrottleGearRatio = 0.0;
 
         // Throttle conversion factors
-        public static final double kThrottleVelocityConversionFactor = (1 / kThrottleGearRatio / 60)
-                * kWheelDiameterMeters * Math.PI;
+        public static final double kThrottleVelocityConversionFactor =
+            (1 / kThrottleGearRatio / 60) * kWheelDiameterMeters * Math.PI;
 
-        public static final double kThrottlePositionConversionFactor = (1 / kThrottleGearRatio) * kWheelDiameterMeters
-                * Math.PI;
+        public static final double kThrottlePositionConversionFactor =
+            (1 / kThrottleGearRatio) * kWheelDiameterMeters * Math.PI;
 
     }
 
-    // Teleop constants
     public static final class TeleopConstants {
 
     }
