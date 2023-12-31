@@ -3,13 +3,16 @@ package raidone.robot.utils;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import raidone.robot.commands.auto.*;
 
 public class AutoChooser {
 
     private SendableChooser<CommandBase> chooser;
 
     // List of commands for autonomous
-    private CommandBase[] commands = {};
+    private CommandBase[] commands = {
+        new TestAuto()
+    };
 
     /**
      * Creates tab in Shuffleboard with list of specified commands ({@link AutoChooser#commands})
