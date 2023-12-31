@@ -27,7 +27,10 @@ public class AutoChooser {
     }
 
     /**
-     * Returns the currently selected autonomous command.
+     * <ul>
+     * <li>Returns the currently selected autonomous command.</li>
+     * <li>Defaults to {@link EmptyAuto} if nothing is selected</li>
+     * </ul>
      * 
      * @return Currently selected autonomous command
      */
