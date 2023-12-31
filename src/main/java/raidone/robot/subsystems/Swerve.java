@@ -3,12 +3,14 @@ package raidone.robot.subsystems;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import raidone.robot.Constants.SwerveConstants;
 
 public class Swerve extends SubsystemBase {
@@ -142,6 +144,20 @@ public class Swerve extends SubsystemBase {
         leftRearModule.setState(desiredStates[2]);
         rightRearModule.setState(desiredStates[3]);
     }
+
+    /**
+	 * Sets the wheels into an X formation to prevent movement.
+     * 
+     * @return 
+	 */
+	public CommandBase setX() {
+        return runOnce( () -> {
+            leftFrontModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+		    rightFrontModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+		    leftRearModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+		    rightRearModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        });
+	}
 
     /**
      * Get predicted pose

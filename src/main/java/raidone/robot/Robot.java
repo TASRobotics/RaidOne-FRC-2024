@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import raidone.robot.utils.AutoChooser;
 import monologue.Monologue;
 
 public class Robot extends TimedRobot {
@@ -17,13 +16,11 @@ public class Robot extends TimedRobot {
 
 	private RobotContainer robotContainer;
 
-	private static AutoChooser chooser;
 	Field2d field  = new Field2d();
 
 	@Override
 	public void robotInit() {
 		robotContainer = new RobotContainer();
-		chooser = new AutoChooser();
 	}
 
 	@Override
@@ -78,15 +75,6 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {}
 
 	@Override
-	public void testExit() {}	
-
-	/**
-	 * Gets the AutoChooser object
-	 * 
-	 * @return AutoChooser
-	 */
-	public static AutoChooser getChooser() {
-		return chooser;
-	}
+	public void testExit() {}
 
 }

@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import raidone.robot.Constants.SwerveConstants;
 import raidone.robot.subsystems.Swerve;
 
@@ -86,8 +87,8 @@ public class DrivePath extends CommandBase {
      * @param swerve Swerve subsystem
      * @param trajectory PathPlanner path
      */
-    private void driveTrajectory(Swerve swerve, PathPlannerPath path) {
-        new FollowPathWithEvents(
+    private CommandBase driveTrajectory(Swerve swerve, PathPlannerPath path) {
+        return Commands.runOnce( () -> new FollowPathWithEvents(
             new FollowPathHolonomic(
                 path,
                 swerve::getPose,
@@ -112,7 +113,7 @@ public class DrivePath extends CommandBase {
             ),
             path,
             swerve::getPose
-        );
+        ));
     }
 
 }
