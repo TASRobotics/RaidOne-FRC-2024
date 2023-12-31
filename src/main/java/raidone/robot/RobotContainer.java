@@ -9,16 +9,21 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import monologue.Logged;
+import monologue.Monologue;
+import monologue.Monologue.LogNT;
 import raidone.robot.Constants.TeleopConstants;
 import raidone.robot.subsystems.Swerve;
 
-public class RobotContainer {
+public class RobotContainer implements Logged {
 
 	private static final Swerve swerve = new Swerve();
 	private final XboxController master = new XboxController(0);
 
 	/** The container for the robot. Contains subsystems, OI devices, and commands. */
-	public RobotContainer() {
+	public RobotContainer() {		
+		Monologue.setupLogging(this, "/Robot");
+
     	configureBindings();
 
 		swerve.setDefaultCommand(
