@@ -65,6 +65,11 @@ public final class Constants {
         public static final double kThrottlePositionConversionFactor =
             (1 / kThrottleGearRatio) * kWheelDiameterMeters * Math.PI;
 
+        // Pathing PID constants 
+        public static final double kPathing_kP = 0.0;
+        public static final double kPathing_kI = 0.0;
+        public static final double kPathing_kD = 0.0;
+
     }
 
     public static final class TeleopConstants {
