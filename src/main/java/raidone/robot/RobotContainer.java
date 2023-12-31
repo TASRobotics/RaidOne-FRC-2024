@@ -17,7 +17,7 @@ import raidone.robot.subsystems.Swerve;
 
 public class RobotContainer implements Logged {
 
-	private static final Swerve swerve = new Swerve();
+	private final Swerve swerve = new Swerve();
 	private final XboxController master = new XboxController(0);
 
 	@LogNT
@@ -65,7 +65,7 @@ public class RobotContainer implements Logged {
 	 * 
 	 * @return Swerve object
 	 */
-	public static Swerve getSwerve() {
+	public Swerve getSwerve() {
 		return swerve;
 	}
 }
