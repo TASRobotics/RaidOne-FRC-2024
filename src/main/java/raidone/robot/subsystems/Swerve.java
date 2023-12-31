@@ -66,6 +66,24 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
+     * Gets current chassis speeds relative to itself
+     * 
+     * @return Chassis speeds
+     */
+    public ChassisSpeeds getRelativeSpeeds() {
+        return SwerveConstants.kSwerveKinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    /**
+     * Drives the chassis at a certain speed relative to itself
+     * 
+     * @param speed Desired chassis speed
+     */
+    public void driveRelative(ChassisSpeeds speed) {
+        setModuleStates(SwerveConstants.kSwerveKinematics.toSwerveModuleStates(speed));
+    }
+
+    /**
      * Drives the swerve (Input range: [-1, 1] )
      * 
      * @param xSpeed Percent power for X-axis
