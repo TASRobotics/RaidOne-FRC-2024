@@ -5,17 +5,24 @@
 package raidone.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import raidone.robot.utils.AutoChooser;
 
 public class Robot extends TimedRobot {
-	private Command m_autonomousCommand;
 
-	private RobotContainer m_robotContainer;
+	private Command autonomousCommand;
+
+	private RobotContainer robotContainer;
+
+	private static AutoChooser chooser;
+	Field2d field  = new Field2d();
 
 	@Override
 	public void robotInit() {
-		m_robotContainer = new RobotContainer();
+		robotContainer = new RobotContainer();
+		chooser = new AutoChooser();
 	}
 
 	@Override
@@ -34,10 +41,10 @@ public class Robot extends TimedRobot {
 
   	@Override
   	public void autonomousInit() {
-    	m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    	autonomousCommand = robotContainer.getAutonomousCommand();
 
-    	if (m_autonomousCommand != null) {
-      		m_autonomousCommand.schedule();
+    	if (autonomousCommand != null) {
+      		autonomousCommand.schedule();
 		}
 	}
 
@@ -49,8 +56,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-    	if (m_autonomousCommand != null) {
-    		m_autonomousCommand.cancel();
+    	if (autonomousCommand != null) {
+    		autonomousCommand.cancel();
     	}
 	}
 
@@ -69,5 +76,15 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {}
 
 	@Override
-	public void testExit() {}
+	public void testExit() {}	
+
+	/**
+	 * Gets the AutoChooser object
+	 * 
+	 * @return AutoChooser
+	 */
+	public static AutoChooser getChooser() {
+		return chooser;
+	}
+
 }
