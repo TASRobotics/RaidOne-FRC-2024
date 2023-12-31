@@ -74,6 +74,8 @@ public final class Constants {
 
     public static final class TeleopConstants {
 
+        public static final double kDriveDeadband = 0.05;
+
     }
 
     public static double kVoltageCompensation = 12.0;
