@@ -1,12 +1,13 @@
 package raidone.robot.subsystems;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,7 +21,7 @@ public class SwerveModule {
     private CANSparkMax rotor;
     private CANSparkMax throttle;
 
-    private WPI_CANCoder rotorEncoder;
+    private CANcoder rotorEncoder;
     private RelativeEncoder throttleEncoder;
 
     private PIDController rotorPID;
@@ -38,23 +39,25 @@ public class SwerveModule {
         rotor = new CANSparkMax(rotorID, MotorType.kBrushless);
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
 
-        rotorEncoder = new WPI_CANCoder(rotorEncoderID);
+        rotorEncoder = new CANcoder(rotorEncoderID);
         throttleEncoder = throttle.getEncoder();
 
         rotor.restoreFactoryDefaults();
         throttle.restoreFactoryDefaults();
-        rotorEncoder.configFactoryDefault();
+        rotorEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
         rotor.setInverted(SwerveConstants.kRotorMotorInversion);
         rotor.enableVoltageCompensation(Constants.kVoltageCompensation);
         rotor.setIdleMode(IdleMode.kBrake);
 
-        rotorEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-        rotorEncoder.configMagnetOffset(rotorOffsetAngle);
-        rotorEncoder.configSensorDirection(SwerveConstants.kRotorEncoderDirection);
-        rotorEncoder.configSensorInitializationStrategy(
-            SensorInitializationStrategy.BootToAbsolutePosition
-        );
+        CANcoderConfiguration rotorEncoderConfigs = new CANcoderConfiguration()
+            .withMagnetSensor(new MagnetSensorConfigs()
+                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
+                .withMagnetOffset(rotorOffsetAngle)
+                .withSensorDirection(SwerveConstants.kRotorEncoderDirection)
+            );
+        
+        rotorEncoder.getConfigurator().apply(rotorEncoderConfigs);
 
 
         rotorPID = new PIDController(
@@ -84,7 +87,7 @@ public class SwerveModule {
     public SwerveModuleState getState() {
         return new SwerveModuleState(
             throttleEncoder.getVelocity(),
-            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition())
+            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue())
         );
     }
 
@@ -96,7 +99,7 @@ public class SwerveModule {
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
             throttleEncoder.getPosition(),
-            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition())
+            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue())
         );
     }
 

@@ -1,5 +1,7 @@
 package raidone.robot;
 
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
@@ -41,7 +43,7 @@ public final class Constants {
 
         // Rotor encoder & motor inversion
         public static final boolean kRotorMotorInversion = false;
-        public static final boolean kRotorEncoderDirection = false;
+        public static final SensorDirectionValue kRotorEncoderDirection = SensorDirectionValue.Clockwise_Positive;
 
         // Rotor PID Constants
         public static final double kRotor_kP = 0.0;
