@@ -4,14 +4,9 @@
 
 package raidone.robot;
 
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import monologue.Monologue;
 
-public class Robot extends LoggedRobot {
+public class Robot extends TimedRobot {
 
 	private Command autonomousCommand;
 
@@ -27,24 +22,24 @@ public class Robot extends LoggedRobot {
 
 	Field2d field = new Field2d();
 
-	Logger advLogger = Logger.getInstance();
+	// Logger advLogger = Logger.getInstance();
 
 	@Override
 	public void robotInit() {
-		advLogger.recordMetadata("R1 Season", "Amogus");
+		// advLogger.recordMetadata("R1 Season", "Amogus");
 
-		if (isReal()) {
-		    // advLogger.addDataReceiver(new WPILOGWriter("/U/Logs")); // Log to a USB stick ("/U/logs")
-		    advLogger.addDataReceiver(new NT4Publisher());
-		    new PowerDistribution(1, ModuleType.kRev);
-		} else {
-		    setUseTiming(false);
-		    // String logPath = LogFileUtil.findReplayLog();
-		    // advLogger.setReplaySource(new WPILOGReader(logPath));
-		    // advLogger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-		}
+		// if (isReal()) {
+		//     // advLogger.addDataReceiver(new WPILOGWriter("/U/Logs")); // Log to a USB stick ("/U/logs")
+		//     advLogger.addDataReceiver(new NT4Publisher());
+		//     new PowerDistribution(1, ModuleType.kRev);
+		// } else {
+		//     setUseTiming(false);
+		//     // String logPath = LogFileUtil.findReplayLog();
+		//     // advLogger.setReplaySource(new WPILOGReader(logPath));
+		//     // advLogger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+		// }
 		
-		advLogger.start();
+		// advLogger.start();
 
 		robotContainer = new RobotContainer();
 	}

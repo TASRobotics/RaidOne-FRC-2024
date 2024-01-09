@@ -1,11 +1,15 @@
 package raidone.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,10 +20,10 @@ import raidone.robot.Constants.SwerveConstants;
 
 public class SwerveModule {
 
-    private WPI_TalonFX rotor;
-    private WPI_TalonFX throttle;
+    private TalonFX rotor;
+    private TalonFX throttle;
 
-    private WPI_CANCoder rotorEncoder;
+    private CANcoder rotorEncoder;
     private PIDController rotorPID;
     
     /**
@@ -32,27 +36,26 @@ public class SwerveModule {
      */
     public SwerveModule(int rotorID, int throttleID, int rotorEncoderID, double rotorOffsetAngle) {
 
-        rotor = new WPI_TalonFX(rotorID);
-        throttle = new WPI_TalonFX(throttleID);
+        rotor = new TalonFX(rotorID);
+        throttle = new TalonFX(throttleID);
 
-        rotorEncoder = new WPI_CANCoder(rotorEncoderID);
-        //throttleEncoder = throttle.getEncoder();
+        rotorEncoder = new CANcoder(rotorEncoderID);
 
-        rotor.configFactoryDefault();
-        throttle.configFactoryDefault();
-        rotorEncoder.configFactoryDefault();
+        rotor.getConfigurator().apply(new TalonFXConfiguration());
+        throttle.getConfigurator().apply(new TalonFXConfiguration());
+        rotorEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
         rotor.setInverted(SwerveConstants.kRotorMotorInversion);
-        rotor.configVoltageCompSaturation(Constants.kVoltageCompensation);
-        rotor.enableVoltageCompensation(true);
-        rotor.setNeutralMode(NeutralMode.Brake);
+        rotor.setNeutralMode(NeutralModeValue.Brake);
 
-        rotorEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-        rotorEncoder.configMagnetOffset(rotorOffsetAngle);
-        rotorEncoder.configSensorDirection(SwerveConstants.kRotorEncoderDirection);
-        rotorEncoder.configSensorInitializationStrategy(
-            SensorInitializationStrategy.BootToAbsolutePosition
-        );
+        CANcoderConfiguration rotorEncoderConfigs = new CANcoderConfiguration()
+            .withMagnetSensor(new MagnetSensorConfigs()
+                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
+                .withMagnetOffset(rotorOffsetAngle)
+                .withSensorDirection(SwerveConstants.kRotorEncoderDirection)
+            );
+        
+        rotorEncoder.getConfigurator().apply(rotorEncoderConfigs);
 
 
         rotorPID = new PIDController(
@@ -63,10 +66,10 @@ public class SwerveModule {
 
         rotorPID.enableContinuousInput(-180, 180);
 
-        throttle.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        throttle.configVoltageCompSaturation(Constants.kVoltageCompensation);
-        throttle.enableVoltageCompensation(true);
-        throttle.setNeutralMode(NeutralMode.Brake);
+        throttle.getConfigurator().apply(new FeedbackConfigs()
+            .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
+        );
+        throttle.setNeutralMode(NeutralModeValue.Brake);
     }
 
     /**
@@ -75,10 +78,10 @@ public class SwerveModule {
      * @return Current state of module
      */
     public SwerveModuleState getState() {
-        double throttleVelocity = throttle.getSelectedSensorVelocity() * SwerveConstants.kThrottleVelocityConversionFactor; 
+        double throttleVelocity = throttle.getVelocity().getValue() * SwerveConstants.kThrottleVelocityConversionFactor;
         return new SwerveModuleState(
             throttleVelocity,
-            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition())
+            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue())
         );
     }
 
@@ -88,10 +91,10 @@ public class SwerveModule {
      * @return Current position of module
      */
     public SwerveModulePosition getPosition() {
-        double throttlePosition = throttle.getSelectedSensorPosition() * SwerveConstants.kThrottlePositionConversionFactor;
+        double throttlePosition = throttle.getPosition().getValue() * SwerveConstants.kThrottlePositionConversionFactor;
         return new SwerveModulePosition(
             throttlePosition, 
-            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition())
+            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue())
         );
     }
 

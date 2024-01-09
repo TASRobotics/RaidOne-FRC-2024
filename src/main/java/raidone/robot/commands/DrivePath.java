@@ -10,12 +10,13 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import raidone.robot.Constants.SwerveConstants;
 import raidone.robot.subsystems.Swerve;
 
-public class DrivePath extends CommandBase {
+public class DrivePath extends Command {
 
     private Swerve swerve;
     private PathPlannerPath path;
@@ -54,7 +55,7 @@ public class DrivePath extends CommandBase {
             swerve.setPose(
                 new Pose2d(
                     initialPose.position,
-                    initialPose.holonomicRotation
+                    initialPose.rotationTarget.getTarget()
                 )
             );
         }
@@ -87,32 +88,35 @@ public class DrivePath extends CommandBase {
      * @param swerve Swerve subsystem
      * @param trajectory PathPlanner path
      */
-    private CommandBase driveTrajectory(Swerve swerve, PathPlannerPath path) {
-        return Commands.runOnce( () -> new FollowPathWithEvents(
-            new FollowPathHolonomic(
-                path,
-                swerve::getPose,
-                swerve::getRelativeSpeeds,
-                swerve::driveRelative,
-                new HolonomicPathFollowerConfig(
-                    new PIDConstants(
-                        SwerveConstants.kPathing_kP,
-                        SwerveConstants.kPathing_kI,
-                        SwerveConstants.kPathing_kD
-                    ),
-                    new PIDConstants(
-                        SwerveConstants.kRotor_kP,
-                        SwerveConstants.kRotor_kI,
-                        SwerveConstants.kRotor_kD
-                    ),
-                    4.5, // Assuming MK4i module is using L2 ratio with NEO V1.0/1.1
-                    0.4,
-                    new ReplanningConfig()
-                ),
-                swerve
-            ),
+    private Command driveTrajectory(Swerve swerve, PathPlannerPath path) {
+        return Commands.runOnce( () -> new FollowPathHolonomic(
             path,
-            swerve::getPose
+            swerve::getPose,
+            swerve::getRelativeSpeeds,
+            swerve::driveRelative,
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(
+                    SwerveConstants.kPathing_kP,
+                    SwerveConstants.kPathing_kI,
+                    SwerveConstants.kPathing_kD
+                ),
+                new PIDConstants(
+                    SwerveConstants.kRotor_kP,
+                    SwerveConstants.kRotor_kI,
+                    SwerveConstants.kRotor_kD
+                ),
+                4.5,
+                0.4,
+                new ReplanningConfig()
+            ),
+            () -> {
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+            },
+            swerve
         ));
     }
 

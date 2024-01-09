@@ -6,7 +6,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import raidone.robot.commands.DrivePath;
@@ -39,7 +39,7 @@ public class Autos implements Sendable {
         return chooser.getSelected();
     }
 
-    public CommandBase testAuto() {
+    public Command testAuto() {
         return Commands.sequence(
             new DrivePath(this.swerve, PathPlannerPath.fromPathFile("Path 1"))
                 .andThen(new WaitCommand(0.5))
