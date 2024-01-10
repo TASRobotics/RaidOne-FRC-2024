@@ -6,10 +6,13 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -25,6 +28,8 @@ public class SwerveModule {
     private RelativeEncoder throttleEncoder;
 
     private PIDController rotorPID;
+    private SparkPIDController throttleVelController;
+    private SimpleMotorFeedforward throttleFF;
 
     /**
      * Constructs SwerveModule object
@@ -64,6 +69,18 @@ public class SwerveModule {
             SwerveConstants.kRotor_kP,
             SwerveConstants.kRotor_kI,
             SwerveConstants.kRotor_kD
+        );
+
+        throttleVelController = throttle.getPIDController();
+
+        throttleVelController.setP(SwerveConstants.kThrottle_kP, 0);
+        throttleVelController.setI(SwerveConstants.kThrottle_kI, 0);
+        throttleVelController.setD(SwerveConstants.kThrottle_kD, 0);
+
+        throttleFF = new SimpleMotorFeedforward(
+            SwerveConstants.kThrottle_kS,
+            SwerveConstants.kThrottle_kV,
+            SwerveConstants.kThrottle_kA
         );
 
         rotorPID.enableContinuousInput(-180, 180);
@@ -117,7 +134,12 @@ public class SwerveModule {
         );
 
         rotor.set(rotorOutput);
-        throttle.set(optimizedState.speedMetersPerSecond);
+        throttleVelController.setReference(
+            optimizedState.speedMetersPerSecond,
+            ControlType.kVelocity,
+            0,
+            throttleFF.calculate(optimizedState.speedMetersPerSecond)
+        );
     }
 
 }

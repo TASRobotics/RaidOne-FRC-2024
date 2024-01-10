@@ -50,6 +50,16 @@ public final class Constants {
         public static final double kRotor_kI = 0.0;
         public static final double kRotor_kD = 0.0;
 
+        // Throttle PID constants
+        public static final double kThrottle_kP = 0.0;
+        public static final double kThrottle_kI = 0.0;
+        public static final double kThrottle_kD = 0.0;
+
+        // Throttle feedforward constants
+        public static final double kThrottle_kS = 0.0;
+        public static final double kThrottle_kA = 0.0;
+        public static final double kThrottle_kV = 0.0;
+
         // Velocity & acceleration of swerve
         public static final double kMaxVelocityMetersPerSecond = 3.0;
         public static final double kMaxAccelerationMetersPerSecond = 3.0;
