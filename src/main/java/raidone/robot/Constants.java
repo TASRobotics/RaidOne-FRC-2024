@@ -10,25 +10,25 @@ public final class Constants {
     public static final class SwerveConstants {
 
         // SwerveModule IDs & offset angle
-        public static final int kLeftFrontRotorID = 1;
-        public static final int kLeftFrontThrottleID = 2;
-        public static final int kLeftFrontCANCoderID = 3;
-        public static final double kLeftFrontRotorOffsetAngle = 0.0;
+        public static final int kIIRotorID = 1;
+        public static final int kIIThrottleID = 2;
+        public static final int kIICANCoderID = 3;
+        public static final double kIIRotorOffsetAngle = 0.0;
 
-        public static final int kLeftRearRotorID = 4;
-        public static final int kLeftRearThrottleID = 5;
-        public static final int kLeftRearCANCoderID = 6;
-        public static final double kLeftRearRotorOffsetAngle = 0.0;
+        public static final int kIIIRotorID = 4;
+        public static final int kIIIThrottleID = 5;
+        public static final int kIIICANCoderID = 6;
+        public static final double kIIIRotorOffsetAngle = 0.0;
 
-        public static final int kRightFrontRotorID = 7;
-        public static final int kRightFrontThrottleID = 8;
-        public static final int kRightFrontCANCoderID = 9;
-        public static final double kRightFrontRotorOffsetAngle = 0.0;
+        public static final int kIRotorID = 7;
+        public static final int kIThrottleID = 8;
+        public static final int kICANCoderID = 9;
+        public static final double kIRotorOffsetAngle = 0.0;
 
-        public static final int kRightRearRotorID = 10;
-        public static final int kRightRearThrottleID = 11;
-        public static final int kRightRearCANCoderID = 12;
-        public static final double kRightRearRotorOffsetAngle = 0.0;
+        public static final int kIVRotorID = 10;
+        public static final int kIVThrottleID = 11;
+        public static final int kIVCANCoderID = 12;
+        public static final double kIVRotorOffsetAngle = 0.0;
 
         // Swerve kinematics (Order: leftFront, leftRear, rightFront, rightRear)
         public static final SwerveDriveKinematics kSwerveKinematics = new SwerveDriveKinematics(

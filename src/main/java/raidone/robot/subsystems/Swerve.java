@@ -17,37 +17,37 @@ public class Swerve extends SubsystemBase {
 
     private final Pigeon2 imu = new Pigeon2(SwerveConstants.kImuID);
 
-    private final SwerveModule leftFrontModule, rightFrontModule, leftRearModule, rightRearModule;
+    private final SwerveModule moduleI, moduleIV, moduleII, moduleIII;
     private final SwerveDriveOdometry odometry;
     
     public Swerve() {
 
-        leftFrontModule = new SwerveModule(
-            SwerveConstants.kLeftFrontThrottleID, 
-            SwerveConstants.kLeftFrontRotorID, 
-            SwerveConstants.kLeftFrontCANCoderID, 
-            SwerveConstants.kLeftFrontRotorOffsetAngle
+        moduleI = new SwerveModule(
+            SwerveConstants.kIThrottleID, 
+            SwerveConstants.kIRotorID, 
+            SwerveConstants.kICANCoderID, 
+            SwerveConstants.kIRotorOffsetAngle
         );
 
-        rightFrontModule = new SwerveModule(
-            SwerveConstants.kRightFrontThrottleID, 
-            SwerveConstants.kRightFrontRotorID, 
-            SwerveConstants.kRightFrontCANCoderID, 
-            SwerveConstants.kRightFrontRotorOffsetAngle
+        moduleII = new SwerveModule(
+            SwerveConstants.kIIThrottleID, 
+            SwerveConstants.kIIRotorID, 
+            SwerveConstants.kIICANCoderID, 
+            SwerveConstants.kIIRotorOffsetAngle
         );
 
-        leftRearModule = new SwerveModule(
-            SwerveConstants.kLeftRearThrottleID, 
-            SwerveConstants.kLeftRearRotorID, 
-            SwerveConstants.kLeftRearCANCoderID, 
-            SwerveConstants.kLeftRearRotorOffsetAngle
+        moduleIII = new SwerveModule(
+            SwerveConstants.kIIIThrottleID, 
+            SwerveConstants.kIIIRotorID, 
+            SwerveConstants.kIIICANCoderID, 
+            SwerveConstants.kIIIRotorOffsetAngle
         );
 
-        rightRearModule = new SwerveModule(
-            SwerveConstants.kRightRearThrottleID, 
-            SwerveConstants.kRightRearRotorID, 
-            SwerveConstants.kRightRearCANCoderID, 
-            SwerveConstants.kRightRearRotorOffsetAngle
+        moduleIV = new SwerveModule(
+            SwerveConstants.kIVThrottleID, 
+            SwerveConstants.kIVRotorID, 
+            SwerveConstants.kIVCANCoderID, 
+            SwerveConstants.kIVRotorOffsetAngle
         );
 
         odometry = new SwerveDriveOdometry(
@@ -113,10 +113,10 @@ public class Swerve extends SubsystemBase {
      */
     public SwerveModuleState[] getModuleStates() {
         return new SwerveModuleState[] {
-            leftFrontModule.getState(),
-            rightFrontModule.getState(),
-            leftRearModule.getState(),
-            rightRearModule.getState()
+            moduleI.getState(),
+            moduleIV.getState(),
+            moduleII.getState(),
+            moduleIII.getState()
         };
     }
 
@@ -126,10 +126,10 @@ public class Swerve extends SubsystemBase {
      */
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
-            leftFrontModule.getPosition(),
-            rightFrontModule.getPosition(),
-            leftRearModule.getPosition(),
-            rightRearModule.getPosition()
+            moduleI.getPosition(),
+            moduleIV.getPosition(),
+            moduleII.getPosition(),
+            moduleIII.getPosition()
         };
     }
 
@@ -139,10 +139,10 @@ public class Swerve extends SubsystemBase {
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 1);
-        leftFrontModule.setState(desiredStates[0]);
-        rightFrontModule.setState(desiredStates[1]);
-        leftRearModule.setState(desiredStates[2]);
-        rightRearModule.setState(desiredStates[3]);
+        moduleI.setState(desiredStates[0]);
+        moduleIV.setState(desiredStates[1]);
+        moduleII.setState(desiredStates[2]);
+        moduleIII.setState(desiredStates[3]);
     }
 
     /**
@@ -152,10 +152,10 @@ public class Swerve extends SubsystemBase {
 	 */
 	public Command setX() {
         return runOnce( () -> {
-            leftFrontModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-		    rightFrontModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-		    leftRearModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-		    rightRearModule.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+            moduleI.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+		    moduleIV.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+		    moduleII.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+		    moduleIII.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         });
 	}
 
