@@ -1,5 +1,7 @@
 package raidone.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -65,6 +67,8 @@ public class Swerve extends SubsystemBase {
             imu.getRotation2d(),
             getModulePositions()
         );
+
+        Logger.recordOutput("Swerve states", this.getModuleStates());
     }
 
     /**
