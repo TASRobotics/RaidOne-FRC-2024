@@ -5,6 +5,7 @@
 - Implement WPI simulation (Change to Falcon500 probably)
 
 ### ID Reference:
+
 Motors:
 - 1: module I throttle
 - 2: module I rotor
@@ -14,11 +15,13 @@ Motors:
 - 6: module III rotor 
 - 7: module IV throttle 
 - 8: module IV rotor
+
 Encoders:
 - 1: module I angle
 - 2: module II angle 
 - 3: module III angle 
 - 4: module IV angle
+
 Pidgeon: 1
 
 
