@@ -15,7 +15,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import raidone.robot.Constants;
 import raidone.robot.Constants.SwerveConstants;
 
 public class SwerveModule {
