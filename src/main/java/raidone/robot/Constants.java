@@ -39,7 +39,7 @@ public final class Constants {
         );
 
         // IMU ID
-        public static final int kImuID = 13;
+        public static final int kImuID = 1;
 
         // Rotor encoder & motor inversion
         public static final boolean kRotorMotorInversion = false;

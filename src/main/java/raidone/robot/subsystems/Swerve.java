@@ -17,7 +17,7 @@ import raidone.robot.Constants.SwerveConstants;
 
 public class Swerve extends SubsystemBase {
 
-    private final Pigeon2 imu = new Pigeon2(SwerveConstants.kImuID);
+    private final Pigeon2 imu = new Pigeon2(SwerveConstants.kImuID, "seCANdary");
 
     private final SwerveModule moduleI, moduleIV, moduleII, moduleIII;
     private final SwerveDriveOdometry odometry;
@@ -63,10 +63,10 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         // Update odometry with current module state
-        odometry.update(
-            imu.getRotation2d(),
-            getModulePositions()
-        );
+        // odometry.update(
+        //     imu.getRotation2d(),
+        //     getModulePositions()
+        // );
 
         Logger.recordOutput("Swerve states", this.getModuleStates());
     }

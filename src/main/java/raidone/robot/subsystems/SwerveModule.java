@@ -35,10 +35,10 @@ public class SwerveModule {
      */
     public SwerveModule(int rotorID, int throttleID, int rotorEncoderID, double rotorOffsetAngle) {
 
-        rotor = new TalonFX(rotorID);
-        throttle = new TalonFX(throttleID);
+        rotor = new TalonFX(rotorID,"seCANdary");
+        throttle = new TalonFX(throttleID,"seCANdary");
 
-        rotorEncoder = new CANcoder(rotorEncoderID);
+        rotorEncoder = new CANcoder(rotorEncoderID, "seCANdary");
 
         rotor.getConfigurator().apply(new TalonFXConfiguration());
         throttle.getConfigurator().apply(new TalonFXConfiguration());
