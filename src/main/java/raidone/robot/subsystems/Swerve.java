@@ -118,9 +118,9 @@ public class Swerve extends SubsystemBase {
     public SwerveModuleState[] getModuleStates() {
         return new SwerveModuleState[] {
             moduleI.getState(),
-            moduleIV.getState(),
             moduleII.getState(),
-            moduleIII.getState()
+            moduleIII.getState(),
+            moduleIV.getState()
         };
     }
 
@@ -131,22 +131,22 @@ public class Swerve extends SubsystemBase {
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[] {
             moduleI.getPosition(),
-            moduleIV.getPosition(),
             moduleII.getPosition(),
-            moduleIII.getPosition()
+            moduleIII.getPosition(),
+            moduleIV.getPosition()
         };
     }
 
     /**
      * Set swerve module states
-     * @param desiredStates Array of desired states (Order: leftFront, leftRear, rightFront, rightRear)
+     * @param desiredStates Array of desired states (Order: I, II, III, IV)
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 1);
         moduleI.setState(desiredStates[0]);
-        moduleIV.setState(desiredStates[1]);
-        moduleII.setState(desiredStates[2]);
-        moduleIII.setState(desiredStates[3]);
+        moduleII.setState(desiredStates[1]);
+        moduleIII.setState(desiredStates[2]);
+        moduleIV.setState(desiredStates[3]);
     }
 
     /**
@@ -157,9 +157,9 @@ public class Swerve extends SubsystemBase {
 	public Command setX() {
         return runOnce( () -> {
             moduleI.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-		    moduleIV.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
 		    moduleII.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-		    moduleIII.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+		    moduleIII.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+		    moduleIV.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         });
 	}
 

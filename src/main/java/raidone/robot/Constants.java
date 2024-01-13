@@ -4,6 +4,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
@@ -30,12 +31,24 @@ public final class Constants {
         public static final int kIVCANCoderID = 4;
         public static final double kIVRotorOffsetAngle = 0.0; 
 
+        public static final double ROBOT_WIDTH_INCHES = 28.0;
+        public static final double ROBOT_HALF_WIDTH_METERS = Units.inchesToMeters(ROBOT_WIDTH_INCHES) / 2.0;
+        // public static final double ROBOT_RADIUS_INCHES = FastMath.hypot(ROBOT_WIDTH_INCHES, ROBOT_WIDTH_INCHES) / 2.0;
+        // public static final double ROBOT_RADIUS_METERS = Units.inchesToMeters(ROBOT_RADIUS_INCHES);
+        public static final double WHEEL_DIAMETER_INCHES = 4.0;
+        public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(WHEEL_DIAMETER_INCHES);
+
+        public static final Translation2d MODULE_I_POSITION = new Translation2d(ROBOT_HALF_WIDTH_METERS, -ROBOT_HALF_WIDTH_METERS);
+        public static final Translation2d MODULE_II_POSITION = new Translation2d(ROBOT_HALF_WIDTH_METERS, ROBOT_HALF_WIDTH_METERS);
+        public static final Translation2d MODULE_III_POSITION = new Translation2d(-ROBOT_HALF_WIDTH_METERS, ROBOT_HALF_WIDTH_METERS);
+        public static final Translation2d MODULE_IV_POSITION = new Translation2d(-ROBOT_HALF_WIDTH_METERS, -ROBOT_HALF_WIDTH_METERS);
+
         // Swerve kinematics (Order: leftFront, leftRear, rightFront, rightRear)
         public static final SwerveDriveKinematics kSwerveKinematics = new SwerveDriveKinematics(
-            new Translation2d(0.0, 0.0),
-            new Translation2d(0.0, 0.0),
-            new Translation2d(0.0, 0.0),
-            new Translation2d(0.0, 0.0)
+            MODULE_I_POSITION,
+            MODULE_II_POSITION,
+            MODULE_III_POSITION,
+            MODULE_IV_POSITION
         );
 
         // IMU ID
