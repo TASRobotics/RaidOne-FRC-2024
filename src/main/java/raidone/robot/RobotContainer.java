@@ -34,7 +34,7 @@ public class RobotContainer implements Logged {
 				-MathUtil.applyDeadband(master.getLeftY(), TeleopConstants.kDriveDeadband),
 				-MathUtil.applyDeadband(master.getLeftX(), TeleopConstants.kDriveDeadband),
 				-MathUtil.applyDeadband(master.getRightX(), TeleopConstants.kDriveDeadband),
-				true),
+				false),
 				swerve
 			)
 		);

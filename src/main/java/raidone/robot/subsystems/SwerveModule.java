@@ -43,7 +43,7 @@ public class SwerveModule {
         rotor.getConfigurator().apply(new TalonFXConfiguration());
         throttle.getConfigurator().apply(new TalonFXConfiguration());
         rotorEncoder.getConfigurator().apply(new CANcoderConfiguration());
-
+        
         rotor.setInverted(SwerveConstants.kRotorMotorInversion);
         rotor.setNeutralMode(NeutralModeValue.Brake);
 
@@ -52,6 +52,7 @@ public class SwerveModule {
                 .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
                 .withMagnetOffset(rotorOffsetAngle)
                 .withSensorDirection(SwerveConstants.kRotorEncoderDirection)
+                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
             );
         
         rotorEncoder.getConfigurator().apply(rotorEncoderConfigs);
@@ -80,7 +81,7 @@ public class SwerveModule {
         double throttleVelocity = throttle.getVelocity().getValue() * SwerveConstants.kThrottleVelocityConversionFactor;
         return new SwerveModuleState(
             throttleVelocity,
-            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue())
+            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue() * 360)
         );
     }
 
@@ -93,7 +94,7 @@ public class SwerveModule {
         double throttlePosition = throttle.getPosition().getValue() * SwerveConstants.kThrottlePositionConversionFactor;
         return new SwerveModulePosition(
             throttlePosition, 
-            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue())
+            Rotation2d.fromDegrees(rotorEncoder.getAbsolutePosition().getValue() * 360)
         );
     }
 
