@@ -1,4 +1,4 @@
-package frc.robot;
+package raidone.robot;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
@@ -10,9 +10,12 @@ public final class CTREConfigs {
     public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
     public CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
 
-    public CTREConfigs(){
+    public CTREConfigs(double moduleAngleOffset){
         /** Swerve CANCoder Configuration */
         swerveCANcoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.cancoderInvert;
+        swerveCANcoderConfig.withMagnetSensor(new MagnetSensorConfigs()
+            .withMagnetOffset(moduleAngleOffset)
+        );
 
         /** Swerve Angle Motor Configurations */
         /* Motor Inverts and Neutral Mode */

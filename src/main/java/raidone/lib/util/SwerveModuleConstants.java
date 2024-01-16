@@ -1,24 +1,26 @@
-package frc.lib.util;
+package raidone.lib.util;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class SwerveModuleConstants {
-    public final int driveMotorID;
-    public final int angleMotorID;
-    public final int cancoderID;
-    public final Rotation2d angleOffset;
+    public final String MODULE_NUMBER;
+    public final int THROTTLE_ID;
+    public final int ROTOR_ID;
+    public final int CAN_CODER_ID;
+    public final Rotation2d ANGLE_OFFSET;
 
     /**
-     * Swerve Module Constants to be used when creating swerve modules.
-     * @param driveMotorID
-     * @param angleMotorID
+     * 
+     * @param throttleID
+     * @param rotorID
      * @param canCoderID
      * @param angleOffset
      */
-    public SwerveModuleConstants(int driveMotorID, int angleMotorID, int canCoderID, Rotation2d angleOffset) {
-        this.driveMotorID = driveMotorID;
-        this.angleMotorID = angleMotorID;
-        this.cancoderID = canCoderID;
-        this.angleOffset = angleOffset;
+    public SwerveModuleConstants(String moduleNum, int throttleID, int rotorID, int canCoderID, Rotation2d angleOffset) {
+        this.MODULE_NUMBER = moduleNum;
+        this.THROTTLE_ID = throttleID;
+        this.ROTOR_ID = rotorID;
+        this.CAN_CODER_ID = canCoderID;
+        this.ANGLE_OFFSET = angleOffset;
     }
 }

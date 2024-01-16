@@ -1,4 +1,4 @@
-package frc.robot;
+package raidone.robot;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -10,8 +10,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.lib.math.Conversions;
-import frc.lib.util.SwerveModuleConstants;
+import raidone.lib.math.Conversions;
+import raidone.lib.util.SwerveModuleConstants;
 
 public class SwerveModule {
     public int moduleNumber;
