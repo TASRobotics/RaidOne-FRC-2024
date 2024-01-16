@@ -11,15 +11,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import raidone.lib.math.Conversions;
-import raidone.lib.util.SwerveModuleConstants;
 
 public class SwerveModule {
-    public int moduleNumber;
-    private Rotation2d angleOffset;
-
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
+    private CTREConfig ctreConfig;
+    private SwerveModuleConstants moduleConstants;
 
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
@@ -30,22 +28,23 @@ public class SwerveModule {
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
-    public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
-        this.moduleNumber = moduleNumber;
-        this.angleOffset = moduleConstants.angleOffset;
+    public SwerveModule(SwerveModuleConstants moduleConstants){
+
+        this.moduleConstants = moduleConstants;        
+        ctreConfig = new CTREConfig(moduleConstants.ANGLE_OFFSET_ROTATIONS);
         
         /* Angle Encoder Config */
-        angleEncoder = new CANcoder(moduleConstants.cancoderID, "seCANdary");
-        angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
+        angleEncoder = new CANcoder(moduleConstants.CAN_CODER_ID, "seCANdary");
+        angleEncoder.getConfigurator().apply(ctreConfig.swerveCANcoderConfig);
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "seCANdary");
-        mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
+        mAngleMotor = new TalonFX(moduleConstants.ROTOR_ID, "seCANdary");
+        mAngleMotor.getConfigurator().apply(ctreConfig.swerveAngleFXConfig);
         resetToAbsolute();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "seCANdary");
-        mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
+        mDriveMotor = new TalonFX(moduleConstants.THROTTLE_ID, "seCANdary");
+        mDriveMotor.getConfigurator().apply(ctreConfig.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
     }
 
@@ -72,7 +71,7 @@ public class SwerveModule {
     }
 
     public void resetToAbsolute(){
-        double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
+        double absolutePosition = getCANcoder().getRotations() - this.moduleConstants.ANGLE_OFFSET_ROTATIONS;
         mAngleMotor.setPosition(absolutePosition);
     }
 
@@ -88,5 +87,32 @@ public class SwerveModule {
             Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.Swerve.wheelCircumference), 
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
         );
+    }
+
+    public SwerveModuleConstants getModuleConstants() {
+        return this.moduleConstants;
+    }
+    public static class SwerveModuleConstants {
+        public final int MODULE_NUMBER;
+        public final int THROTTLE_ID;
+        public final int ROTOR_ID;
+        public final int CAN_CODER_ID;
+        public final double ANGLE_OFFSET_ROTATIONS;
+    
+        /***
+         * 
+         * @param moduleNum
+         * @param throttleID
+         * @param rotorID
+         * @param canCoderID
+         * @param angleOffset in TalonFX rotations
+         */
+        public SwerveModuleConstants(int moduleNum, int throttleID, int rotorID, int canCoderID, double angleOffset) {
+            this.MODULE_NUMBER = moduleNum;
+            this.THROTTLE_ID = throttleID;
+            this.ROTOR_ID = rotorID;
+            this.CAN_CODER_ID = canCoderID;
+            this.ANGLE_OFFSET_ROTATIONS = angleOffset;
+        }
     }
 }

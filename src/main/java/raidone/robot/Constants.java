@@ -4,13 +4,11 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import raidone.lib.util.COTSTalonFXSwerveConstants;
-import raidone.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
@@ -87,11 +85,12 @@ public final class Constants {
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
         public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
-        public static final SwerveModuleConstants[] MODULE_CONSTANTS = new SwerveModuleConstants[] {
-            new SwerveModuleConstants("I", 1, 2, 1, Rotation2d.fromRotations(-0.114258)),
-            new SwerveModuleConstants("II", 3, 4, 2, Rotation2d.fromRotations(-0.273193)),
-            new SwerveModuleConstants("III", 5, 6, 3, Rotation2d.fromRotations(-0.096680)),
-            new SwerveModuleConstants("IV", 7, 8, 4, Rotation2d.fromRotations(-0.121582)),
+        // angle offset in rotations
+        public static final SwerveModule.SwerveModuleConstants[] MODULE_CONSTANTS = new SwerveModule.SwerveModuleConstants[] {
+            new SwerveModule.SwerveModuleConstants(1, 1, 2, 1, -0.114258),
+            new SwerveModule.SwerveModuleConstants(2, 3, 4, 2, -0.273193),
+            new SwerveModule.SwerveModuleConstants(3, 5, 6, 3, -0.096680),
+            new SwerveModule.SwerveModuleConstants(4, 7, 8, 4, -0.121582),
         };
     }
 

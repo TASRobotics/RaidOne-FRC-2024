@@ -17,6 +17,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static raidone.robot.Constants.Swerve.*;
+
+import javax.lang.model.element.ModuleElement;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
@@ -29,10 +32,10 @@ public class Swerve extends SubsystemBase {
         imu.setYaw(0);
 
         swerveModules = new SwerveModule[] {
-            new SwerveModule(0, Constants.Swerve.ModI.constants),
-            new SwerveModule(1, Constants.Swerve.ModII.constants),
-            new SwerveModule(2, Constants.Swerve.ModIII.constants),
-            new SwerveModule(3, Constants.Swerve.ModIV.constants)
+            new SwerveModule(MODULE_CONSTANTS[0]),
+            new SwerveModule(MODULE_CONSTANTS[1]),
+            new SwerveModule(MODULE_CONSTANTS[2]),
+            new SwerveModule(MODULE_CONSTANTS[3])
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
@@ -55,7 +58,7 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
         for(SwerveModule mod : swerveModules){
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+            mod.setDesiredState(swerveModuleStates[mod.getModuleConstants().MODULE_NUMBER], isOpenLoop);
         }
     }    
 
@@ -64,14 +67,14 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
         
         for(SwerveModule mod : swerveModules){
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+            mod.setDesiredState(desiredStates[mod.getModuleConstants().MODULE_NUMBER], false);
         }
     }
 
     public SwerveModuleState[] getModuleStates(){
         SwerveModuleState[] states = new SwerveModuleState[4];
         for(SwerveModule mod : swerveModules){
-            states[mod.moduleNumber] = mod.getState();
+            states[mod.getModuleConstants().MODULE_NUMBER] = mod.getState();
         }
         return states;
     }
@@ -79,7 +82,7 @@ public class Swerve extends SubsystemBase {
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : swerveModules){
-            positions[mod.moduleNumber] = mod.getPosition();
+            positions[mod.getModuleConstants().MODULE_NUMBER] = mod.getPosition();
         }
         return positions;
     }
@@ -119,9 +122,9 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getGyroYaw(), getModulePositions());
 
         for(SwerveModule mod : swerveModules){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+            SmartDashboard.putNumber("Mod " + mod.getModuleConstants().MODULE_NUMBER + " CANcoder", mod.getCANcoder().getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.getModuleConstants().MODULE_NUMBER + " Angle", mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.getModuleConstants().MODULE_NUMBER + " Velocity", mod.getState().speedMetersPerSecond);    
         }
     }
 }

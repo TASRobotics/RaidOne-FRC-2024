@@ -5,15 +5,16 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 
-public final class CTREConfigs {
+public final class CTREConfig {
     public TalonFXConfiguration swerveAngleFXConfig = new TalonFXConfiguration();
     public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
     public CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
 
-    public CTREConfigs(double moduleAngleOffset){
+    public CTREConfig(double moduleAngleOffset){
         /** Swerve CANCoder Configuration */
         swerveCANcoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.cancoderInvert;
         swerveCANcoderConfig.withMagnetSensor(new MagnetSensorConfigs()
+            .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
             .withMagnetOffset(moduleAngleOffset)
         );
 
