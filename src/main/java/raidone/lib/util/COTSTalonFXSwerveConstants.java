@@ -1,5 +1,7 @@
 package raidone.lib.util;
 
+import static raidone.robot.Constants.Swerve.CAN_CODER_INVERT;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
@@ -7,28 +9,28 @@ import edu.wpi.first.math.util.Units;
 
 /* Contains values and required settings for common COTS swerve modules. */
 public class COTSTalonFXSwerveConstants {
-    public final double wheelDiameter;
-    public final double wheelCircumference;
-    public final double angleGearRatio;
-    public final double driveGearRatio;
-    public final double angleKP;
-    public final double angleKI;
-    public final double angleKD;
-    public final InvertedValue driveMotorInvert;
-    public final InvertedValue angleMotorInvert;
-    public final SensorDirectionValue cancoderInvert;
+    public final double WHEEL_DIAMETER;
+    public final double WHEEL_CIRCUMFERENCE;
+    public final double ROTOR_GEAR_RATIO;
+    public final double THROTTLE_GEAR_RATIO;
+    public final double ROTOR_KP;
+    public final double ROTOR_KI;
+    public final double ROTOR_KD;
+    public final InvertedValue THROTTLE_INVERT;
+    public final InvertedValue ROTOR_INVERT;
+    public final SensorDirectionValue CAN_CODER_INVERT;
 
-    public COTSTalonFXSwerveConstants(double wheelDiameter, double angleGearRatio, double driveGearRatio, double angleKP, double angleKI, double angleKD, InvertedValue driveMotorInvert, InvertedValue angleMotorInvert, SensorDirectionValue cancoderInvert){
-        this.wheelDiameter = wheelDiameter;
-        this.wheelCircumference = wheelDiameter * Math.PI;
-        this.angleGearRatio = angleGearRatio;
-        this.driveGearRatio = driveGearRatio;
-        this.angleKP = angleKP;
-        this.angleKI = angleKI;
-        this.angleKD = angleKD;
-        this.driveMotorInvert = driveMotorInvert;
-        this.angleMotorInvert = angleMotorInvert;
-        this.cancoderInvert = cancoderInvert;
+    public COTSTalonFXSwerveConstants(double wheelDiameter, double rotorGearRatio, double throttleGearRatio, double rotorKP, double rotorKI, double rotorKD, InvertedValue throttleInvert, InvertedValue rotorInvert, SensorDirectionValue canCoderInvert){
+        this.WHEEL_DIAMETER = wheelDiameter;
+        this.WHEEL_CIRCUMFERENCE = wheelDiameter * Math.PI;
+        this.ROTOR_GEAR_RATIO = rotorGearRatio;
+        this.THROTTLE_GEAR_RATIO = throttleGearRatio;
+        this.ROTOR_KP = rotorKP;
+        this.ROTOR_KI = rotorKI;
+        this.ROTOR_KD = rotorKD;
+        this.THROTTLE_INVERT = throttleInvert;
+        this.ROTOR_INVERT = rotorInvert;
+        this.CAN_CODER_INVERT = canCoderInvert;
     }
 
     /** West Coast Products */
@@ -36,37 +38,37 @@ public class COTSTalonFXSwerveConstants {
         /** West Coast Products - SwerveX Standard*/
         public static final class SwerveXStandard{
             /** West Coast Products - SwerveX Standard (Falcon 500)*/
-            public static final COTSTalonFXSwerveConstants Falcon500(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants Falcon500(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** (396 / 35) : 1 */
-                double angleGearRatio = ((396.0 / 35.0) / 1.0);
+                double ROTOR_GEAR_RATIO = ((396.0 / 35.0) / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.Clockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
             
             /** West Coast Products - SwerveX Standard (Kraken X60)*/
-            public static final COTSTalonFXSwerveConstants KrakenX60(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants KrakenX60(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** (396 / 35) : 1 */
-                double angleGearRatio = ((396.0 / 35.0) / 1.0);
+                double ROTOR_GEAR_RATIO = ((396.0 / 35.0) / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.Clockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
             
             public static final class driveRatios{
@@ -102,37 +104,37 @@ public class COTSTalonFXSwerveConstants {
         /** West Coast Products - SwerveX Flipped*/
         public static final class SwerveXFlipped{
             /** West Coast Products - SwerveX Flipped (Falcon 500)*/
-            public static final COTSTalonFXSwerveConstants Falcon500(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants Falcon500(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** (468 / 35) : 1 */
-                double angleGearRatio = ((468.0 / 35.0) / 1.0);
+                double ROTOR_GEAR_RATIO = ((468.0 / 35.0) / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.Clockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
             
             /** West Coast Products - SwerveX Flipped (Kraken X60)*/
-            public static final COTSTalonFXSwerveConstants KrakenX60(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants KrakenX60(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** (468 / 35) : 1 */
-                double angleGearRatio = ((468.0 / 35.0) / 1.0);
+                double ROTOR_GEAR_RATIO = ((468.0 / 35.0) / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.Clockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
 
             public static final class driveRatios{
@@ -171,37 +173,37 @@ public class COTSTalonFXSwerveConstants {
         /** Swerve Drive Specialties - MK3 Module*/
         public static final class MK3{
             /** Swerve Drive Specialties - MK3 Module (Falcon 500)*/
-            public static final COTSTalonFXSwerveConstants Falcon500(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants Falcon500(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** 12.8 : 1 */
-                double angleGearRatio = (12.8 / 1.0);
+                double ROTOR_GEAR_RATIO = (12.8 / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.CounterClockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
             
             /** Swerve Drive Specialties - MK3 Module (Kraken X60)*/
-            public static final COTSTalonFXSwerveConstants KrakenX60(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants KrakenX60(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** 12.8 : 1 */
-                double angleGearRatio = (12.8 / 1.0);
+                double ROTOR_GEAR_RATIO = (12.8 / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.CounterClockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
 
             public static final class driveRatios{
@@ -215,37 +217,37 @@ public class COTSTalonFXSwerveConstants {
         /** Swerve Drive Specialties - MK4 Module*/
         public static final class MK4{
             /** Swerve Drive Specialties - MK4 Module (Falcon 500)*/
-            public static final COTSTalonFXSwerveConstants Falcon500(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants Falcon500(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** 12.8 : 1 */
-                double angleGearRatio = (12.8 / 1.0);
+                double ROTOR_GEAR_RATIO = (12.8 / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.CounterClockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
 
             /** Swerve Drive Specialties - MK4 Module (Kraken X60)*/
-            public static final COTSTalonFXSwerveConstants KrakenX60(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants KrakenX60(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** 12.8 : 1 */
-                double angleGearRatio = (12.8 / 1.0);
+                double ROTOR_GEAR_RATIO = (12.8 / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.CounterClockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
 
             public static final class driveRatios{
@@ -263,37 +265,37 @@ public class COTSTalonFXSwerveConstants {
         /** Swerve Drive Specialties - MK4i Module*/
         public static final class MK4i{
             /** Swerve Drive Specialties - MK4i Module (Falcon 500)*/
-            public static final COTSTalonFXSwerveConstants Falcon500(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants Falcon500(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** (150 / 7) : 1 */
-                double angleGearRatio = ((150.0 / 7.0) / 1.0);
+                double ROTOR_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
         
-                double angleKP = 100.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 100.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.Clockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
 
             /** Swerve Drive Specialties - MK4i Module (Kraken X60)*/
-            public static final COTSTalonFXSwerveConstants KrakenX60(double driveGearRatio){
-                double wheelDiameter = Units.inchesToMeters(4.0);
+            public static final COTSTalonFXSwerveConstants KrakenX60(double THROTTLE_GEAR_RATIO){
+                double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
         
                 /** (150 / 7) : 1 */
-                double angleGearRatio = ((150.0 / 7.0) / 1.0);
+                double ROTOR_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
         
-                double angleKP = 1.0;
-                double angleKI = 0.0;
-                double angleKD = 0.0;
+                double ROTOR_KP = 1.0;
+                double ROTOR_KI = 0.0;
+                double ROTOR_KD = 0.0;
         
-                InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
-                InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
-                SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
-                return new COTSTalonFXSwerveConstants(wheelDiameter, angleGearRatio, driveGearRatio, angleKP, angleKI, angleKD, driveMotorInvert, angleMotorInvert, cancoderInvert);
+                InvertedValue THROTTLE_INVERT = InvertedValue.CounterClockwise_Positive;
+                InvertedValue ROTOR_INVERT = InvertedValue.Clockwise_Positive;
+                SensorDirectionValue CAN_CODER_INVERT = SensorDirectionValue.CounterClockwise_Positive;
+                return new COTSTalonFXSwerveConstants(WHEEL_DIAMETER, ROTOR_GEAR_RATIO, THROTTLE_GEAR_RATIO, ROTOR_KP, ROTOR_KI, ROTOR_KD, THROTTLE_INVERT, ROTOR_INVERT, CAN_CODER_INVERT);
             }
 
             public static final class driveRatios{
