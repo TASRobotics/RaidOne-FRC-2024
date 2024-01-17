@@ -58,7 +58,7 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.MAX_SPEED);
 
         for(SwerveModule mod : swerveModules){
-            mod.setDesiredState(swerveModuleStates[mod.getModuleConstants().MODULE_NUMBER], isOpenLoop);
+            mod.setDesiredState(swerveModuleStates[mod.getModuleConstants().MODULE_NUMBER - 1], isOpenLoop);
         }
     }    
 
@@ -67,14 +67,14 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.MAX_SPEED);
         
         for(SwerveModule mod : swerveModules){
-            mod.setDesiredState(desiredStates[mod.getModuleConstants().MODULE_NUMBER], false);
+            mod.setDesiredState(desiredStates[mod.getModuleConstants().MODULE_NUMBER - 1], false);
         }
     }
 
     public SwerveModuleState[] getModuleStates(){
         SwerveModuleState[] states = new SwerveModuleState[4];
         for(SwerveModule mod : swerveModules){
-            states[mod.getModuleConstants().MODULE_NUMBER] = mod.getState();
+            states[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getState();
         }
         return states;
     }
@@ -82,7 +82,7 @@ public class Swerve extends SubsystemBase {
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(SwerveModule mod : swerveModules){
-            positions[mod.getModuleConstants().MODULE_NUMBER] = mod.getPosition();
+            positions[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getPosition();
         }
         return positions;
     }
