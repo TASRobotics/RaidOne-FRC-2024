@@ -87,10 +87,10 @@ public final class Constants {
 
         // angle offset in rotations
         public static final SwerveModule.SwerveModuleConstants[] MODULE_CONSTANTS = new SwerveModule.SwerveModuleConstants[] {
-            new SwerveModule.SwerveModuleConstants(1, 1, 2, 1, -0.114258),
-            new SwerveModule.SwerveModuleConstants(2, 3, 4, 2, -0.273193),
-            new SwerveModule.SwerveModuleConstants(3, 5, 6, 3, -0.096680),
-            new SwerveModule.SwerveModuleConstants(4, 7, 8, 4, -0.121582),
+            new SwerveModule.SwerveModuleConstants(1, 1, 2, 1, 0.76), // -0.114258
+            new SwerveModule.SwerveModuleConstants(2, 3, 4, 2, 0.041), // -0.273193
+            new SwerveModule.SwerveModuleConstants(3, 5, 6, 3, 0.353), // -0.096680
+            new SwerveModule.SwerveModuleConstants(4, 7, 8, 4, 0.377), // -0.121582
         };
     }
 
