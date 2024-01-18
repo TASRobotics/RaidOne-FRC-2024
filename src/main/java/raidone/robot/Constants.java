@@ -109,4 +109,14 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED);
     }
+
+    public static final class ArmConstants{
+        public static final double kIntakeJoint_kP = 0.0;
+        public static final double kIntakeJoint_kI = 0.0;
+        public static final double kIntakeJoint_kD = 0.0;
+
+        public static final double kArmJoint_kP = 0.0;
+        public static final double kArmJoint_kI = 0.0;
+        public static final double kArmJoint_kD = 0.0;
+    }
 }
