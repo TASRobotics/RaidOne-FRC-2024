@@ -32,7 +32,7 @@ public class Swerve extends SubsystemBase {
         imu.setYaw(0);
 
         swerveModules = new SwerveModule[] {
-                new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID, CAN_CODER_I_ID, MODULE_I_OFFSET),
+                new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID,  CAN_CODER_I_ID, MODULE_I_OFFSET),
                 new SwerveModule(THROTTLE_II_ID, ROTOR_II_ID, CAN_CODER_II_ID, MODULE_II_OFFSET),
                 new SwerveModule(THROTTLE_III_ID, ROTOR_III_ID, CAN_CODER_III_ID, MODULE_III_OFFSET),
                 new SwerveModule(THROTTLE_IV_ID, ROTOR_IV_ID, CAN_CODER_IV_ID, MODULE_IV_OFFSET)
