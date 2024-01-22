@@ -20,16 +20,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Swerve.*;
 
 import javax.lang.model.element.ModuleElement;
 
+import org.littletonrobotics.junction.Logger;
+
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] swerveModules;
     public Pigeon2 imu;
+
+    // private Field2d field = new Field2d();
 
     public Swerve() {
         imu = new Pigeon2(Constants.Swerve.pigeonID, "seCANdary");
@@ -43,8 +48,10 @@ public class Swerve extends SubsystemBase {
                 new SwerveModule(THROTTLE_IV_ID, ROTOR_IV_ID, CAN_CODER_IV_ID, MODULE_IV_OFFSET)
         };
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.SWERVE_DRIVE_KINEMATICS, getGyroYaw(),
+        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.SWERVE_DRIVE_KINEMATICS, getRotation(),
                 getModulePositions());
+
+        // SmartDashboard.putData("field", field);
 
         // Configure AutoBuilder last
         AutoBuilder.configureHolonomic(
@@ -55,7 +62,7 @@ public class Swerve extends SubsystemBase {
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                        new PIDConstants(0.37, 0.0, 0.0), // Rotation PID constants
                         4.5, // Max module speed, in m/s
                         TRACK_WIDTH / 2, // Drive base radius in meters. Distance from robot center to furthest module.
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -149,7 +156,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setPose(Pose2d pose) {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), pose);
+        swerveOdometry.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
     public Rotation2d getHeading() {
@@ -157,17 +164,21 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setHeading(Rotation2d heading) {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(),
+        swerveOdometry.resetPosition(getRotation(), getModulePositions(),
                 new Pose2d(getPose().getTranslation(), heading));
     }
 
     public void zeroHeading() {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(),
+        swerveOdometry.resetPosition(getRotation(), getModulePositions(),
                 new Pose2d(getPose().getTranslation(), new Rotation2d()));
     }
 
-    public Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(imu.getYaw().getValue());
+    // public Rotation2d getRotation() {
+    // return Rotation2d.fromDegrees(imu.getYaw().getValue());
+    // }
+
+    public Rotation2d getRotation() {
+        return imu.getRotation2d();
     }
 
     public void resetModulesToAbsolute() {
@@ -186,9 +197,15 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        swerveOdometry.update(getGyroYaw(), getModulePositions());
+        swerveOdometry.update(getRotation(), getModulePositions());
 
         SmartDashboard.putNumber("Velocity (m/s)", getModuleStates()[0].speedMetersPerSecond);
+
+        SmartDashboard.putNumber("Rotation", imu.getAngle());
+        SmartDashboard.putNumber("Y", getPose().getY());
+        SmartDashboard.putNumber("X", getPose().getX());
+
+        // field.setRobotPose(this.getPose());
 
         // for (SwerveModule mod : swerveModules) {
         // SmartDashboard.putNumber("Mod " + mod.getModuleConstants().MODULE_NUMBER + "
