@@ -111,6 +111,10 @@ public final class Constants {
     }
 
     public static final class ArmConstants{
+        public static final int ARM_SLAVE_ID = 3;
+        public static final int INTAKE_JOINT_ID = 2;
+        public static final int ARM_MASTER_ID = 1;
+
         public static final double kIntakeJoint_kP = 0.0;
         public static final double kIntakeJoint_kI = 0.0;
         public static final double kIntakeJoint_kD = 0.0;

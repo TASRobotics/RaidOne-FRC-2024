@@ -20,7 +20,7 @@ public class IntakeArm {
 
     private MotionMagicVoltage m_mmReq;
 
-    private StatusSignal<Boolean> intakeRevLim;
+    private StatusSignal<Boolean> intakeForLim;
 
     private PIDController intakePID;
     private TalonFXConfiguration cfg;
@@ -32,11 +32,16 @@ public class IntakeArm {
 
         m_mmReq = new MotionMagicVoltage(0);
         cfg = new TalonFXConfiguration();
+        /**
+         *Enable For Lim
+         Enable For Lim Pos Res
+         Inv motor
+         */
         mm = cfg.MotionMagic;
 
         intakeJoint = new TalonFX(intakeJointID);
 
-        intakeRevLim = intakeJoint.getFault_ReverseHardLimit();
+        intakeForLim = intakeJoint.getFault_ForwardHardLimit();
 
         intakePID = new PIDController(ArmConstants.kIntakeJoint_kP, ArmConstants.kIntakeJoint_kI, ArmConstants.kIntakeJoint_kD);
 
@@ -67,11 +72,19 @@ public class IntakeArm {
         }
     }
 
-    public int goHome(){
-        while(intakeRevLim.getValue()){
-            intakeJoint.set(-0.1);
-        }
+    public void goHome(){
+        intakeJoint.set(0.1);
+    }
+
+    public void updateForLimSwitch(){
+        intakeForLim = intakeJoint.getFault_ForwardHardLimit();
+    }
+
+    public boolean getIntakeForLim(){
+        return intakeJoint.getFault_ForwardHardLimit().getValue();
+    }
+
+    public void stopArm(){
         intakeJoint.stopMotor();
-        return 1;
     }
 }

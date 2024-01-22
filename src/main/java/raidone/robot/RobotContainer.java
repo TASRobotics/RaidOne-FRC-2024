@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import raidone.robot.autos.*;
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
+import raidone.robot.Constants.ArmConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,22 +30,24 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton armHoming = new JoystickButton(driver, XboxController.Button.kY.value);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    // private final Swerve s_Swerve = new Swerve();
+    private final IntakeArm arm = new IntakeArm(ArmConstants.ARM_MASTER_ID, ArmConstants.ARM_SLAVE_ID, ArmConstants.INTAKE_JOINT_ID);
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        s_Swerve.setDefaultCommand(
-            new TeleopSwerve(
-                s_Swerve, 
-                () -> -driver.getRawAxis(translationAxis), 
-                () -> -driver.getRawAxis(strafeAxis), 
-                () -> -driver.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean()
-            )
-        );
+        // s_Swerve.setDefaultCommand(
+        //     new TeleopSwerve(
+        //         s_Swerve, 
+        //         () -> -driver.getRawAxis(translationAxis), 
+        //         () -> -driver.getRawAxis(strafeAxis), 
+        //         () -> -driver.getRawAxis(rotationAxis), 
+        //         () -> robotCentric.getAsBoolean()
+        //     )
+        // );
 
         // Configure the button bindings
         configureButtonBindings();
@@ -58,7 +61,8 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        armHoming.onTrue(new ArmHome(arm));
     }
 
     /**
@@ -68,6 +72,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new ExampleAuto(s_Swerve);
+        return new ExampleAuto(null);
     }
 }
