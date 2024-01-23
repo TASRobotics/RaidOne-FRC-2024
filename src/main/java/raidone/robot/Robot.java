@@ -6,7 +6,9 @@ package raidone.robot;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -22,6 +24,8 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private Field2d field = new Field2d();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -48,6 +52,8 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    field.setRobotPose(m_robotContainer.getSwerve().getPose());
+    SmartDashboard.putData("Field", field);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

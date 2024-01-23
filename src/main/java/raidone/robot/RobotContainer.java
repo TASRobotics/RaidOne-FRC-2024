@@ -86,4 +86,8 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
+    
+    public Swerve getSwerve() {
+        return s_Swerve;
+    }
 }
