@@ -1,7 +1,10 @@
 package raidone.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -85,6 +88,9 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        PathPlannerPath path1 = PathPlannerPath.fromPathFile("Test");
+        Pose2d pose = new Pose2d(path1.getPoint(0).position, new Rotation2d(0));
+        s_Swerve.setPose(pose);
         return autoChooser.getSelected();
     }
     
