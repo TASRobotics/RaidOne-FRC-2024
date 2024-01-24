@@ -61,7 +61,7 @@ public class Swerve extends SubsystemBase {
                 this::driveRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
-                        new PIDConstants(0.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(20.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(0.37, 0.0, 0.0), // Rotation PID constants
                         2.5, // Max module speed, in m/s
                         TRACK_WIDTH / 2, // Drive base radius in meters. Distance from robot center to furthest module.
@@ -75,9 +75,9 @@ public class Swerve extends SubsystemBase {
 
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
+                        return alliance.get() != DriverStation.Alliance.Red;
                     }
-                    return false;
+                    return true;
                 },
                 this // Reference to this subsystem to set requirements
         );
