@@ -31,8 +31,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
-    public SwerveModule[] swerveModules;
     public Pigeon2 imu;
+
+    private SwerveModule frontLeftModule;
+    private SwerveModule frontRightModule;
+    private SwerveModule backRightModule;
+    private SwerveModule backLeftModule;
 
     // private Field2d field = new Field2d();
 
@@ -41,12 +45,10 @@ public class Swerve extends SubsystemBase {
         imu.getConfigurator().apply(new Pigeon2Configuration());
         imu.setYaw(0);
 
-        swerveModules = new SwerveModule[] {
-                new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID, CAN_CODER_I_ID, MODULE_I_OFFSET),
-                new SwerveModule(THROTTLE_II_ID, ROTOR_II_ID, CAN_CODER_II_ID, MODULE_II_OFFSET),
-                new SwerveModule(THROTTLE_III_ID, ROTOR_III_ID, CAN_CODER_III_ID, MODULE_III_OFFSET),
-                new SwerveModule(THROTTLE_IV_ID, ROTOR_IV_ID, CAN_CODER_IV_ID, MODULE_IV_OFFSET)
-        };
+        frontLeftModule = new SwerveModule(THROTTLE_FL_ID, ROTOR_FL_ID, CAN_CODER_FL_ID, MODULE_FL_OFFSET);
+        backLeftModule = new SwerveModule(THROTTLE_BL_ID, ROTOR_BL_ID, CAN_CODER_BL_ID, MODULE_BL_OFFSET);
+        backRightModule = new SwerveModule(THROTTLE_BR_ID, ROTOR_BR_ID, CAN_CODER_BR_ID, MODULE_BR_OFFSET);
+        frontRightModule = new SwerveModule(THROTTLE_FR_ID, ROTOR_FR_ID, CAN_CODER_FR_ID, MODULE_FR_OFFSET);
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.SWERVE_DRIVE_KINEMATICS, getRotation(),
                 getModulePositions());
@@ -101,10 +103,10 @@ public class Swerve extends SubsystemBase {
         // - 1], isOpenLoop);
         // }
 
-        swerveModules[0].setDesiredState(swerveModuleStates[0], isOpenLoop);
-        swerveModules[1].setDesiredState(swerveModuleStates[1], isOpenLoop);
-        swerveModules[2].setDesiredState(swerveModuleStates[2], isOpenLoop);
-        swerveModules[3].setDesiredState(swerveModuleStates[3], isOpenLoop);
+        backLeftModule.setDesiredState(swerveModuleStates[0], isOpenLoop);
+        backRightModule.setDesiredState(swerveModuleStates[1], isOpenLoop);
+        frontRightModule.setDesiredState(swerveModuleStates[2], isOpenLoop);
+        frontLeftModule.setDesiredState(swerveModuleStates[3], isOpenLoop);
 
     }
 
@@ -116,10 +118,10 @@ public class Swerve extends SubsystemBase {
         // mod.setDesiredState(desiredStates[mod.getModuleConstants().MODULE_NUMBER -1],
         // false);
 
-        swerveModules[0].setDesiredState(desiredStates[0], false);
-        swerveModules[1].setDesiredState(desiredStates[1], false);
-        swerveModules[2].setDesiredState(desiredStates[2], false);
-        swerveModules[3].setDesiredState(desiredStates[3], false);
+        backLeftModule.setDesiredState(desiredStates[0], false);
+        backRightModule.setDesiredState(desiredStates[1], false);
+        frontRightModule.setDesiredState(desiredStates[2], false);
+        frontLeftModule.setDesiredState(desiredStates[3], false);
 
     }
 
@@ -129,10 +131,10 @@ public class Swerve extends SubsystemBase {
         // states[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getState();
         // }
 
-        states[0] = swerveModules[0].getState();
-        states[1] = swerveModules[1].getState();
-        states[2] = swerveModules[2].getState();
-        states[3] = swerveModules[3].getState();
+        states[0] = backLeftModule.getState();
+        states[1] = backRightModule.getState();
+        states[2] = frontRightModule.getState();
+        states[3] = frontLeftModule.getState();
 
         return states;
     }
@@ -143,10 +145,10 @@ public class Swerve extends SubsystemBase {
         // positions[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getPosition();
         // }
 
-        positions[0] = swerveModules[0].getPosition();
-        positions[1] = swerveModules[1].getPosition();
-        positions[2] = swerveModules[2].getPosition();
-        positions[3] = swerveModules[3].getPosition();
+        positions[0] = backLeftModule.getPosition();
+        positions[1] = backRightModule.getPosition();
+        positions[2] = frontRightModule.getPosition();
+        positions[3] = frontLeftModule.getPosition();
 
         return positions;
     }
@@ -182,9 +184,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetModulesToAbsolute() {
-        for (SwerveModule mod : swerveModules) {
-            mod.resetToAbsolute();
-        }
+        backLeftModule.resetToAbsolute();
+        backRightModule.resetToAbsolute();
+        frontRightModule.resetToAbsolute();
+        frontLeftModule.resetToAbsolute();
     }
 
     public ChassisSpeeds getRelativeSpeeds() {
