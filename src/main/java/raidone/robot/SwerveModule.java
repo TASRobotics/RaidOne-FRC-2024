@@ -17,7 +17,7 @@ public class SwerveModule {
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
     private CTREConfig ctreConfig;
-    private SwerveModuleConstants moduleConstants;
+    private double moduleAngleOffset;
 
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.THROTTLE_KS, Constants.Swerve.THROTTLE_KV, Constants.Swerve.THROTTLE_KA);
 
@@ -28,22 +28,22 @@ public class SwerveModule {
     /* angle motor control requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
 
-    public SwerveModule(SwerveModuleConstants moduleConstants){
+    public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset){
 
-        this.moduleConstants = moduleConstants;        
-        ctreConfig = new CTREConfig(moduleConstants.ANGLE_OFFSET_ROTATIONS);
+        ctreConfig = new CTREConfig(moduleAngleOffset);
+        this.moduleAngleOffset = moduleAngleOffset;
         
         /* Angle Encoder Config */
-        angleEncoder = new CANcoder(moduleConstants.CAN_CODER_ID, "seCANdary");
+        angleEncoder = new CANcoder(canCoderID, "seCANdary");
         angleEncoder.getConfigurator().apply(ctreConfig.swerveCANcoderConfig);
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFX(moduleConstants.ROTOR_ID, "seCANdary");
+        mAngleMotor = new TalonFX(rotorID, "seCANdary");
         mAngleMotor.getConfigurator().apply(ctreConfig.swerveAngleFXConfig);
         resetToAbsolute();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(moduleConstants.THROTTLE_ID, "seCANdary");
+        mDriveMotor = new TalonFX(throttleID, "seCANdary");
         mDriveMotor.getConfigurator().apply(ctreConfig.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
     }
@@ -71,8 +71,8 @@ public class SwerveModule {
     }
 
     public void resetToAbsolute(){
-        double absolutePosition = getCANcoder().getRotations() - this.moduleConstants.ANGLE_OFFSET_ROTATIONS;
-        mAngleMotor.setPosition(absolutePosition);
+        // double absolutePosition = getCANcoder().getRotations() - this.moduleAngleOffset;
+        mAngleMotor.setPosition(getCANcoder().getRotations());
     }
 
     public SwerveModuleState getState(){
@@ -89,30 +89,30 @@ public class SwerveModule {
         );
     }
 
-    public SwerveModuleConstants getModuleConstants() {
-        return this.moduleConstants;
-    }
-    public static class SwerveModuleConstants {
-        public final int MODULE_NUMBER;
-        public final int THROTTLE_ID;
-        public final int ROTOR_ID;
-        public final int CAN_CODER_ID;
-        public final double ANGLE_OFFSET_ROTATIONS;
+    // public SwerveModuleConstants getModuleConstants() {
+    //     return this.moduleConstants;
+    // }
+    // public class SwerveModuleConstants {
+    //     public final int MODULE_NUMBER;
+    //     public final int THROTTLE_ID;
+    //     public final int ROTOR_ID;
+    //     public final int CAN_CODER_ID;
+    //     public final double ANGLE_OFFSET_ROTATIONS;
     
-        /***
-         * 
-         * @param moduleNum
-         * @param throttleID
-         * @param rotorID
-         * @param canCoderID
-         * @param angleOffset in TalonFX rotations
-         */
-        public SwerveModuleConstants(int moduleNum, int throttleID, int rotorID, int canCoderID, double angleOffset) {
-            this.MODULE_NUMBER = moduleNum;
-            this.THROTTLE_ID = throttleID;
-            this.ROTOR_ID = rotorID;
-            this.CAN_CODER_ID = canCoderID;
-            this.ANGLE_OFFSET_ROTATIONS = angleOffset;
-        }
-    }
+    //     /***
+    //      * 
+    //      * @param moduleNum
+    //      * @param throttleID
+    //      * @param rotorID
+    //      * @param canCoderID
+    //      * @param angleOffset in TalonFX rotations
+    //      */
+    //     public SwerveModuleConstants(int moduleNum, int throttleID, int rotorID, int canCoderID, double angleOffset) {
+    //         this.MODULE_NUMBER = moduleNum;
+    //         this.THROTTLE_ID = throttleID;
+    //         this.ROTOR_ID = rotorID;
+    //         this.CAN_CODER_ID = canCoderID;
+    //         this.ANGLE_OFFSET_ROTATIONS = angleOffset;
+    //     }
+    // }
 }

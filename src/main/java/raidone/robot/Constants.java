@@ -27,10 +27,10 @@ public final class Constants {
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
          public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
             new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
+            new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0));
 
         /* Module Gear Ratios */
         public static final double THROTTLE_GEAR_RATIO = chosenModule.THROTTLE_GEAR_RATIO;
@@ -86,12 +86,32 @@ public final class Constants {
         public static final NeutralModeValue THROTTLE_NEUTRAL_MODE = NeutralModeValue.Brake;
 
         // angle offset in rotations
-        public static final SwerveModule.SwerveModuleConstants[] MODULE_CONSTANTS = new SwerveModule.SwerveModuleConstants[] {
-            new SwerveModule.SwerveModuleConstants(1, 1, 2, 1, 0.76), // -0.114258
-            new SwerveModule.SwerveModuleConstants(2, 3, 4, 2, 0.041), // -0.273193
-            new SwerveModule.SwerveModuleConstants(3, 5, 6, 3, 0.353), // -0.096680
-            new SwerveModule.SwerveModuleConstants(4, 7, 8, 4, 0.377), // -0.121582
-        };
+        // public static final SwerveModule.SwerveModuleConstants[] MODULE_CONSTANTS = new SwerveModule.SwerveModuleConstants[] {
+        //     new SwerveModule.SwerveModuleConstants(1, 1, 2, 1, -0.114258),
+        //     new SwerveModule.SwerveModuleConstants(2, 3, 4, 2, -0.27193),
+        //     new SwerveModule.SwerveModuleConstants(3, 5, 6, 3, -0.096680),
+        //     new SwerveModule.SwerveModuleConstants(4, 7, 8, 4, -0.121582),
+        // };
+
+        public static final int THROTTLE_I_ID = 1;
+        public static final int ROTOR_I_ID = 2;
+        public static final int CAN_CODER_I_ID = 1;
+        public static final double MODULE_I_OFFSET = -0.776123;
+
+        public static final int THROTTLE_II_ID = 3;
+        public static final int ROTOR_II_ID = 4;
+        public static final int CAN_CODER_II_ID = 2;
+        public static final double MODULE_II_OFFSET = -0.597656;
+
+        public static final int THROTTLE_III_ID = 5;
+        public static final int ROTOR_III_ID = 6;
+        public static final int CAN_CODER_III_ID = 3;
+        public static final double MODULE_III_OFFSET = -0.121338;
+
+        public static final int THROTTLE_IV_ID = 7;
+        public static final int ROTOR_IV_ID = 8;
+        public static final int CAN_CODER_IV_ID = 4;
+        public static final double MODULE_IV_OFFSET = -0.611328;
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
