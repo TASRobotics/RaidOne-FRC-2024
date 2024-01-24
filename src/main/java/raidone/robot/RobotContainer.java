@@ -5,6 +5,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -41,6 +42,7 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kX.value);
 
     private SendableChooser<Command> autoChooser;
 
@@ -57,7 +59,7 @@ public class RobotContainer {
                         s_Swerve,
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
-                        () -> driver.getRawAxis(rotationAxis) * 0.7,
+                        () -> driver.getRawAxis(rotationAxis) * 0.5,
                         () -> robotCentric.getAsBoolean()));
 
         // Configure the button bindings
@@ -79,7 +81,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-
+        zeroPose.onTrue(new InstantCommand(() -> s_Swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
     }
 
     /**

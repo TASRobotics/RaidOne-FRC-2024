@@ -61,7 +61,7 @@ public class Swerve extends SubsystemBase {
                 this::driveRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
-                        new PIDConstants(0.005, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(0.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(0.37, 0.0, 0.0), // Rotation PID constants
                         2.5, // Max module speed, in m/s
                         TRACK_WIDTH / 2, // Drive base radius in meters. Distance from robot center to furthest module.
@@ -101,10 +101,10 @@ public class Swerve extends SubsystemBase {
         // - 1], isOpenLoop);
         // }
 
+        swerveModules[3].setDesiredState(swerveModuleStates[3], isOpenLoop);
         swerveModules[0].setDesiredState(swerveModuleStates[0], isOpenLoop);
         swerveModules[1].setDesiredState(swerveModuleStates[1], isOpenLoop);
         swerveModules[2].setDesiredState(swerveModuleStates[2], isOpenLoop);
-        swerveModules[3].setDesiredState(swerveModuleStates[3], isOpenLoop);
 
     }
 
@@ -116,10 +116,10 @@ public class Swerve extends SubsystemBase {
         // mod.setDesiredState(desiredStates[mod.getModuleConstants().MODULE_NUMBER -1],
         // false);
 
+        swerveModules[3].setDesiredState(desiredStates[3], false);
         swerveModules[0].setDesiredState(desiredStates[0], false);
         swerveModules[1].setDesiredState(desiredStates[1], false);
         swerveModules[2].setDesiredState(desiredStates[2], false);
-        swerveModules[3].setDesiredState(desiredStates[3], false);
 
     }
 
@@ -129,10 +129,10 @@ public class Swerve extends SubsystemBase {
         // states[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getState();
         // }
 
+        states[3] = swerveModules[3].getState();
         states[0] = swerveModules[0].getState();
         states[1] = swerveModules[1].getState();
         states[2] = swerveModules[2].getState();
-        states[3] = swerveModules[3].getState();
 
         return states;
     }
@@ -143,10 +143,10 @@ public class Swerve extends SubsystemBase {
         // positions[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getPosition();
         // }
 
+        positions[3] = swerveModules[3].getPosition();
         positions[0] = swerveModules[0].getPosition();
         positions[1] = swerveModules[1].getPosition();
         positions[2] = swerveModules[2].getPosition();
-        positions[3] = swerveModules[3].getPosition();
 
         return positions;
     }
