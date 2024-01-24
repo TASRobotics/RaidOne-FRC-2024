@@ -1,10 +1,23 @@
 package raidone.robot;
 
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,14 +42,86 @@ public class SwerveModule {
 
     public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset){
         /* Angle Encoder Config */
-        rotorEncoder = TalonFXConfig.SwerveModule.configNewCANcoder(canCoderID, moduleAngleOffset);
+        // rotorEncoder = TalonFXConfig.SwerveModule.configNewCANcoder(canCoderID, moduleAngleOffset);
+
+        rotorEncoder = new CANcoder(canCoderID, "seCANdary");
+        rotorEncoder.getConfigurator().apply(
+            new MagnetSensorConfigs()
+                .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+                .withMagnetOffset(moduleAngleOffset)
+        );
 
         /* Angle Motor Config */
-        rotor = TalonFXConfig.SwerveModule.configNewRotor(rotorID);
+        // rotor = TalonFXConfig.SwerveModule.configNewRotor(rotorID);
+        // resetToAbsolute();
+
+        ClosedLoopGeneralConfigs closedLoopGeneralConfigs = new ClosedLoopGeneralConfigs();
+        closedLoopGeneralConfigs.ContinuousWrap = true;
+
+        rotor = new TalonFX(rotorID, "seCANdary");
+        rotor.getConfigurator().apply(
+            new TalonFXConfiguration()
+                .withMotorOutput(new MotorOutputConfigs()
+                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Coast)
+                )
+                .withSlot0(
+                    new Slot0Configs()
+                        .withKP(0.0)
+                        .withKI(0.0)
+                        .withKD(0.0)
+                        .withKS(0.0)
+                        .withKA(0.0)
+                )
+                .withClosedLoopGeneral(closedLoopGeneralConfigs)
+                .withCurrentLimits(new CurrentLimitsConfigs()
+                    .withSupplyCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(25)
+                    .withSupplyCurrentThreshold(40)
+                    .withSupplyTimeThreshold(0.1)
+                )
+        );
+
         resetToAbsolute();
 
         /* Drive Motor Config */
-        throttle = TalonFXConfig.SwerveModule.configNewThrottle(throttleID);
+        // throttle = TalonFXConfig.SwerveModule.configNewThrottle(throttleID);
+
+        throttle = new TalonFX(throttleID, "seCANdary");
+        throttle.getConfigurator().apply(
+            new TalonFXConfiguration()
+                .withMotorOutput(new MotorOutputConfigs()
+                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Brake)
+                )
+                .withFeedback(new FeedbackConfigs()
+                    .withSensorToMechanismRatio((6.75 / 1.0))
+                )
+                .withSlot0(
+                    new Slot0Configs()
+                        .withKP(0.0)
+                        .withKI(0.0)
+                        .withKD(0.0)
+                        .withKS(0.0)
+                        .withKA(0.0)
+                )
+                .withClosedLoopGeneral(closedLoopGeneralConfigs)
+                .withOpenLoopRamps(new OpenLoopRampsConfigs()
+                    .withDutyCycleOpenLoopRampPeriod(0.25)
+                    .withVoltageOpenLoopRampPeriod(0.25)
+                )
+                .withClosedLoopRamps(new ClosedLoopRampsConfigs()
+                    .withDutyCycleClosedLoopRampPeriod(0.0)
+                    .withVoltageClosedLoopRampPeriod(0.0)
+                )
+                .withCurrentLimits(new CurrentLimitsConfigs()
+                    .withSupplyCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(35)
+                    .withSupplyCurrentThreshold(60)
+                    .withSupplyTimeThreshold(0.1)
+                )
+        );
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
