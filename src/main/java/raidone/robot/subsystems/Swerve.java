@@ -25,16 +25,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Swerve.*;
 
-import javax.lang.model.element.ModuleElement;
-
-import org.littletonrobotics.junction.Logger;
-
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] swerveModules;
     public Pigeon2 imu;
-
-    // private Field2d field = new Field2d();
+    private Field2d field = new Field2d();
 
     public Swerve() {
         imu = new Pigeon2(Constants.Swerve.PIGEON_ID, "seCANdary");
@@ -51,16 +46,15 @@ public class Swerve extends SubsystemBase {
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.SWERVE_DRIVE_KINEMATICS, getRotation(),
                 getModulePositions());
 
-        // SmartDashboard.putData("field", field);
 
-        // Configure AutoBuilder last
+        // Pathplanner autobuilder
         AutoBuilder.configureHolonomic(
-                this::getPose, // Robot pose supplier
-                this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
-                                                 // Constants class
+                this::getPose, 
+                this::setPose, 
+                this::getRelativeSpeeds, 
+                this::driveRelative, 
+                new HolonomicPathFollowerConfig( 
+
                         new PIDConstants(20.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(0.37, 0.0, 0.0), // Rotation PID constants
                         2.5, // Max module speed, in m/s
@@ -205,18 +199,7 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Y", getPose().getY());
         SmartDashboard.putNumber("X", getPose().getX());
 
-        // field.setRobotPose(this.getPose());
-
-        // for (SwerveModule mod : swerveModules) {
-        // SmartDashboard.putNumber("Mod " + mod.getModuleConstants().MODULE_NUMBER + "
-        // CANcoder",
-        // mod.getCANcoder().getDegrees());
-        // SmartDashboard.putNumber("Mod " + mod.getModuleConstants().MODULE_NUMBER + "
-        // Angle",
-        // mod.getPosition().angle.getDegrees());
-        // SmartDashboard.putNumber("Mod " + mod.getModuleConstants().MODULE_NUMBER + "
-        // Velocity",
-        // mod.getState().speedMetersPerSecond);
-        // }
+        field.setRobotPose(getPose());
+        SmartDashboard.putData("Field", field); 
     }
 }
