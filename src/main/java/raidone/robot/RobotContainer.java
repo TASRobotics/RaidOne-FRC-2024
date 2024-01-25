@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import raidone.robot.autos.*;
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
 
@@ -47,16 +46,16 @@ public class RobotContainer {
     private SendableChooser<Command> autoChooser;
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    private final Swerve swerve = new Swerve();
 
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        s_Swerve.setDefaultCommand(
+        swerve.setDefaultCommand(
                 new TeleopSwerve(
-                        s_Swerve,
+                        swerve,
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> driver.getRawAxis(rotationAxis) * 0.5,
@@ -80,8 +79,8 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        zeroPose.onTrue(new InstantCommand(() -> s_Swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
+        zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
+        zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
     }
 
     /**
@@ -92,11 +91,11 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         PathPlannerPath path1 = PathPlannerPath.fromPathFile("Test");
         Pose2d pose = new Pose2d(path1.getPoint(0).position, new Rotation2d(0));
-        s_Swerve.setPose(pose);
+        swerve.setPose(pose);
         return autoChooser.getSelected();
     }
     
     public Swerve getSwerve() {
-        return s_Swerve;
+        return swerve;
     }
 }
