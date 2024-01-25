@@ -37,7 +37,7 @@ public class Swerve extends SubsystemBase {
     // private Field2d field = new Field2d();
 
     public Swerve() {
-        imu = new Pigeon2(Constants.Swerve.pigeonID, "seCANdary");
+        imu = new Pigeon2(Constants.Swerve.PIGEON_ID, "seCANdary");
         imu.getConfigurator().apply(new Pigeon2Configuration());
         imu.setYaw(0);
 
