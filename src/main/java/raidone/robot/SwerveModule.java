@@ -17,7 +17,6 @@ public class SwerveModule {
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
     private CTREConfig ctreConfig;
-    private double moduleAngleOffset;
 
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.THROTTLE_KS, Constants.Swerve.THROTTLE_KV, Constants.Swerve.THROTTLE_KA);
 
@@ -31,7 +30,6 @@ public class SwerveModule {
     public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset){
 
         ctreConfig = new CTREConfig(moduleAngleOffset);
-        this.moduleAngleOffset = moduleAngleOffset;
         
         /* Angle Encoder Config */
         angleEncoder = new CANcoder(canCoderID, "seCANdary");

@@ -1,6 +1,5 @@
 package raidone.robot;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,8 +34,8 @@ public class RobotContainer {
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    // private final int rotationAxis = XboxController.Axis.kRightX.value;
-    private final int rotationAxis = Joystick.kDefaultTwistChannel;
+    // private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
+    private final int rotationAxis = Joystick.kDefaultTwistChannel; // For joystick
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
