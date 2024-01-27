@@ -13,77 +13,80 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import raidone.lib.math.Conversions;
 
 public class SwerveModule {
-    private TalonFX mAngleMotor;
-    private TalonFX mDriveMotor;
-    private CANcoder angleEncoder;
+    private TalonFX rotor;
+    private TalonFX throttle;
+    private CANcoder CANCoder;
     private CTREConfig ctreConfig;
 
-    private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.THROTTLE_KS, Constants.Swerve.THROTTLE_KV, Constants.Swerve.THROTTLE_KA);
+    private final SimpleMotorFeedforward throttleFeedForward = new SimpleMotorFeedforward(Constants.Swerve.THROTTLE_KS, Constants.Swerve.THROTTLE_KV, Constants.Swerve.THROTTLE_KA);
 
     /* drive motor control requests */
-    private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
-    private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
+    private final DutyCycleOut throttleDutyCycle = new DutyCycleOut(0);
+    private final VelocityVoltage throttleVelocity = new VelocityVoltage(0);
 
     /* angle motor control requests */
-    private final PositionVoltage anglePosition = new PositionVoltage(0);
+    private final PositionVoltage rotorPosition = new PositionVoltage(0);
 
     public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset){
 
         ctreConfig = new CTREConfig(moduleAngleOffset);
 
         /* Angle Encoder Config */
-        angleEncoder = new CANcoder(canCoderID, "seCANdary");
-        angleEncoder.getConfigurator().apply(ctreConfig.CANCoderConfig);
+        CANCoder = new CANcoder(canCoderID, "seCANdary");
+        CANCoder.getConfigurator().apply(ctreConfig.CANCoderConfig);
 
         /* Angle Motor Config */
-        mAngleMotor = new TalonFX(rotorID, "seCANdary");
-        mAngleMotor.getConfigurator().apply(ctreConfig.rotorFXConfig);
+        rotor = new TalonFX(rotorID, "seCANdary");
+        rotor.getConfigurator().apply(ctreConfig.rotorFXConfig);
         resetToAbsolute();
 
         /* Drive Motor Config */
-        mDriveMotor = new TalonFX(throttleID, "seCANdary");
-        mDriveMotor.getConfigurator().apply(ctreConfig.throttleFXConfig);
-        mDriveMotor.getConfigurator().setPosition(0.0);
+        throttle = new TalonFX(throttleID, "seCANdary");
+        throttle.getConfigurator().apply(ctreConfig.throttleFXConfig);
+        throttle.getConfigurator().setPosition(0.0);
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle); 
-        mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
+        rotor.setControl(rotorPosition.withPosition(desiredState.angle.getRotations()));
         setSpeed(desiredState, isOpenLoop);
     }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
         if(isOpenLoop){
-            driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED;
-            mDriveMotor.setControl(driveDutyCycle);
+            throttleDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED;
+            throttle.setControl(throttleDutyCycle);
         }
         else {
-            driveVelocity.Velocity = Conversions.MPSToRPS(desiredState.speedMetersPerSecond, Constants.Swerve.WHEEL_CIRCUMFERENCE);
-            driveVelocity.FeedForward = driveFeedForward.calculate(desiredState.speedMetersPerSecond);
-            mDriveMotor.setControl(driveVelocity);
+            throttleVelocity
+    .Velocity = Conversions.MPSToRPS(desiredState.speedMetersPerSecond, Constants.Swerve.WHEEL_CIRCUMFERENCE);
+            throttleVelocity
+    .FeedForward = throttleFeedForward.calculate(desiredState.speedMetersPerSecond);
+            throttle.setControl(throttleVelocity
+    );
         }
     }
 
     public Rotation2d getCANcoder(){
-        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue());
+        return Rotation2d.fromRotations(CANCoder.getAbsolutePosition().getValue());
     }
 
     public void resetToAbsolute(){
         // double absolutePosition = getCANcoder().getRotations() - this.moduleAngleOffset;
-        mAngleMotor.setPosition(getCANcoder().getRotations());
+        rotor.setPosition(getCANcoder().getRotations());
     }
 
     public SwerveModuleState getState(){
         return new SwerveModuleState(
-            Conversions.RPSToMPS(mDriveMotor.getVelocity().getValue(), Constants.Swerve.WHEEL_CIRCUMFERENCE), 
-            Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
+            Conversions.RPSToMPS(throttle.getVelocity().getValue(), Constants.Swerve.WHEEL_CIRCUMFERENCE), 
+            Rotation2d.fromRotations(rotor.getPosition().getValue())
         );
     }
 
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
-            Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.Swerve.WHEEL_CIRCUMFERENCE), 
-            Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
+            Conversions.rotationsToMeters(throttle.getPosition().getValue(), Constants.Swerve.WHEEL_CIRCUMFERENCE), 
+            Rotation2d.fromRotations(rotor.getPosition().getValue())
         );
     }
 
