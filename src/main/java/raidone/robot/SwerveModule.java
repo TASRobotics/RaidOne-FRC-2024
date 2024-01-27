@@ -30,19 +30,19 @@ public class SwerveModule {
     public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset){
 
         ctreConfig = new CTREConfig(moduleAngleOffset);
-        
+
         /* Angle Encoder Config */
         angleEncoder = new CANcoder(canCoderID, "seCANdary");
-        angleEncoder.getConfigurator().apply(ctreConfig.swerveCANcoderConfig);
+        angleEncoder.getConfigurator().apply(ctreConfig.CANCoderConfig);
 
         /* Angle Motor Config */
         mAngleMotor = new TalonFX(rotorID, "seCANdary");
-        mAngleMotor.getConfigurator().apply(ctreConfig.swerveAngleFXConfig);
+        mAngleMotor.getConfigurator().apply(ctreConfig.rotorFXConfig);
         resetToAbsolute();
 
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(throttleID, "seCANdary");
-        mDriveMotor.getConfigurator().apply(ctreConfig.swerveDriveFXConfig);
+        mDriveMotor.getConfigurator().apply(ctreConfig.throttleFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
     }
 
