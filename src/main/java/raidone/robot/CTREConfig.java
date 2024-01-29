@@ -8,6 +8,7 @@ import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 public final class CTREConfig {
     public TalonFXConfiguration swerveAngleFXConfig = new TalonFXConfiguration();
     public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
+    public TalonFXConfiguration intakeConfiguration = new TalonFXConfiguration();
     public CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
 
     public CTREConfig(double moduleAngleOffset){
@@ -63,5 +64,8 @@ public final class CTREConfig {
 
         swerveDriveFXConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = Constants.Swerve.CLOSED_LOOP_RAMP;
         swerveDriveFXConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = Constants.Swerve.CLOSED_LOOP_RAMP;
+
+        intakeConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionEnable = true;
+        intakeConfiguration.HardwareLimitSwitch.ForwardLimitAutosetPositionValue = 0;
     }
 }

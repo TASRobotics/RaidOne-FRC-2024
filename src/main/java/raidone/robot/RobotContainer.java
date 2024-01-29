@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import raidone.robot.autos.*;
@@ -30,11 +31,17 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton armHoming = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton armHoming = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton autoArm = new JoystickButton(driver, XboxController.Button.kStart.value);
+    private final JoystickButton autoIntake = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kB.value);
 
     /* Subsystems */
     // private final Swerve s_Swerve = new Swerve();
     private final IntakeArm arm = new IntakeArm(ArmConstants.ARM_MASTER_ID, ArmConstants.ARM_SLAVE_ID, ArmConstants.INTAKE_JOINT_ID);
+
+    private double armSetpoint;
+    private double intakeSetpoint;
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -50,7 +57,11 @@ public class RobotContainer {
         // );
 
         // Configure the button bindings
+        
+
         configureButtonBindings();
+
+        setArmPos();
     }
 
     /**
@@ -62,7 +73,12 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        armHoming.onTrue(new ArmHome(arm));
+        armHoming.onTrue(new SequentialCommandGroup(new ArmIntakeHome(arm), new ArmHome(arm)));
+        autoArm.toggleOnTrue(new SetArmPos(arm, armSetpoint));
+    }
+
+    private void setArmPos(){
+        
     }
 
     /**

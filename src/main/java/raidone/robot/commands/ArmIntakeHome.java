@@ -3,10 +3,10 @@ package raidone.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import raidone.robot.subsystems.IntakeArm;
 
-public class ArmHome extends Command{
+public class ArmIntakeHome extends Command{
     private IntakeArm arm;
 
-    public ArmHome(IntakeArm arm){
+    public ArmIntakeHome(IntakeArm arm){
         this.arm = arm;
         addRequirements(this.arm);
     }
@@ -20,20 +20,19 @@ public class ArmHome extends Command{
     @Override
     public void execute() {
         // TODO Auto-generated method stub
-        arm.armGoHome();
-        arm.updateForLimSwitch();
-
+        arm.intakeGoHome();
+        // arm.updateForLimSwitch();
     }
 
     @Override
     public boolean isFinished() {
         // TODO Auto-generated method stub
-        return arm.getArmForLim();
+        return arm.getIntakeForLim();
     }
 
     @Override
     public void end(boolean interrupted) {
         // TODO Auto-generated method stub
-        arm.stopArm();
+        arm.stopIntake();
     }
 }

@@ -115,6 +115,12 @@ public final class Constants {
         public static final int INTAKE_JOINT_ID = 2;
         public static final int ARM_MASTER_ID = 1;
 
+        public static final double INTAKEPOS_ARM_SETPOINT = 0;
+        public static final double INTAKEPOS_INTAKE_SETPOINT = 8.967;
+
+        public static final double SCORINGPOS_ARM_SETPOINT = -2.197;
+        public static final double SCORINGPOS_INTAKE_SETPOINT = 0.334;
+
         public static final double kIntakeJoint_kP = 0.0;
         public static final double kIntakeJoint_kI = 0.0;
         public static final double kIntakeJoint_kD = 0.0;
