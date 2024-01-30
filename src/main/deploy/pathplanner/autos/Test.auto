@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 0.5,
+      "y": 7.13
+    },
+    "rotation": 90.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,7 +14,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test"
+            "pathName": "Test Path 1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test Path 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Test Path 3"
           }
         }
       ]
