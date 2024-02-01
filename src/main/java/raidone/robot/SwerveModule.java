@@ -90,6 +90,11 @@ public class SwerveModule {
         );
     }
 
+    public void stopMotors(){
+        rotor.stopMotor();
+        throttle.stopMotor();
+    }
+
     // public SwerveModuleConstants getModuleConstants() {
     //     return this.moduleConstants;
     // }

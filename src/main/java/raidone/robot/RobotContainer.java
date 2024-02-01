@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -35,18 +37,22 @@ public class RobotContainer {
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
-    // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For joystick
+    // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For
+    // joystick
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final POVButton ordinalTurnUp = new POVButton(driver, 0);
+    private final POVButton ordinalTurnDown = new POVButton(driver, 180);
+    private final POVButton ordinalTurnLeft = new POVButton(driver, 270);
+    private final POVButton ordinalTurnRight = new POVButton(driver, 90);
 
     private SendableChooser<Command> autoChooser;
 
     /* Subsystems */
     private final Swerve swerve = new Swerve();
-
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -79,7 +85,14 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
-        zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
+        zeroPose.onTrue(
+                new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
+
+        ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
+        ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
+        ordinalTurnLeft.onTrue(new OrdinalTurn(270, swerve));
+        ordinalTurnRight.onTrue(new OrdinalTurn(90, swerve));
+
     }
 
     /**
@@ -93,7 +106,7 @@ public class RobotContainer {
         swerve.setPose(pose);
         return autoChooser.getSelected();
     }
-    
+
     public Swerve getSwerve() {
         return swerve;
     }

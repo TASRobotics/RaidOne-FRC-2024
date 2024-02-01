@@ -1,6 +1,7 @@
 package raidone.robot.subsystems;
 
 import raidone.robot.SwerveModule;
+import raidone.robot.commands.OrdinalTurn;
 import raidone.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -26,9 +27,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Swerve.*;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
-    public SwerveModule[] swerveModules;
-    public Pigeon2 imu;
+    private SwerveDriveOdometry swerveOdometry;
+    private SwerveModule[] swerveModules;
+    private Pigeon2 imu;
     private Field2d field = new Field2d();
 
     public Swerve() {
@@ -187,6 +188,12 @@ public class Swerve extends SubsystemBase {
 
     public void driveRelative(ChassisSpeeds speed) {
         setModuleStates(SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(speed));
+    }
+
+    public void stopAll(){
+        for (SwerveModule swerveModule : swerveModules) {
+            swerveModule.stopMotors();
+        }
     }
 
     @Override
