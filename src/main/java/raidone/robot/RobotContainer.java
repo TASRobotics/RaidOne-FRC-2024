@@ -43,6 +43,9 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve swerve = new Swerve();
+    private final Wrist wrist = new Wrist();
+    private final Arm arm = new Arm();
+    
 
 
     /**
