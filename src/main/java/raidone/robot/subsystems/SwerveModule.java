@@ -44,7 +44,7 @@ public class SwerveModule {
         rotor = new CANSparkMax(rotorID, MotorType.kBrushless);
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
 
-        rotorEncoder = new CANcoder(rotorEncoderID, Constants.SwerveConstants.CAN_BUS_NAME);
+        rotorEncoder = new CANcoder(rotorEncoderID);//, Constants.SwerveConstants.CAN_BUS_NAME);
         throttleEncoder = throttle.getEncoder();
 
         rotor.restoreFactoryDefaults();
@@ -57,7 +57,7 @@ public class SwerveModule {
 
         CANcoderConfiguration rotorEncoderConfigs = new CANcoderConfiguration()
             .withMagnetSensor(new MagnetSensorConfigs()
-                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
+                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
                 .withMagnetOffset(rotorOffsetAngle)
                 .withSensorDirection(SwerveConstants.ROTOR_ENCODER_DIRECTION)
             );
@@ -83,7 +83,7 @@ public class SwerveModule {
             SwerveConstants.THROTTLE_KA
         );
 
-        rotorPID.enableContinuousInput(-180, 180);
+        rotorPID.enableContinuousInput(0, 360);
 
         throttle.enableVoltageCompensation(Constants.VOLTAGE_COMPENSATION);
         
@@ -125,7 +125,7 @@ public class SwerveModule {
      * 
      * @param state Module state
      */
-    public void setState(SwerveModuleState state) {
+    public void setState(SwerveModuleState state, boolean isOpenLoop) {
         SwerveModuleState optimizedState = SwerveModuleState.optimize(state, getState().angle);
         
         double rotorOutput = rotorPID.calculate(

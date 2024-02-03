@@ -7,6 +7,7 @@ package raidone.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -19,6 +20,7 @@ import monologue.Monologue.LogNT;
 import raidone.robot.Constants.TeleopConstants;
 import raidone.robot.auto.Autos;
 import raidone.robot.commands.OrdinalTurn;
+import raidone.robot.commands.TeleopSwerve;
 import raidone.robot.subsystems.Swerve;
 
 public class RobotContainer implements Logged {
@@ -49,14 +51,12 @@ public class RobotContainer implements Logged {
     	configureBindings();
 
 		swerve.setDefaultCommand(
-			new RunCommand(() -> swerve.drive(
-				-MathUtil.applyDeadband(translationAxis, TeleopConstants.DRIVE_DEADBAND),
-				-MathUtil.applyDeadband(strafeAxis, TeleopConstants.DRIVE_DEADBAND),
-				MathUtil.applyDeadband(rotationAxis, TeleopConstants.DRIVE_DEADBAND),
-				true),
-				swerve
-			)
-		);
+                new TeleopSwerve(
+                        swerve,
+                        () -> -driver.getRawAxis(translationAxis),
+                        () -> -driver.getRawAxis(strafeAxis),
+                        () -> driver.getRawAxis(rotationAxis) * 0.75,
+                        () -> true));
 	}
 
 	/**
@@ -82,7 +82,8 @@ public class RobotContainer implements Logged {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-    	return autos.get();
+    	// return autos.get();
+		return Commands.runOnce( () -> swerve.setX() );
 	}
 
 	/**
