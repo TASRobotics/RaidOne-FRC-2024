@@ -26,9 +26,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Swerve.*;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
-    public SwerveModule[] swerveModules;
-    public Pigeon2 imu;
+    private SwerveDriveOdometry swerveOdometry;
+    private SwerveModule[] swerveModules;
+    private Pigeon2 imu;
     private Field2d field = new Field2d();
 
     public Swerve() {
@@ -90,11 +90,6 @@ public class Swerve extends SubsystemBase {
                                 rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.MAX_SPEED);
 
-        // for (SwerveModule mod : swerveModules) {
-        // mod.setDesiredState(swerveModuleStates[mod.getModuleConstants().MODULE_NUMBER
-        // - 1], isOpenLoop);
-        // }
-
         swerveModules[3].setDesiredState(swerveModuleStates[3], isOpenLoop);
         swerveModules[0].setDesiredState(swerveModuleStates[0], isOpenLoop);
         swerveModules[1].setDesiredState(swerveModuleStates[1], isOpenLoop);
@@ -153,7 +148,12 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
-    public Rotation2d getHeading() {
+    public double getHeadingOtherOne() {
+        // return getPose().getRotation();
+        return Math.IEEEremainder(imu.getAngle(), 360);
+    }
+
+    public Rotation2d getHeading(){
         return getPose().getRotation();
     }
 
@@ -187,6 +187,16 @@ public class Swerve extends SubsystemBase {
 
     public void driveRelative(ChassisSpeeds speed) {
         setModuleStates(SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(speed));
+    }
+
+    public double getAngleDegrees(){
+        return imu.getAngle();
+    }
+
+    public void stopAll(){
+        for (SwerveModule swerveModule : swerveModules) {
+            swerveModule.stopMotors();
+        }
     }
 
     @Override
