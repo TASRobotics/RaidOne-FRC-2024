@@ -96,14 +96,14 @@ public class DrivePath extends Command {
             swerve::driveRelative,
             new HolonomicPathFollowerConfig(
                 new PIDConstants(
-                    SwerveConstants.kPathing_kP,
-                    SwerveConstants.kPathing_kI,
-                    SwerveConstants.kPathing_kD
+                    SwerveConstants.PATHING_KP,
+                    SwerveConstants.PATHING_KI,
+                    SwerveConstants.PATHING_KD
                 ),
                 new PIDConstants(
-                    SwerveConstants.kRotor_kP,
-                    SwerveConstants.kRotor_kI,
-                    SwerveConstants.kRotor_kD
+                    SwerveConstants.ROTOR_KP,
+                    SwerveConstants.ROTOR_KI,
+                    SwerveConstants.ROTOR_KD
                 ),
                 4.5,
                 0.4,

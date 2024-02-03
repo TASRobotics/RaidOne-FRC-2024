@@ -51,48 +51,48 @@ public class SwerveModule {
         throttle.restoreFactoryDefaults();
         rotorEncoder.getConfigurator().apply(new CANcoderConfiguration());
 
-        rotor.setInverted(SwerveConstants.kRotorMotorInversion);
-        rotor.enableVoltageCompensation(Constants.kVoltageCompensation);
+        rotor.setInverted(SwerveConstants.ROTOR_INVERSION);
+        rotor.enableVoltageCompensation(Constants.VOLTAGE_COMPENSATION);
         rotor.setIdleMode(IdleMode.kBrake);
 
         CANcoderConfiguration rotorEncoderConfigs = new CANcoderConfiguration()
             .withMagnetSensor(new MagnetSensorConfigs()
                 .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
                 .withMagnetOffset(rotorOffsetAngle)
-                .withSensorDirection(SwerveConstants.kRotorEncoderDirection)
+                .withSensorDirection(SwerveConstants.ROTOR_ENCODER_DIRECTION)
             );
         
         rotorEncoder.getConfigurator().apply(rotorEncoderConfigs);
 
 
         rotorPID = new PIDController(
-            SwerveConstants.kRotor_kP,
-            SwerveConstants.kRotor_kI,
-            SwerveConstants.kRotor_kD
+            SwerveConstants.ROTOR_KP,
+            SwerveConstants.ROTOR_KI,
+            SwerveConstants.ROTOR_KD
         );
 
         throttleVelController = throttle.getPIDController();
 
-        throttleVelController.setP(SwerveConstants.kThrottle_kP, 0);
-        throttleVelController.setI(SwerveConstants.kThrottle_kI, 0);
-        throttleVelController.setD(SwerveConstants.kThrottle_kD, 0);
+        throttleVelController.setP(SwerveConstants.THROTTLE_KP, 0);
+        throttleVelController.setI(SwerveConstants.THROTTLE_KI, 0);
+        throttleVelController.setD(SwerveConstants.THROTTLE_KD, 0);
 
         throttleFF = new SimpleMotorFeedforward(
-            SwerveConstants.kThrottle_kS,
-            SwerveConstants.kThrottle_kV,
-            SwerveConstants.kThrottle_kA
+            SwerveConstants.THROTTLE_KS,
+            SwerveConstants.THROTTLE_KV,
+            SwerveConstants.THROTTLE_KA
         );
 
         rotorPID.enableContinuousInput(-180, 180);
 
-        throttle.enableVoltageCompensation(Constants.kVoltageCompensation);
+        throttle.enableVoltageCompensation(Constants.VOLTAGE_COMPENSATION);
         
         throttleEncoder.setVelocityConversionFactor(
-            SwerveConstants.kThrottleVelocityConversionFactor
+            SwerveConstants.THROTTLE_VEL_COMPENSATION_FACTOR
         );
 
         throttleEncoder.setPositionConversionFactor(
-            SwerveConstants.kThrottlePositionConversionFactor
+            SwerveConstants.THROTTLE_POS_COMPENSATION_FACTOR
         );
     }
 

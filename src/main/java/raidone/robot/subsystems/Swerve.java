@@ -15,7 +15,7 @@ import raidone.robot.Constants.SwerveConstants;
 
 public class Swerve extends SubsystemBase {
 
-    private final Pigeon2 imu = new Pigeon2(SwerveConstants.kImuID);
+    private final Pigeon2 imu = new Pigeon2(SwerveConstants.IMU_ID);
 
     private final SwerveModule leftFrontModule, rightFrontModule, leftRearModule, rightRearModule;
     private final SwerveDriveOdometry odometry;
@@ -23,35 +23,35 @@ public class Swerve extends SubsystemBase {
     public Swerve() {
 
         leftFrontModule = new SwerveModule(
-            SwerveConstants.kLeftFrontThrottleID, 
-            SwerveConstants.kLeftFrontRotorID, 
-            SwerveConstants.kLeftFrontCANCoderID, 
-            SwerveConstants.kLeftFrontRotorOffsetAngle
+            SwerveConstants.FRONT_LEFT_THROTTLE_ID, 
+            SwerveConstants.FRONT_LEFT_ROTOR_ID, 
+            SwerveConstants.FRONT_LEFT_CANCODER_ID, 
+            SwerveConstants.FRONT_LEFT_ANGLE_OFFSET
         );
 
         rightFrontModule = new SwerveModule(
-            SwerveConstants.kRightFrontThrottleID, 
-            SwerveConstants.kRightFrontRotorID, 
-            SwerveConstants.kRightFrontCANCoderID, 
-            SwerveConstants.kRightFrontRotorOffsetAngle
+            SwerveConstants.FRONT_RIGHT_THROTTLE_ID, 
+            SwerveConstants.FRONT_RIGHT_ROTOR_ID, 
+            SwerveConstants.FRONT_RIGHT_CANCODER_ID, 
+            SwerveConstants.FRONT_RIGHT_ANGLE_OFFSET
         );
 
         leftRearModule = new SwerveModule(
-            SwerveConstants.kLeftRearThrottleID, 
-            SwerveConstants.kLeftRearRotorID, 
-            SwerveConstants.kLeftRearCANCoderID, 
-            SwerveConstants.kLeftRearRotorOffsetAngle
+            SwerveConstants.REAR_LEFT_THROTTLE_ID, 
+            SwerveConstants.REAR_LEFT_ROTOR_ID, 
+            SwerveConstants.REAR_LEFT_CANCODER_ID, 
+            SwerveConstants.REAR_LEFT_ANGLE_OFFSET
         );
 
         rightRearModule = new SwerveModule(
-            SwerveConstants.kRightRearThrottleID, 
-            SwerveConstants.kRightRearRotorID, 
-            SwerveConstants.kRightRearCANCoderID, 
-            SwerveConstants.kRightRearRotorOffsetAngle
+            SwerveConstants.REAR_RIGHT_THROTTLE_ID, 
+            SwerveConstants.REAR_RIGHT_ROTOR_ID, 
+            SwerveConstants.REAR_RIGHT_CANCODER_ID, 
+            SwerveConstants.REAR_RIGHT_ANGLE_OFFSET
         );
 
         odometry = new SwerveDriveOdometry(
-            SwerveConstants.kSwerveKinematics,
+            SwerveConstants.SWERVE_DRIVE_KINEMATICS,
             imu.getRotation2d(),
             getModulePositions()
         );
@@ -73,7 +73,7 @@ public class Swerve extends SubsystemBase {
      * @return Chassis speeds
      */
     public ChassisSpeeds getRelativeSpeeds() {
-        return SwerveConstants.kSwerveKinematics.toChassisSpeeds(getModuleStates());
+        return SwerveConstants.SWERVE_DRIVE_KINEMATICS.toChassisSpeeds(getModuleStates());
     }
 
     /**
@@ -82,7 +82,7 @@ public class Swerve extends SubsystemBase {
      * @param speed Desired chassis speed
      */
     public void driveRelative(ChassisSpeeds speed) {
-        setModuleStates(SwerveConstants.kSwerveKinematics.toSwerveModuleStates(speed));
+        setModuleStates(SwerveConstants.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(speed));
     }
 
     /**
@@ -96,11 +96,11 @@ public class Swerve extends SubsystemBase {
     public void drive(double xSpeed, double ySpeed, double zSpeed, boolean fieldOriented) {
         SwerveModuleState[] states = null;
         if (fieldOriented) {
-            states = SwerveConstants.kSwerveKinematics.toSwerveModuleStates(
+            states = SwerveConstants.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(
                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, imu.getRotation2d())
             );
         } else {
-            states = SwerveConstants.kSwerveKinematics.toSwerveModuleStates(
+            states = SwerveConstants.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(
                 new ChassisSpeeds(xSpeed, ySpeed, zSpeed)
             );
         }

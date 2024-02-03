@@ -31,9 +31,9 @@ public class RobotContainer implements Logged {
 
 		swerve.setDefaultCommand(
 			new RunCommand(() -> swerve.drive(
-				-MathUtil.applyDeadband(master.getLeftY(), TeleopConstants.kDriveDeadband),
-				-MathUtil.applyDeadband(master.getLeftX(), TeleopConstants.kDriveDeadband),
-				-MathUtil.applyDeadband(master.getRightX(), TeleopConstants.kDriveDeadband),
+				-MathUtil.applyDeadband(master.getLeftY(), TeleopConstants.DRIVE_DEADBAND),
+				-MathUtil.applyDeadband(master.getLeftX(), TeleopConstants.DRIVE_DEADBAND),
+				-MathUtil.applyDeadband(master.getRightX(), TeleopConstants.DRIVE_DEADBAND),
 				true),
 				swerve
 			)
