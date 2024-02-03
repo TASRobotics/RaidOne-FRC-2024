@@ -15,7 +15,7 @@ import raidone.robot.Constants.SwerveConstants;
 
 public class Swerve extends SubsystemBase {
 
-    private final Pigeon2 imu = new Pigeon2(SwerveConstants.IMU_ID);
+    private final Pigeon2 imu = new Pigeon2(SwerveConstants.IMU_ID, SwerveConstants.CAN_BUS_NAME);
 
     private final SwerveModule leftFrontModule, rightFrontModule, leftRearModule, rightRearModule;
     private final SwerveDriveOdometry odometry;

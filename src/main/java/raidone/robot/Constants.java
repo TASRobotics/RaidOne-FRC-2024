@@ -38,6 +38,8 @@ public final class Constants {
             new Translation2d(0.0, 0.0)
         );
 
+        public static final String CAN_BUS_NAME = "";
+
         // IMU ID
         public static final int IMU_ID = 0;
 

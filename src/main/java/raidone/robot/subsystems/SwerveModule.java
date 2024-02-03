@@ -44,7 +44,7 @@ public class SwerveModule {
         rotor = new CANSparkMax(rotorID, MotorType.kBrushless);
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
 
-        rotorEncoder = new CANcoder(rotorEncoderID);
+        rotorEncoder = new CANcoder(rotorEncoderID, Constants.SwerveConstants.CAN_BUS_NAME);
         throttleEncoder = throttle.getEncoder();
 
         rotor.restoreFactoryDefaults();
