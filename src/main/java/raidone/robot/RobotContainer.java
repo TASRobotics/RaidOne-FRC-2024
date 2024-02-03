@@ -44,7 +44,6 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton stopAll = new JoystickButton(driver, XboxController.Button.kA.value);
     private final POVButton ordinalTurnUp = new POVButton(driver, 0);
     private final POVButton ordinalTurnDown = new POVButton(driver, 180);
     private final POVButton ordinalTurnLeft = new POVButton(driver, 270);

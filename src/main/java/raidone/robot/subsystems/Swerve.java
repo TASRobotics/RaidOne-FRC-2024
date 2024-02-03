@@ -1,7 +1,6 @@
 package raidone.robot.subsystems;
 
 import raidone.robot.SwerveModule;
-import raidone.robot.commands.OrdinalTurn;
 import raidone.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -149,7 +148,12 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
-    public Rotation2d getHeading() {
+    public double getHeadingOtherOne() {
+        // return getPose().getRotation();
+        return Math.IEEEremainder(imu.getAngle(), 360);
+    }
+
+    public Rotation2d getHeading(){
         return getPose().getRotation();
     }
 
@@ -183,6 +187,10 @@ public class Swerve extends SubsystemBase {
 
     public void driveRelative(ChassisSpeeds speed) {
         setModuleStates(SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(speed));
+    }
+
+    public double getAngleDegrees(){
+        return imu.getAngle();
     }
 
     public void stopAll(){
