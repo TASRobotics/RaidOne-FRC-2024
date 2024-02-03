@@ -5,20 +5,42 @@
 package raidone.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import monologue.Logged;
 import monologue.Monologue;
 import monologue.Monologue.LogNT;
 import raidone.robot.Constants.TeleopConstants;
 import raidone.robot.auto.Autos;
+import raidone.robot.commands.OrdinalTurn;
 import raidone.robot.subsystems.Swerve;
 
 public class RobotContainer implements Logged {
 
 	private final Swerve swerve = new Swerve();
-	private final XboxController master = new XboxController(0);
+	private final XboxController driver = new XboxController(0);
+
+     /* Drive Controls */
+     private final int translationAxis = XboxController.Axis.kLeftY.value;
+     private final int strafeAxis = XboxController.Axis.kLeftX.value;
+     private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
+     // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For joystick
+
+     /* Driver Buttons */
+    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final POVButton ordinalTurnUp = new POVButton(driver, 0);
+    private final POVButton ordinalTurnDown = new POVButton(driver, 180);
+    private final POVButton ordinalTurnLeft = new POVButton(driver, 270);
+    private final POVButton ordinalTurnRight = new POVButton(driver, 90);
 
 	@LogNT
 	private final Autos autos = new Autos(swerve);
@@ -31,9 +53,9 @@ public class RobotContainer implements Logged {
 
 		swerve.setDefaultCommand(
 			new RunCommand(() -> swerve.drive(
-				-MathUtil.applyDeadband(master.getLeftY(), TeleopConstants.DRIVE_DEADBAND),
-				-MathUtil.applyDeadband(master.getLeftX(), TeleopConstants.DRIVE_DEADBAND),
-				-MathUtil.applyDeadband(master.getRightX(), TeleopConstants.DRIVE_DEADBAND),
+				-MathUtil.applyDeadband(translationAxis, TeleopConstants.DRIVE_DEADBAND),
+				-MathUtil.applyDeadband(strafeAxis, TeleopConstants.DRIVE_DEADBAND),
+				MathUtil.applyDeadband(rotationAxis, TeleopConstants.DRIVE_DEADBAND),
 				true),
 				swerve
 			)
@@ -49,7 +71,13 @@ public class RobotContainer implements Logged {
 	 * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
 	 * joysticks}.
 	 */
-	private void configureBindings() {}
+	private void configureBindings() {
+        zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
+        ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
+        ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
+        ordinalTurnLeft.onTrue(new OrdinalTurn(270, swerve));
+        ordinalTurnRight.onTrue(new OrdinalTurn(90, swerve));
+    }
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.

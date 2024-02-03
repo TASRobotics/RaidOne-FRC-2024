@@ -58,6 +58,19 @@ public class Swerve extends SubsystemBase {
 
     }
 
+    public double getHeading(){
+        return Math.IEEEremainder(imu.getAngle(), 360);
+    }
+
+    public void zeroHeading() {
+        odometry.resetPosition(getRotation(), getModulePositions(),
+                new Pose2d(getPose().getTranslation(), new Rotation2d()));
+    }
+
+    public Rotation2d getRotation() {
+        return imu.getRotation2d();
+    }
+
     @Override
     public void periodic(){
         // Update odometry with current module state
@@ -90,18 +103,18 @@ public class Swerve extends SubsystemBase {
      * 
      * @param xSpeed Percent power for X-axis
      * @param ySpeed Percent power for Y-axis
-     * @param zSpeed Percent percent power for rotation
+     * @param rotSpeed Percent percent power for rotation
      * @param fieldOriented Drive orientation (true = field oriented, false = robot oriented)
      */
-    public void drive(double xSpeed, double ySpeed, double zSpeed, boolean fieldOriented) {
+    public void drive(double xSpeed, double ySpeed, double rotSpeed, boolean fieldOriented) {
         SwerveModuleState[] states = null;
         if (fieldOriented) {
             states = SwerveConstants.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(
-                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, imu.getRotation2d())
+                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotSpeed, imu.getRotation2d())
             );
         } else {
             states = SwerveConstants.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(
-                new ChassisSpeeds(xSpeed, ySpeed, zSpeed)
+                new ChassisSpeeds(xSpeed, ySpeed, rotSpeed)
             );
         }
         setModuleStates(states);
