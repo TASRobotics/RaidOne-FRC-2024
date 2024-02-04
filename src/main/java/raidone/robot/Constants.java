@@ -107,7 +107,39 @@ public final class Constants {
 
     public static final class Arm{
         public static final int ARM_MOTOR_ID = 0;
+        
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kIz = 0.0;
+        public static final double kFF = 0.0;
+        public static final double kMaxOutput = 0.0;
+        public static final double kMinOutput = 0.0;
+        public static final double maxRPM = 0.0;
+        public static final double maxVel = 0.0;
+        public static final double minVel = 0.0;
+        public static final double maxAcc = 0.0;
+        public static final double allowedErr = 0.0;
+    }
+
+    public static final class Wrist{
         public static final int WRIST_MOTOR_ID = 0;
-        public static final int PUBLIC_MOTOR_ID = 0;
+        
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kIz = 0.0;
+        public static final double kFF = 0.0;
+        public static final double kMaxOutput = 0.0;
+        public static final double kMinOutput = 0.0;
+        public static final double maxRPM = 0.0;
+        public static final double maxVel = 0.0;
+        public static final double minVel = 0.0;
+        public static final double maxAcc = 0.0;
+        public static final double allowedErr = 0.0;
+    }
+
+    public static final class Intake{
+        public static final int INTAKE_MOTOR_ID = 0;
     }
 }
