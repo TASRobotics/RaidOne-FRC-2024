@@ -104,4 +104,10 @@ public final class Constants {
         public static final int CAN_CODER_IV_ID = 4;
         public static final double MODULE_IV_OFFSET = -0.611328;
     }
+
+    public static final class Arm{
+        public static final int ARM_MOTOR_ID = 0;
+        public static final int WRIST_MOTOR_ID = 0;
+        public static final int PUBLIC_MOTOR_ID = 0;
+    }
 }
