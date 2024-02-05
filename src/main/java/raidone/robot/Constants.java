@@ -7,7 +7,9 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 // import raidone.lib.util.COTSTalonFXSwerveConstants;
+import raidone.lib.math.Conversions;
 
 public final class Constants {
     public static final double STICK_DEADBAND = 0.1;
@@ -54,7 +56,14 @@ public final class Constants {
         public static final boolean THROTTLE_ENABLE_CURRENT_LIMIT = true;
 
         public static final double VOLTAGE_COMPENSATION = 12.0;
-        public static final double 
+
+        public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4.0);
+
+        public static final double THROTTLE_VEL_CONVERSION_FACTOR = 
+        (1/THROTTLE_GEAR_RATIO/60)*WHEEL_DIAMETER_METERS*Math.PI;
+
+        public static final double THROTTLE_POS_CONVERSTION_FACTOR = 
+        (1/THROTTLE_GEAR_RATIO)*WHEEL_DIAMETER_METERS*Math.PI;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
