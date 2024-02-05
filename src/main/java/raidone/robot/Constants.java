@@ -53,6 +53,9 @@ public final class Constants {
         public static final double THROTTLE_CURRENT_THRESHOLD_TIME = 0.1;
         public static final boolean THROTTLE_ENABLE_CURRENT_LIMIT = true;
 
+        public static final double VOLTAGE_COMPENSATION = 12.0;
+        public static final double 
+
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
         public static final double OPEN_LOOP_RAMP = 0.25;
