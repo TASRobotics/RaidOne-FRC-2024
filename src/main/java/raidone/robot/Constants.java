@@ -7,9 +7,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
-// import raidone.lib.util.COTSTalonFXSwerveConstants;
-import raidone.lib.math.Conversions;
 
 public final class Constants {
     public static final double STICK_DEADBAND = 0.1;
@@ -28,10 +25,15 @@ public final class Constants {
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
          public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-            new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
             new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0));
+            new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
+
+            // new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+            // new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+            // new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            // new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0));
 
         /* Module Gear Ratios */
         public static final double THROTTLE_GEAR_RATIO = (6.75 / 1.0);
@@ -71,9 +73,9 @@ public final class Constants {
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double ROTOR_KP = 100.0;
+        public static final double ROTOR_KP = 0.005;
         public static final double ROTOR_KI = 0.0;
-        public static final double ROTOR_KD = 0.0;
+        public static final double ROTOR_KD = 0.000;
 
         /* Drive Motor PID Values */
         public static final double THROTTLE_KP = 0.12; 
@@ -99,21 +101,21 @@ public final class Constants {
         public static final int THROTTLE_I_ID = 1;
         public static final int ROTOR_I_ID = 2;
         public static final int CAN_CODER_I_ID = 1;
-        public static final double MODULE_I_OFFSET = -0.776123;
+        public static final double MODULE_I_OFFSET = -0.772949; // -0.772949
 
         public static final int THROTTLE_II_ID = 3;
         public static final int ROTOR_II_ID = 4;
         public static final int CAN_CODER_II_ID = 2;
-        public static final double MODULE_II_OFFSET = -0.597656;
+        public static final double MODULE_II_OFFSET = -0.897949;
 
         public static final int THROTTLE_III_ID = 5;
         public static final int ROTOR_III_ID = 6;
         public static final int CAN_CODER_III_ID = 3;
-        public static final double MODULE_III_OFFSET = -0.121338;
+        public static final double MODULE_III_OFFSET = -0.532959;
 
         public static final int THROTTLE_IV_ID = 7;
         public static final int ROTOR_IV_ID = 8;
         public static final int CAN_CODER_IV_ID = 4;
-        public static final double MODULE_IV_OFFSET = -0.611328;
+        public static final double MODULE_IV_OFFSET = -0.104004;
     }
 }

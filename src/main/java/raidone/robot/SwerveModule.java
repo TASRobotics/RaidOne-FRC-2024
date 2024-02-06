@@ -23,11 +23,10 @@ public class SwerveModule {
     private CANSparkMax rotor;
     private CANSparkMax throttle;
     private CANcoder CANCoder;
-    private RelativeEncoder rotorEncoder;
     private RelativeEncoder throttleEncoder;
     public CANcoderConfiguration CANCoderConfig;
 
-    private SparkPIDController rotorPID;
+    private PIDController rotorPID;
 
     public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset) {
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
@@ -42,31 +41,22 @@ public class SwerveModule {
 
         CANCoderConfig = new CANcoderConfiguration();
 
-        rotor.setInverted(false);
+        rotor.setInverted(true);
         rotor.setIdleMode(IdleMode.kBrake);
 
         CANCoderConfig.withMagnetSensor(new MagnetSensorConfigs()
-                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+                .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
                 .withMagnetOffset(moduleAngleOffset));
 
         CANCoder.getConfigurator().apply(CANCoderConfig);
 
-        rotorPID = rotor.getPIDController();
+        rotorPID = new PIDController(
+            Constants.Swerve.ROTOR_KP,
+            Constants.Swerve.ROTOR_KI,
+            Constants.Swerve.ROTOR_KD
+        );
 
-        rotorPID.setPositionPIDWrappingEnabled(true);
-
-        rotorPID.setPositionPIDWrappingMaxInput(180);
-        rotorPID.setPositionPIDWrappingMinInput(-180);
-
-        rotorEncoder = rotor.getEncoder();
-        rotorPID.setFeedbackDevice(rotorEncoder);
-        rotorEncoder.setPositionConversionFactor();
-        rotorEncoder.setPosition(CANCoder.getAbsolutePosition().getValue());
-
-        rotorPID.setP(0.0);
-        rotorPID.setI(0.0);
-        rotorPID.setD(0.0);
-        rotorPID.setFF(0.0);
+        rotorPID.enableContinuousInput(-180, 180);
 
         throttle.setIdleMode(IdleMode.kBrake);
 
@@ -79,8 +69,9 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
-        // rotor.set(rotorPID.calculate(getState().angle.getDegrees(), desiredState.angle.getDegrees()));
-        rotorPID.setReference(desiredState.angle.getRotations(), ControlType.kPosition);
+        rotor.set(rotorPID.calculate(getState().angle.getDegrees(), desiredState.angle.getDegrees()));
+        // rotorPID.setReference(desiredState.angle.getRotations(), ControlType.kPosition);
+        
         setSpeed(desiredState, isOpenLoop);
     }
 
@@ -106,7 +97,7 @@ public class SwerveModule {
     public SwerveModuleState getState() {
         return new SwerveModuleState(
                 throttleEncoder.getVelocity(),
-                Rotation2d.fromDegrees(throttleEncoder.getPosition()));
+                Rotation2d.fromRotations(CANCoder.getAbsolutePosition().getValue()));
     }
 
     public SwerveModulePosition getPosition() {
