@@ -28,7 +28,7 @@ public class SwerveModule {
 
     private PIDController rotorPID;
 
-    public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset) {
+    public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset, boolean throttleInversion) {
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
         throttleEncoder = throttle.getEncoder();
 
@@ -59,6 +59,7 @@ public class SwerveModule {
         rotorPID.enableContinuousInput(-180, 180);
 
         throttle.setIdleMode(IdleMode.kBrake);
+        throttle.setInverted(throttleInversion);
 
         throttleEncoder.setVelocityConversionFactor(
                 Constants.Swerve.THROTTLE_VEL_CONVERSION_FACTOR);

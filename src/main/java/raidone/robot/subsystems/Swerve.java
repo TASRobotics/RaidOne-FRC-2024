@@ -29,10 +29,10 @@ public class Swerve extends SubsystemBase {
         imu.setYaw(0);
 
         
-        FLModule = new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID, CAN_CODER_I_ID, MODULE_I_OFFSET);
-        BLModule = new SwerveModule(THROTTLE_II_ID, ROTOR_II_ID, CAN_CODER_II_ID, MODULE_II_OFFSET);
-        BRModule = new SwerveModule(THROTTLE_III_ID, ROTOR_III_ID, CAN_CODER_III_ID, MODULE_III_OFFSET);
-        FRModule = new SwerveModule(THROTTLE_IV_ID, ROTOR_IV_ID, CAN_CODER_IV_ID, MODULE_IV_OFFSET);
+        FLModule = new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID, CAN_CODER_I_ID, MODULE_I_OFFSET, false);
+        BLModule = new SwerveModule(THROTTLE_II_ID, ROTOR_II_ID, CAN_CODER_II_ID, MODULE_II_OFFSET, false);
+        BRModule = new SwerveModule(THROTTLE_III_ID, ROTOR_III_ID, CAN_CODER_III_ID, MODULE_III_OFFSET, true);
+        FRModule = new SwerveModule(THROTTLE_IV_ID, ROTOR_IV_ID, CAN_CODER_IV_ID, MODULE_IV_OFFSET, true);
 
         swerveOdometry = new SwerveDriveOdometry(SWERVE_DRIVE_KINEMATICS, getRotation(), getModulePositions());
     }

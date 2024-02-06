@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-    public static final double STICK_DEADBAND = 0.1;
+    public static final double STICK_DEADBAND = 0.03;
 
     public static final class Swerve {
         public static final int PIGEON_ID = 1;
@@ -73,9 +73,9 @@ public final class Constants {
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double ROTOR_KP = 0.005;
+        public static final double ROTOR_KP = 0.008;
         public static final double ROTOR_KI = 0.0;
-        public static final double ROTOR_KD = 0.000;
+        public static final double ROTOR_KD = 0.0001;
 
         /* Drive Motor PID Values */
         public static final double THROTTLE_KP = 0.12; 

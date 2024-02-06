@@ -31,8 +31,8 @@ public class RobotContainer {
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    // private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
-    private final int rotationAxis = Joystick.kDefaultTwistChannel; // For joystick
+    private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
+    // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For joystick
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
@@ -71,8 +71,8 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        // zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
-        // zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
+        zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
+        zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
     }
 
     /**
