@@ -51,7 +51,6 @@ public class RobotContainer {
     private final POVButton ordinalTurnLeft = new POVButton(driver, 270);
     private final POVButton ordinalTurnRight = new POVButton(driver, 90);
 
-    // TODO: change ordinal turn based on the driverstation
     // IF BLUE: 45, if red, 315
     private final JoystickButton turnToSource = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton turnToAmp = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
@@ -90,10 +89,10 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
         zeroPose.onTrue(
                 new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
-        turnToSource.onTrue(
-                new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 45 : 315, swerve));
-        turnToAmp.onTrue(
-                new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 270 : 90, swerve));
+        // turnToSource.onTrue(
+                // new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 45 : 315, swerve));
+        // turnToAmp.onTrue(
+                // new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 270 : 90, swerve));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
         ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
