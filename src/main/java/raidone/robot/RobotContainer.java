@@ -2,6 +2,8 @@ package raidone.robot;
 
 import java.sql.Driver;
 
+import org.littletonrobotics.junction.inputs.LoggedDriverStation.JoystickInputs;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import raidone.robot.commands.*;
@@ -30,7 +33,7 @@ import raidone.robot.subsystems.*;
  */
 public class RobotContainer {
     /* Controllers */
-    private final Joystick driver = new Joystick(0);
+    private final XboxController driver = new XboxController(0);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -52,13 +55,21 @@ public class RobotContainer {
     private final POVButton ordinalTurnRight = new POVButton(driver, 90);
 
     // IF BLUE: 45, if red, 315
-    private final JoystickButton turnToSource = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton turnToAmp = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final Trigger turnToAmp = new Trigger(() -> getRightTrigger());
+    private final Trigger turnToSource = new Trigger(() -> getLeftTrigger());
 
     private SendableChooser<Command> autoChooser;
 
     /* Subsystems */
     private final Swerve swerve = new Swerve();
+
+    public boolean getRightTrigger() {
+        return driver.getRightTriggerAxis() > 0.5;
+    }
+
+    public boolean getLeftTrigger() {
+        return driver.getLeftTriggerAxis() > 0.5;
+    }
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -69,7 +80,7 @@ public class RobotContainer {
                         swerve,
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
-                        () -> driver.getRawAxis(rotationAxis) * 0.5,
+                        () -> -driver.getRawAxis(rotationAxis) * 0.5,
                         () -> true));
 
         // Configure the button bindings
@@ -89,10 +100,11 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
         zeroPose.onTrue(
                 new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
-        // turnToSource.onTrue(
-                // new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 45 : 315, swerve));
-        // turnToAmp.onTrue(
-                // new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 270 : 90, swerve));
+                
+        turnToSource.onTrue(
+                new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 45 : 315, swerve));
+        turnToAmp.onTrue(
+                new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 270 : 90, swerve));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
         ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
