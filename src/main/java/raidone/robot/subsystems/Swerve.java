@@ -2,6 +2,10 @@ package raidone.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,10 +15,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Swerve.*;
+
+import raidone.robot.Constants;
 import raidone.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
@@ -70,6 +77,8 @@ public class Swerve extends SubsystemBase {
             getRotation(),
             getModulePositions()
         );
+
+        configureAutoBuilder();
     }
 
     /**
@@ -232,6 +241,40 @@ public class Swerve extends SubsystemBase {
      */
     public void driveRelative(ChassisSpeeds speed) {
         setModuleStates(SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(speed));
+    }
+
+    private void configureAutoBuilder() {
+        AutoBuilder.configureHolonomic(
+            this::getPose,
+            this::setPose,
+            this::getRelativeSpeeds,
+            this::driveRelative,
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(
+                    Constants.Swerve.TRANSLATION_KP,
+                    Constants.Swerve.TRANSLATION_KI,
+                    Constants.Swerve.TRANSLATION_KD
+                ),
+                new PIDConstants(
+                    Constants.Swerve.ROTATION_KP,
+                    Constants.Swerve.ROTATION_KI,
+                    Constants.Swerve.ROTATION_KD
+                ),
+                Constants.Swerve.MAX_SPEED,
+                Constants.Swerve.TRACK_WIDTH / 2.0,
+                new ReplanningConfig()
+            ),
+            () -> {
+                var alliance = DriverStation.getAlliance();
+
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+
+                return false;
+            },
+            this
+        );
     }
 
     @Override

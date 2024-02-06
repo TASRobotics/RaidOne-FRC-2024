@@ -64,6 +64,15 @@ public final class Constants {
         public static final double THROTTLE_KS = 0.32; 
         public static final double THROTTLE_KV = 1.51;
         public static final double THROTTLE_KA = 0.27;
+
+        // Pathing consants
+        public static final double TRANSLATION_KP = 0.0;
+        public static final double TRANSLATION_KI = 0.0;
+        public static final double TRANSLATION_KD = 0.0;
+
+        public static final double ROTATION_KP = 0.0;
+        public static final double ROTATION_KI = 0.0;
+        public static final double ROTATION_KD = 0.0;
         
         // Swerve Profiling Values 
         //* Meters per Second 
