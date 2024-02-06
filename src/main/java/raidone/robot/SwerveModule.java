@@ -23,7 +23,7 @@ public class SwerveModule {
     private CANSparkMax rotor;
     private CANSparkMax throttle;
     private CANcoder caNcoder;
-    private SparkRelativeEncoder rotorEncoder;
+    private RelativeEncoder rotorEncoder;
     private RelativeEncoder throttleEncoder;
     public CANcoderConfiguration CANCoderConfig;
 
@@ -58,7 +58,8 @@ public class SwerveModule {
         rotorPID.setPositionPIDWrappingMaxInput(180);
         rotorPID.setPositionPIDWrappingMinInput(-180);
 
-        rotorPID.setFeedbackDevice(caNcoder);
+        rotorEncoder = rotor.getEncoder();
+        rotorPID.setFeedbackDevice(rotorEncoder);
 
         throttle.setIdleMode(IdleMode.kBrake);
 
