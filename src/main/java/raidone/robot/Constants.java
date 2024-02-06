@@ -14,16 +14,16 @@ public final class Constants {
         public static final double TRACK_WIDTH = Units.inchesToMeters(23.0);
         public static final double WHEEL_BASE = Units.inchesToMeters(23.0);
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4.0) * Math.PI;
-        public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4.0);
+        public static final double WHEEL_DIAMETER_M = Units.inchesToMeters(4.0);
 
         public static final double THROTTLE_GEAR_RATIO = (6.75 / 1.0);
         public static final double ROTOR_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
         
         public static final double THROTTLE_VEL_CONVERSION_FACTOR = 
-        (1/THROTTLE_GEAR_RATIO/60)*WHEEL_DIAMETER_METERS*Math.PI;
+        (1 / THROTTLE_GEAR_RATIO / 60) * WHEEL_DIAMETER_M * Math.PI;
         
         public static final double THROTTLE_POS_CONVERSTION_FACTOR = 
-        (1/THROTTLE_GEAR_RATIO)*WHEEL_DIAMETER_METERS*Math.PI;
+        (1 / THROTTLE_GEAR_RATIO) * WHEEL_DIAMETER_M * Math.PI;
 
         
         // Swerve Kinematics        
@@ -76,30 +76,30 @@ public final class Constants {
         
         // Swerve Profiling Values 
         //* Meters per Second 
-        public static final double MAX_SPEED = 4.5; 
+        public static final double MAX_SPEED_MPS = 4.5; 
         //* Radians per Second 
         public static final double MAX_ANGULAR_VELOCITY = 10.0;
 
         // SwerveModule ID & Offsets
-        public static final int THROTTLE_I_ID = 1;
-        public static final int ROTOR_I_ID = 2;
-        public static final int CAN_CODER_I_ID = 1;
-        public static final double MODULE_I_OFFSET = -0.772949; // -0.772949
+        public static final int THROTTLE_LF_ID = 1;
+        public static final int ROTOR_LF_ID = 2;
+        public static final int CAN_CODER_LF_ID = 1;
+        public static final double MODULE_LF_OFFSET = -0.772949;
         
-        public static final int THROTTLE_II_ID = 3;
-        public static final int ROTOR_II_ID = 4;
-        public static final int CAN_CODER_II_ID = 2;
-        public static final double MODULE_II_OFFSET = -0.897949;
+        public static final int THROTTLE_LB_ID = 3;
+        public static final int ROTOR_LB_ID = 4;
+        public static final int CAN_CODER_LB_ID = 2;
+        public static final double MODULE_LB_OFFSET = -0.897949;
         
-        public static final int THROTTLE_III_ID = 5;
-        public static final int ROTOR_III_ID = 6;
-        public static final int CAN_CODER_III_ID = 3;
-        public static final double MODULE_III_OFFSET = -0.532959;
+        public static final int THROTTLE_RB_ID = 5;
+        public static final int ROTOR_RB_ID = 6;
+        public static final int CAN_CODER_RB_ID = 3;
+        public static final double MODULE_RB_OFFSET = -0.532959;
         
-        public static final int THROTTLE_IV_ID = 7;
-        public static final int ROTOR_IV_ID = 8;
-        public static final int CAN_CODER_IV_ID = 4;
-        public static final double MODULE_IV_OFFSET = -0.104004;
+        public static final int THROTTLE_RF_ID = 7;
+        public static final int ROTOR_RF_ID = 8;
+        public static final int CAN_CODER_RF_ID = 4;
+        public static final double MODULE_RF_OFFSET = -0.104004;
     }
 
     public static final double STICK_DEADBAND = 0.03;

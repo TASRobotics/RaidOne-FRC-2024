@@ -107,7 +107,7 @@ public class SwerveModule {
         rotor.set(rotorPID.calculate(getState().angle.getDegrees(), desiredState.angle.getDegrees()));
         
         if (isOpenLoop) {
-            throttle.set(desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED);
+            throttle.set(desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED_MPS);
         } else {
             throttleVelController.setReference(
                 desiredState.speedMetersPerSecond,

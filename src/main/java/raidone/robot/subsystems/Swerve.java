@@ -37,34 +37,34 @@ public class Swerve extends SubsystemBase {
     public Swerve() {
 
         moduleFL = new SwerveModule(
-            THROTTLE_I_ID,
-            ROTOR_I_ID,
-            CAN_CODER_I_ID,
-            MODULE_I_OFFSET,
+            THROTTLE_LF_ID,
+            ROTOR_LF_ID,
+            CAN_CODER_LF_ID,
+            MODULE_LF_OFFSET,
             false
         );
 
         moduleBL = new SwerveModule(
-            THROTTLE_II_ID,
-            ROTOR_II_ID,
-            CAN_CODER_II_ID,
-            MODULE_II_OFFSET,
+            THROTTLE_LB_ID,
+            ROTOR_LB_ID,
+            CAN_CODER_LB_ID,
+            MODULE_LB_OFFSET,
             false
         );
 
         moduleBR = new SwerveModule(
-            THROTTLE_III_ID,
-            ROTOR_III_ID,
-            CAN_CODER_III_ID,
-            MODULE_III_OFFSET,
+            THROTTLE_RB_ID,
+            ROTOR_RB_ID,
+            CAN_CODER_RB_ID,
+            MODULE_RB_OFFSET,
             true
         );
 
         moduleFR = new SwerveModule(
-            THROTTLE_IV_ID,
-            ROTOR_IV_ID,
-            CAN_CODER_IV_ID,
-            MODULE_IV_OFFSET,
+            THROTTLE_RF_ID,
+            ROTOR_RF_ID,
+            CAN_CODER_RF_ID,
+            MODULE_RF_OFFSET,
             true
         );
 
@@ -103,7 +103,7 @@ public class Swerve extends SubsystemBase {
                     rotation)
         );
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED_MPS);
 
         moduleFL.setDesiredState(swerveModuleStates[0], isOpenLoop);
         moduleFR.setDesiredState(swerveModuleStates[1], isOpenLoop);
@@ -118,7 +118,7 @@ public class Swerve extends SubsystemBase {
      * @param desiredStates Desired swerve module states
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED_MPS);
 
         moduleFL.setDesiredState(desiredStates[0], true);
         moduleFR.setDesiredState(desiredStates[1], true);
@@ -270,7 +270,7 @@ public class Swerve extends SubsystemBase {
                     Constants.Swerve.ROTATION_KI,
                     Constants.Swerve.ROTATION_KD
                 ),
-                Constants.Swerve.MAX_SPEED,
+                Constants.Swerve.MAX_SPEED_MPS,
                 Constants.Swerve.TRACK_WIDTH / 2.0,
                 new ReplanningConfig()
             ),
