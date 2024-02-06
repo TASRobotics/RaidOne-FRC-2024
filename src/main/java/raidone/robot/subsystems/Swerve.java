@@ -1,49 +1,44 @@
 package raidone.robot.subsystems;
 
-import raidone.robot.SwerveModule;
-import raidone.robot.Constants;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Swerve.*;
+import raidone.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
+    private Pigeon2 imu;
+    public SwerveModule FLModule, BLModule, BRModule, FRModule;
     public SwerveDriveOdometry swerveOdometry;
-    public SwerveModule[] swerveModules;
-    public Pigeon2 imu;
     private Field2d field = new Field2d();
 
     public Swerve() {
-        imu = new Pigeon2(Constants.Swerve.PIGEON_ID, "seCANdary");
+        imu = new Pigeon2(PIGEON_ID);
         imu.getConfigurator().apply(new Pigeon2Configuration());
         imu.setYaw(0);
 
-        swerveModules = new SwerveModule[] {
-                new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID, CAN_CODER_I_ID, MODULE_I_OFFSET),
-                new SwerveModule(THROTTLE_II_ID, ROTOR_II_ID, CAN_CODER_II_ID, MODULE_II_OFFSET),
-                new SwerveModule(THROTTLE_III_ID, ROTOR_III_ID, CAN_CODER_III_ID, MODULE_III_OFFSET),
-                new SwerveModule(THROTTLE_IV_ID, ROTOR_IV_ID, CAN_CODER_IV_ID, MODULE_IV_OFFSET)
-        };
+        
+        FLModule = new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID, CAN_CODER_I_ID, MODULE_I_OFFSET);
+        BLModule = new SwerveModule(THROTTLE_II_ID, ROTOR_II_ID, CAN_CODER_II_ID, MODULE_II_OFFSET);
+        BRModule = new SwerveModule(THROTTLE_III_ID, ROTOR_III_ID, CAN_CODER_III_ID, MODULE_III_OFFSET);
+        FRModule = new SwerveModule(THROTTLE_IV_ID, ROTOR_IV_ID, CAN_CODER_IV_ID, MODULE_IV_OFFSET);
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.SWERVE_DRIVE_KINEMATICS, getRotation(),
-                getModulePositions());
+        swerveOdometry = new SwerveDriveOdometry(SWERVE_DRIVE_KINEMATICS, getRotation(), getModulePositions());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates = Constants.Swerve.SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(
+        SwerveModuleState[] swerveModuleStates = SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                         translation.getX(),
                         translation.getY(),
@@ -53,59 +48,44 @@ public class Swerve extends SubsystemBase {
                                 translation.getX(),
                                 translation.getY(),
                                 rotation));
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.MAX_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED);
 
-        // for (SwerveModule mod : swerveModules) {
-        // mod.setDesiredState(swerveModuleStates[mod.getModuleConstants().MODULE_NUMBER
-        // - 1], isOpenLoop);
-        // }
-
-        swerveModules[3].setDesiredState(swerveModuleStates[3], isOpenLoop);
-        swerveModules[0].setDesiredState(swerveModuleStates[0], isOpenLoop);
-        swerveModules[1].setDesiredState(swerveModuleStates[1], isOpenLoop);
-        swerveModules[2].setDesiredState(swerveModuleStates[2], isOpenLoop);
+        FLModule.setDesiredState(swerveModuleStates[0], isOpenLoop); //3
+        BLModule.setDesiredState(swerveModuleStates[2], isOpenLoop); //0
+        BRModule.setDesiredState(swerveModuleStates[3], isOpenLoop); //1
+        FRModule.setDesiredState(swerveModuleStates[1], isOpenLoop); //2
 
     }
 
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.MAX_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED);
 
-        // for(SwerveModule mod : swerveModules){
-        // mod.setDesiredState(desiredStates[mod.getModuleConstants().MODULE_NUMBER -1],
-        // false);
-
-        swerveModules[3].setDesiredState(desiredStates[3], false);
-        swerveModules[0].setDesiredState(desiredStates[0], false);
-        swerveModules[1].setDesiredState(desiredStates[1], false);
-        swerveModules[2].setDesiredState(desiredStates[2], false);
+        FLModule.setDesiredState(desiredStates[0], false); //3
+        BLModule.setDesiredState(desiredStates[2], false); //0
+        BRModule.setDesiredState(desiredStates[3], false); //1
+        FRModule.setDesiredState(desiredStates[1], false); //2
 
     }
 
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        // for (SwerveModule mod : swerveModules) {
-        // states[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getState();
-        // }
 
-        states[3] = swerveModules[3].getState();
-        states[0] = swerveModules[0].getState();
-        states[1] = swerveModules[1].getState();
-        states[2] = swerveModules[2].getState();
+        states[0] = FLModule.getState();
+        states[2] = BLModule.getState();
+        states[3] = BRModule.getState();
+        states[1] = FRModule.getState();
 
         return states;
     }
 
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        // for (SwerveModule mod : swerveModules) {
-        // positions[mod.getModuleConstants().MODULE_NUMBER - 1] = mod.getPosition();
-        // }
 
-        positions[3] = swerveModules[3].getPosition();
-        positions[0] = swerveModules[0].getPosition();
-        positions[1] = swerveModules[1].getPosition();
-        positions[2] = swerveModules[2].getPosition();
+        positions[0] = FLModule.getPosition();
+        positions[2] = BLModule.getPosition();
+        positions[3] = BRModule.getPosition();
+        positions[1] = FRModule.getPosition();
 
         return positions;
     }
@@ -141,9 +121,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetModulesToAbsolute() {
-        for (SwerveModule mod : swerveModules) {
-            mod.resetToAbsolute();
-        }
+        FLModule.resetToAbsolute();
+        BLModule.resetToAbsolute();
+        BRModule.resetToAbsolute();
+        FRModule.resetToAbsolute();
     }
 
     public ChassisSpeeds getRelativeSpeeds() {

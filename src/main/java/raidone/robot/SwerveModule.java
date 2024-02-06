@@ -78,4 +78,8 @@ public class SwerveModule {
                 throttleEncoder.getPosition(),
                 Rotation2d.fromRotations(rotorEncoder.getPosition().getValue()));
     }
+
+    public void resetToAbsolute() {
+        rotor.getEncoder().setPosition(Rotation2d.fromRotations(rotorEncoder.getAbsolutePosition().getValue()).getRotations());
+    }
 }
