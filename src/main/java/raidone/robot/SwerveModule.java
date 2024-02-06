@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -27,7 +28,8 @@ public class SwerveModule {
     public CANcoderConfiguration CANCoderConfig;
 
     private PIDController rotorPID;
-
+    private SparkPIDController throttleVelController;
+    private SimpleMotorFeedforward throttleFF;
     public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset, boolean throttleInversion) {
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
         throttleEncoder = throttle.getEncoder();
@@ -65,6 +67,17 @@ public class SwerveModule {
                 Constants.Swerve.THROTTLE_VEL_CONVERSION_FACTOR);
         throttleEncoder.setPositionConversionFactor(
                 Constants.Swerve.THROTTLE_POS_CONVERSTION_FACTOR);
+        throttleVelController = throttle.getPIDController();
+
+        throttleVelController.setP(Constants.Swerve.THROTTLE_KP, 0);
+        throttleVelController.setI(Constants.Swerve.THROTTLE_KI, 0);
+        throttleVelController.setD(Constants.Swerve.THROTTLE_KD, 0);
+
+        throttleFF = new SimpleMotorFeedforward(
+            Constants.Swerve.THROTTLE_KS,
+            Constants.Swerve.THROTTLE_KV,
+            Constants.Swerve.THROTTLE_KA
+        );
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -80,15 +93,14 @@ public class SwerveModule {
         if (isOpenLoop) {
             // driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED;
             throttle.set(desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED);
+        } else {
+            throttleVelController.setReference(
+                desiredState.speedMetersPerSecond,
+                ControlType.kVelocity,
+                0,
+                throttleFF.calculate(desiredState.speedMetersPerSecond)
+            );
         }
-        // } else {
-        // driveVelocity.Velocity =
-        // Conversions.MPSToRPS(desiredState.speedMetersPerSecond,
-        // Constants.Swerve.WHEEL_CIRCUMFERENCE);
-        // driveVelocity.FeedForward =
-        // driveFeedForward.calculate(desiredState.speedMetersPerSecond);
-        // mDriveMotor.setControl(driveVelocity);
-        // }
     }
 
     public void throttleGo(){
