@@ -51,11 +51,11 @@ public class RobotContainer {
     public RobotContainer() {
         swerve.setDefaultCommand(
                 new TeleopSwerve(
-                        swerve,
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> driver.getRawAxis(rotationAxis) * 0.5,
-                        () -> robotCentric.getAsBoolean()));
+                        () -> robotCentric.getAsBoolean(),
+                        swerve));
 
         // Configure the button bindings
         configureButtonBindings();
