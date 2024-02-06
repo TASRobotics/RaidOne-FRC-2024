@@ -4,24 +4,30 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import raidone.lib.math.Conversions;
 
 public class SwerveModule {
     private CANSparkMax rotor;
     private CANSparkMax throttle;
-    private CANcoder rotorEncoder;
+    private CANcoder caNcoder;
+    private SparkRelativeEncoder rotorEncoder;
     private RelativeEncoder throttleEncoder;
     public CANcoderConfiguration CANCoderConfig;
 
-    private PIDController rotorPID;
+    private SparkPIDController rotorPID;
 
     public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset) {
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
@@ -29,7 +35,7 @@ public class SwerveModule {
 
         rotor = new CANSparkMax(rotorID, MotorType.kBrushless);
 
-        rotorEncoder = new CANcoder(canCoderID);
+        caNcoder = new CANcoder(canCoderID);
 
         throttle.restoreFactoryDefaults();
         rotor.restoreFactoryDefaults();
@@ -43,14 +49,16 @@ public class SwerveModule {
                 .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
                 .withMagnetOffset(moduleAngleOffset));
 
-        rotorEncoder.getConfigurator().apply(CANCoderConfig);
+        caNcoder.getConfigurator().apply(CANCoderConfig);
 
-        rotorPID = new PIDController(
-                Constants.Swerve.ROTOR_KP,
-                Constants.Swerve.ROTOR_KI,
-                Constants.Swerve.ROTOR_KD);
+        rotorPID = rotor.getPIDController();
 
-        rotorPID.enableContinuousInput(-180, 180);
+        rotorPID.setPositionPIDWrappingEnabled(true);
+
+        rotorPID.setPositionPIDWrappingMaxInput(180);
+        rotorPID.setPositionPIDWrappingMinInput(-180);
+
+        rotorPID.setFeedbackDevice(caNcoder);
 
         throttle.setIdleMode(IdleMode.kBrake);
 
@@ -63,8 +71,28 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
-        rotor.set(rotorPID.calculate(getState().angle.getDegrees(), desiredState.angle.getDegrees()));
-        throttle.set(desiredState.speedMetersPerSecond);
+        // rotor.set(rotorPID.calculate(getState().angle.getDegrees(), desiredState.angle.getDegrees()));
+        setSpeed(desiredState, isOpenLoop);
+    }
+
+    private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+        if (isOpenLoop) {
+            // driveDutyCycle.Output = desiredState.speedMetersPerSecond /
+            // Constants.Swerve.MAX_SPEED;
+            throttle.set(desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED);
+        }
+        // } else {
+        // driveVelocity.Velocity =
+        // Conversions.MPSToRPS(desiredState.speedMetersPerSecond,
+        // Constants.Swerve.WHEEL_CIRCUMFERENCE);
+        // driveVelocity.FeedForward =
+        // driveFeedForward.calculate(desiredState.speedMetersPerSecond);
+        // mDriveMotor.setControl(driveVelocity);
+        // }
+    }
+
+    public void throttleGo(){
+        throttle.set(0.25);
     }
 
     public SwerveModuleState getState() {
@@ -76,10 +104,11 @@ public class SwerveModule {
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
                 throttleEncoder.getPosition(),
-                Rotation2d.fromRotations(rotorEncoder.getPosition().getValue()));
+                Rotation2d.fromRotations(caNcoder.getPosition().getValue()));
     }
 
     public void resetToAbsolute() {
-        rotor.getEncoder().setPosition(Rotation2d.fromRotations(rotorEncoder.getAbsolutePosition().getValue()).getRotations());
+        rotor.getEncoder()
+                .setPosition(Rotation2d.fromRotations(caNcoder.getAbsolutePosition().getValue()).getRotations());
     }
 }

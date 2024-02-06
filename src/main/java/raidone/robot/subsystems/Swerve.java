@@ -50,10 +50,10 @@ public class Swerve extends SubsystemBase {
                                 rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED);
 
-        FLModule.setDesiredState(swerveModuleStates[0], isOpenLoop); //3
-        BLModule.setDesiredState(swerveModuleStates[2], isOpenLoop); //0
-        BRModule.setDesiredState(swerveModuleStates[3], isOpenLoop); //1
-        FRModule.setDesiredState(swerveModuleStates[1], isOpenLoop); //2
+        FLModule.setDesiredState(swerveModuleStates[3], isOpenLoop); //3
+        BLModule.setDesiredState(swerveModuleStates[0], isOpenLoop); //0
+        BRModule.setDesiredState(swerveModuleStates[1], isOpenLoop); //1
+        FRModule.setDesiredState(swerveModuleStates[2], isOpenLoop); //2
 
     }
 
@@ -61,20 +61,20 @@ public class Swerve extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED);
 
-        FLModule.setDesiredState(desiredStates[0], false); //3
-        BLModule.setDesiredState(desiredStates[2], false); //0
-        BRModule.setDesiredState(desiredStates[3], false); //1
-        FRModule.setDesiredState(desiredStates[1], false); //2
+        FLModule.setDesiredState(desiredStates[3], true); //3
+        BLModule.setDesiredState(desiredStates[0], true); //0
+        BRModule.setDesiredState(desiredStates[1], true); //1
+        FRModule.setDesiredState(desiredStates[2], true); //2
 
     }
 
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
 
-        states[0] = FLModule.getState();
-        states[2] = BLModule.getState();
-        states[3] = BRModule.getState();
-        states[1] = FRModule.getState();
+        states[3] = FLModule.getState();
+        states[0] = BLModule.getState();
+        states[1] = BRModule.getState();
+        states[2] = FRModule.getState();
 
         return states;
     }
@@ -82,10 +82,10 @@ public class Swerve extends SubsystemBase {
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
 
-        positions[0] = FLModule.getPosition();
-        positions[2] = BLModule.getPosition();
-        positions[3] = BRModule.getPosition();
-        positions[1] = FRModule.getPosition();
+        positions[3] = FLModule.getPosition();
+        positions[0] = BLModule.getPosition();
+        positions[1] = BRModule.getPosition();
+        positions[2] = FRModule.getPosition();
 
         return positions;
     }
