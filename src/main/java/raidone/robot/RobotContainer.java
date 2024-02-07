@@ -3,11 +3,13 @@ package raidone.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import raidone.robot.Auto.Autos;
@@ -83,7 +85,17 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autos.get();
+        // return autos.get();
+
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        states[0] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+        states[1] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+        states[2] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+        states[3] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+
+        return Commands.run( () ->
+            swerve.setModuleStates(states)
+        );
     }
     
     public Swerve getSwerve() {

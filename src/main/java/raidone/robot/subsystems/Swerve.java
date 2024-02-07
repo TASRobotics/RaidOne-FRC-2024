@@ -120,10 +120,12 @@ public class Swerve extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED_MPS);
 
-        moduleFL.setDesiredState(desiredStates[0], true);
-        moduleFR.setDesiredState(desiredStates[1], true);
-        moduleBL.setDesiredState(desiredStates[2], true);
-        moduleBR.setDesiredState(desiredStates[3], true);
+        SmartDashboard.putNumber("input vel mps", desiredStates[0].speedMetersPerSecond);
+
+        moduleFL.setDesiredState(desiredStates[0], false);
+        moduleFR.setDesiredState(desiredStates[1], false);
+        moduleBL.setDesiredState(desiredStates[2], false);
+        moduleBR.setDesiredState(desiredStates[3], false);
 
     }
 
@@ -296,6 +298,8 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("Rotation", imu.getAngle());
         SmartDashboard.putNumber("Y", getPose().getY());
         SmartDashboard.putNumber("X", getPose().getX());
+
+        SmartDashboard.putNumber("actual vel mps", getModuleStates()[0].speedMetersPerSecond);
 
         field.setRobotPose(getPose());
         SmartDashboard.putData("Field", field); 
