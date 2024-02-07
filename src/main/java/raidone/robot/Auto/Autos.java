@@ -40,7 +40,7 @@ public class Autos implements Sendable {
 
     public Command testAuto() {
         return Commands.sequence(
-            new DrivePath(this.swerve, PathPlannerPath.fromPathFile("Path 1"))
+            new DrivePath(this.swerve, PathPlannerPath.fromPathFile("TestPath"))
                 .andThen(new WaitCommand(0.5))
                 .andThen(swerve.setX())
         );
