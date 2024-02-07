@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import monologue.Annotations.Log;
 import raidone.robot.Auto.Autos;
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
@@ -44,6 +45,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve swerve = new Swerve();
 
+    @Log
     private Autos autos = new Autos(swerve);
 
 
