@@ -2,16 +2,15 @@ package raidone.robot.Auto;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import raidone.robot.commands.DrivePath;
 import raidone.robot.subsystems.Swerve;
 
-public class Autos implements Sendable {
+public class Autos {
 
     private final Swerve swerve;
 
@@ -22,16 +21,13 @@ public class Autos implements Sendable {
 
         chooser = new SendableChooser<Command>();
         configureAutos();
+        
+        SmartDashboard.putData("Auton", chooser);
     }
 
     private void configureAutos() {
         chooser.setDefaultOption("No auto", null);
         chooser.addOption("Test auto", testAuto());
-    }
-
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        chooser.initSendable(builder);
     }
 
     public Command get() {

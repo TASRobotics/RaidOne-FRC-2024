@@ -45,7 +45,6 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve swerve = new Swerve();
 
-    @Log
     private Autos autos = new Autos(swerve);
 
 
@@ -63,8 +62,6 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
-
-        SmartDashboard.putData(autos);
     }
 
     /**
