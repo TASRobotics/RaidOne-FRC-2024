@@ -107,6 +107,9 @@ public final class Constants {
 
     public static final class Arm{
         public static final int ARM_MOTOR_ID = 0;
+
+        public static final double SCORINGPOS = 0.0;
+        public static final double INTAKEPOS = 0.0;
         
         public static final double kP = 0.0;
         public static final double kI = 0.0;
@@ -124,6 +127,9 @@ public final class Constants {
 
     public static final class Wrist{
         public static final int WRIST_MOTOR_ID = 0;
+
+        public static final double SCORINGPOS = 0.0;
+        public static final double INTAKEPOS = 0.0;
         
         public static final double kP = 0.0;
         public static final double kI = 0.0;
@@ -141,5 +147,7 @@ public final class Constants {
 
     public static final class Intake{
         public static final int INTAKE_MOTOR_ID = 0;
+        public static final int kForward = 1;
+        public static final int kBackward = 0;
     }
 }

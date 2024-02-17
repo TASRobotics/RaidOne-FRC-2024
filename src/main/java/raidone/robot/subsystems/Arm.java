@@ -4,8 +4,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkLimitSwitch.Type;
+import com.revrobotics.SparkMaxLimitSwitch.Direction;
 
 import static raidone.robot.Constants.Arm.*;
 
@@ -15,6 +19,7 @@ public class Arm extends SubsystemBase{
     private boolean isHomed;
     private SparkPIDController m_pid;
     private RelativeEncoder m_encoder;
+    private SparkLimitSwitch s_limit; 
 
     public Arm(){
         isHomed = false;
@@ -24,6 +29,7 @@ public class Arm extends SubsystemBase{
 
         m_pid = m_arm.getPIDController();
         m_encoder = m_arm.getEncoder();
+        s_limit = m_arm.getForwardLimitSwitch(Type.kNormallyOpen);
 
         m_pid.setP(kP);
         m_pid.setI(kI);
@@ -62,8 +68,12 @@ public class Arm extends SubsystemBase{
         SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
 
+    public void home(){
+        m_arm.set(-0.1);
+    }
+
     public boolean isHomed(){
-        // isHomed = SparkMax.ReadLimit;
+        isHomed = s_limit.isPressed();
         return isHomed;
     }
 

@@ -3,6 +3,8 @@ package raidone.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,6 +18,7 @@ public class Wrist extends SubsystemBase{
     private boolean isHomed;
     private SparkPIDController m_pid;
     private RelativeEncoder m_encoder;
+    private SparkLimitSwitch s_limit;
 
     public Wrist() {
         isHomed = false;
@@ -25,6 +28,7 @@ public class Wrist extends SubsystemBase{
 
         m_pid = m_wrist.getPIDController();
         m_encoder = m_wrist.getEncoder();
+        s_limit = m_wrist.getForwardLimitSwitch(Type.kNormallyOpen);
 
         m_pid.setP(kP);
         m_pid.setI(kI);
@@ -63,8 +67,12 @@ public class Wrist extends SubsystemBase{
         SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
 
+    public void home(){
+        m_wrist.set(-0.1);
+    }
+
     public boolean isHomed(){
-        // isHomed = SparkMax.ReadLimit;
+        isHomed = s_limit.isPressed();
         return isHomed;
     }
 
