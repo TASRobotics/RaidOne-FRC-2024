@@ -62,15 +62,15 @@ public final class Constants {
         
         // Throttle feedforward constants
         public static final double THROTTLE_KS = 0.00; // 0.32
-        public static final double THROTTLE_KV = 0.5; // 1.51
-        public static final double THROTTLE_KA = 0.00; // 0.27
+        public static final double THROTTLE_KV = 2.7; // 1.51
+        public static final double THROTTLE_KA = 10.0; // 0.27
 
         // Pathing consants
-        public static final double TRANSLATION_KP = 0.0;
+        public static final double TRANSLATION_KP = 0.000001;
         public static final double TRANSLATION_KI = 0.0;
         public static final double TRANSLATION_KD = 0.0;
 
-        public static final double ROTATION_KP = 0.0;
+        public static final double ROTATION_KP = 0.01;
         public static final double ROTATION_KI = 0.0;
         public static final double ROTATION_KD = 0.0;
         

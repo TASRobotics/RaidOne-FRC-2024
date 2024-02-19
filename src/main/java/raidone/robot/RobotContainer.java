@@ -1,5 +1,7 @@
 package raidone.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -85,16 +87,19 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // return autos.get();
+        return AutoBuilder.buildAuto("testAuto");
 
-        SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
-        states[1] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
-        states[2] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
-        states[3] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+        // SwerveModuleState[] states = new SwerveModuleState[4];
+        // states[0] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+        // states[1] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+        // states[2] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
+        // states[3] = new SwerveModuleState(2.0, Rotation2d.fromDegrees(0));
 
-        return Commands.run( () ->
-            swerve.setModuleStates(states)
-        );
+        // return Commands.run( () ->
+        //     swerve.setModuleStates(states)
+        // );
+
+        
     }
     
     public Swerve getSwerve() {
