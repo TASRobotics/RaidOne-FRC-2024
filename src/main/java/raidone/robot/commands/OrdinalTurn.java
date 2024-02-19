@@ -10,7 +10,7 @@ public class OrdinalTurn extends PIDCommand {
     //TODO: tune PID
     public OrdinalTurn(double angle, Swerve swerve) {
         super(
-                new PIDController(0.008, 0, 0),
+                new PIDController(0.008, 0, 0.0001),
                 swerve::getHeadingOrdinalTurn,
                 angle,
                 output -> swerve.drive(new Translation2d(0, 0), output, false, true),

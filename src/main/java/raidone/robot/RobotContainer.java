@@ -55,8 +55,8 @@ public class RobotContainer {
     private final POVButton ordinalTurnRight = new POVButton(driver, 90);
 
     // IF BLUE: 45, if red, 315
-    private final Trigger turnToAmp = new Trigger(() -> getRightTrigger());
     private final Trigger turnToSource = new Trigger(() -> getLeftTrigger());
+    private final Trigger turnToAmp = new Trigger(() -> getRightTrigger());
 
     private SendableChooser<Command> autoChooser;
 
