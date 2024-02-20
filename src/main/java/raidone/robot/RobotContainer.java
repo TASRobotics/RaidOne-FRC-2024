@@ -55,11 +55,11 @@ public class RobotContainer {
     private final Swerve swerve = new Swerve();
 
     public boolean getRightTrigger() {
-        return driver.getRightTriggerAxis() > 0.5;
+        return driver.getRightTriggerAxis() > 0.7;
     }
 
     public boolean getLeftTrigger() {
-        return driver.getLeftTriggerAxis() > 0.5;
+        return driver.getLeftTriggerAxis() > 0.7;
     }
 
     /**
@@ -93,9 +93,9 @@ public class RobotContainer {
                 new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0, 0), new Rotation2d(0)))));
                 
         turnToSource.onTrue(
-                new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 45 : 315, swerve));
+                new OrdinalTurn(45, swerve));
         turnToAmp.onTrue(
-                new OrdinalTurn(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 270 : 90, swerve));
+                new OrdinalTurn(270, swerve));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
         ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
