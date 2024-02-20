@@ -19,7 +19,8 @@ public class AutoArm extends Command {
 
     @Override
     public void execute() {
-        arm.setPos();
+        //arm.setPos();
+        arm.run(-0.3);
     }
 
     @Override
@@ -29,6 +30,6 @@ public class AutoArm extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        
+        arm.stopMotors();
     }
 }
