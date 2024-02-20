@@ -26,6 +26,7 @@ public class Arm extends SubsystemBase{
     private SparkLimitSwitch s_limit1;
     private SparkLimitSwitch s_limit2;
     private Joystick driver = new Joystick(0);
+    private double setpoint = 0;
 
     public Arm(){
         isHomed = false;
@@ -72,7 +73,7 @@ public class Arm extends SubsystemBase{
         SmartDashboard.putNumber("Arm Min Velocity", minVel);
         SmartDashboard.putNumber("Arm Max Acceleration", maxAcc);
         SmartDashboard.putNumber("Arm Allowed Closed Loop Error", allowedErr);
-        SmartDashboard.putNumber("Arm Set Position", 0);
+        SmartDashboard.putNumber("Arm Set Position", setpoint);
     }
 
     public void stopMotors(){
@@ -89,7 +90,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void setPos(){
-        double setpoint = 0;
+        
         if(driver.getRawButton(XboxController.Button.kA.value)){
             setpoint = SCORINGPOS;
         }else if(driver.getRawButton(XboxController.Button.kB.value)){
@@ -104,7 +105,12 @@ public class Arm extends SubsystemBase{
     }
 
     public boolean isHomed(){
-        isHomed = s_limit1.isPressed() && s_limit2.isPressed();
+        if(s_limit1.isPressed() || s_limit2.isPressed()){
+            isHomed = true;
+            m_encoder.setPosition(0);
+        }else{
+            isHomed = false;
+        }
         return isHomed;
     }
 
@@ -117,9 +123,9 @@ public class Arm extends SubsystemBase{
         // m_pid.setIZone(SmartDashboard.getNumber("Arm I Zone", 0));
         // m_pid.setFF(SmartDashboard.getNumber("Arm Feed Forward", 0));
 
-        // // if(getLimit() || m_encoder.getPosition()<0.1){
-        // //     stopMotors();
-        // // }
+        if((getLimit() || m_encoder.getPosition()<0.1)){
+            stopMotors();
+        }
 
         // m_pid.setOutputRange(
         //     SmartDashboard.getNumber("Arm Max Output", 0),

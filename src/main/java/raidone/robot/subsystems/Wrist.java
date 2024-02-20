@@ -17,21 +17,27 @@ import static raidone.robot.Constants.Wrist.*;
 public class Wrist extends SubsystemBase{
     private static Wrist wrist;
     private CANSparkMax m_wrist;
+    private CANSparkMax m_follower;
     private boolean isHomed;
     private SparkPIDController m_pid;
     private RelativeEncoder m_encoder;
     private SparkLimitSwitch s_limit;
     private Joystick driver = new Joystick(0);
+    private double setpoint = 0;
 
     public Wrist() {
         isHomed = false;
         m_wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
+        m_follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
         
         m_wrist.restoreFactoryDefaults();
+        m_follower.restoreFactoryDefaults();
 
         m_pid = m_wrist.getPIDController();
         m_encoder = m_wrist.getEncoder();
         s_limit = m_wrist.getForwardLimitSwitch(Type.kNormallyOpen);
+
+        m_follower.follow(m_wrist, true);
 
         m_pid.setP(kP);
         m_pid.setI(kI);
@@ -58,7 +64,7 @@ public class Wrist extends SubsystemBase{
         SmartDashboard.putNumber("Min Velocity", minVel);
         SmartDashboard.putNumber("Max Acceleration", maxAcc);
         SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-        SmartDashboard.putNumber("Set Position", 0);
+        SmartDashboard.putNumber("Set Position", setpoint);
     }
 
     public void stopMotors() {
@@ -66,7 +72,7 @@ public class Wrist extends SubsystemBase{
     }
 
     public void setPos() {
-        double setpoint = 0;
+        
         if(driver.getRawButton(XboxController.Button.kA.value)){
             setpoint = SCORINGPOS;
         }else if(driver.getRawButton(XboxController.Button.kB.value)){
@@ -81,7 +87,12 @@ public class Wrist extends SubsystemBase{
     }
 
     public boolean isHomed(){
-        isHomed = s_limit.isPressed();
+        if(s_limit.isPressed()){
+            isHomed = true;
+            m_encoder.setPosition(0);
+        }else{
+            isHomed = false;
+        }
         return isHomed;
     }
 

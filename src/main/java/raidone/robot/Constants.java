@@ -123,7 +123,7 @@ public final class Constants {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final double SCORINGPOS = 0.0;
+        public static final double SCORINGPOS = -20.0;
         public static final double INTAKEPOS = 0.0;
         
         public static final double kP = 0.1;

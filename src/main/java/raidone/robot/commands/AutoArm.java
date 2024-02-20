@@ -19,8 +19,7 @@ public class AutoArm extends Command {
 
     @Override
     public void execute() {
-        //arm.setPos();
-        arm.run(-0.3);
+        arm.setPos();
     }
 
     @Override
