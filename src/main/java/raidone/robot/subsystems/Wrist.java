@@ -87,19 +87,19 @@ public class Wrist extends SubsystemBase{
 
     @Override
     public void periodic(){
-        m_pid.setP(SmartDashboard.getNumber("P Gain", 0));
-        m_pid.setI(SmartDashboard.getNumber("I Gain", 0));
-        m_pid.setD(SmartDashboard.getNumber("D Gain", 0));
-        m_pid.setIZone(SmartDashboard.getNumber("I Zone", 0));
-        m_pid.setFF(SmartDashboard.getNumber("Feed Forward", 0));
+        // m_pid.setP(SmartDashboard.getNumber("P Gain", 0));
+        // m_pid.setI(SmartDashboard.getNumber("I Gain", 0));
+        // m_pid.setD(SmartDashboard.getNumber("D Gain", 0));
+        // m_pid.setIZone(SmartDashboard.getNumber("I Zone", 0));
+        // m_pid.setFF(SmartDashboard.getNumber("Feed Forward", 0));
 
-        m_pid.setOutputRange(
-            SmartDashboard.getNumber("Max Output", 0),
-            SmartDashboard.getNumber("Min Output", 0));
+        // m_pid.setOutputRange(
+        //     SmartDashboard.getNumber("Max Output", 0),
+        //     SmartDashboard.getNumber("Min Output", 0));
 
-        m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Max Velocity", 0), 0);
-        m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Min Velocity", 0), 0);
-        m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Max Acceleration", 0), 0);
-        m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Allowed Closed Loop Error", 0),0); 
+        // m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Max Velocity", 0), 0);
+        // m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Min Velocity", 0), 0);
+        // m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Max Acceleration", 0), 0);
+        // m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Allowed Closed Loop Error", 0),0); 
     }
 }

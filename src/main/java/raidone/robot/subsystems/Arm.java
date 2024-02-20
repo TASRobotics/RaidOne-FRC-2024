@@ -58,20 +58,20 @@ public class Arm extends SubsystemBase{
         m_pid.setSmartMotionMaxAccel(maxAcc, 0);
         m_pid.setSmartMotionAllowedClosedLoopError(allowedErr, 0);
 
-        SmartDashboard.putNumber("P Gain", kP);
-        SmartDashboard.putNumber("I Gain", kI);
-        SmartDashboard.putNumber("D Gain", kD);
-        SmartDashboard.putNumber("I Zone", kIz);
-        SmartDashboard.putNumber("Feed Forward", kFF);
-        SmartDashboard.putNumber("Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Min Output", kMinOutput);
+        // SmartDashboard.putNumber("P Gain", kP);
+        // SmartDashboard.putNumber("I Gain", kI);
+        // SmartDashboard.putNumber("D Gain", kD);
+        // SmartDashboard.putNumber("I Zone", kIz);
+        // SmartDashboard.putNumber("Feed Forward", kFF);
+        // SmartDashboard.putNumber("Max Output", kMaxOutput);
+        // SmartDashboard.putNumber("Min Output", kMinOutput);
 
-        // display Smart Motion coefficients
-        SmartDashboard.putNumber("Max Velocity", maxVel);
-        SmartDashboard.putNumber("Min Velocity", minVel);
-        SmartDashboard.putNumber("Max Acceleration", maxAcc);
-        SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-        SmartDashboard.putNumber("Set Position", 0);
+        // // display Smart Motion coefficients
+        // SmartDashboard.putNumber("Max Velocity", maxVel);
+        // SmartDashboard.putNumber("Min Velocity", minVel);
+        // SmartDashboard.putNumber("Max Acceleration", maxAcc);
+        // SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
+        // SmartDashboard.putNumber("Set Position", 0);
     }
 
     public void stopMotors(){
