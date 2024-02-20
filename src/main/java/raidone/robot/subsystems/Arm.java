@@ -43,9 +43,10 @@ public class Arm extends SubsystemBase{
         s_limit1 = m_arm.getForwardLimitSwitch(Type.kNormallyOpen);
         s_limit2 = m_follow.getForwardLimitSwitch(Type.kNormallyOpen);
 
-        m_arm.setSoftLimit(SoftLimitDirection.kReverse, -40);
+        m_arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
+        m_arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
-        m_follow.follow(m_arm);
+        m_follow.follow(m_arm, true);
 
         m_pid.setP(kP);
         m_pid.setI(kI);
@@ -59,20 +60,20 @@ public class Arm extends SubsystemBase{
         m_pid.setSmartMotionMaxAccel(maxAcc, 0);
         m_pid.setSmartMotionAllowedClosedLoopError(allowedErr, 0);
 
-        SmartDashboard.putNumber("P Gain", kP);
-        SmartDashboard.putNumber("I Gain", kI);
-        SmartDashboard.putNumber("D Gain", kD);
-        SmartDashboard.putNumber("I Zone", kIz);
-        SmartDashboard.putNumber("Feed Forward", kFF);
-        SmartDashboard.putNumber("Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Min Output", kMinOutput);
+        SmartDashboard.putNumber("Arm P Gain", kP);
+        SmartDashboard.putNumber("Arm I Gain", kI);
+        SmartDashboard.putNumber("Arm D Gain", kD);
+        SmartDashboard.putNumber("Arm I Zone", kIz);
+        SmartDashboard.putNumber("Arm Feed Forward", kFF);
+        SmartDashboard.putNumber("Arm Max Output", kMaxOutput);
+        SmartDashboard.putNumber("Arm Min Output", kMinOutput);
 
         // display Smart Motion coefficients
-        SmartDashboard.putNumber("Max Velocity", maxVel);
-        SmartDashboard.putNumber("Min Velocity", minVel);
-        SmartDashboard.putNumber("Max Acceleration", maxAcc);
-        SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-        SmartDashboard.putNumber("Set Position", 0);
+        SmartDashboard.putNumber("Arm Max Velocity", maxVel);
+        SmartDashboard.putNumber("Arm Min Velocity", minVel);
+        SmartDashboard.putNumber("Arm Max Acceleration", maxAcc);
+        SmartDashboard.putNumber("Arm Allowed Closed Loop Error", allowedErr);
+        SmartDashboard.putNumber("Arm Set Position", 0);
     }
 
     public void stopMotors(){
@@ -110,23 +111,24 @@ public class Arm extends SubsystemBase{
 
     @Override
     public void periodic(){
-        // m_pid.setP(SmartDashboard.getNumber("P Gain", 0));
-        // m_pid.setI(SmartDashboard.getNumber("I Gain", 0));
-        // m_pid.setD(SmartDashboard.getNumber("D Gain", 0));
-        // m_pid.setIZone(SmartDashboard.getNumber("I Zone", 0));
-        // m_pid.setFF(SmartDashboard.getNumber("Feed Forward", 0));
+        SmartDashboard.putNumber("arm position", m_encoder.getPosition());
+        // m_pid.setP(SmartDashboard.getNumber("Arm P Gain", 0));
+        // m_pid.setI(SmartDashboard.getNumber("Arm I Gain", 0));
+        // m_pid.setD(SmartDashboard.getNumber("Arm D Gain", 0));
+        // m_pid.setIZone(SmartDashboard.getNumber("Arm I Zone", 0));
+        // m_pid.setFF(SmartDashboard.getNumber("Arm Feed Forward", 0));
 
         // // if(getLimit() || m_encoder.getPosition()<0.1){
         // //     stopMotors();
         // // }
 
         // m_pid.setOutputRange(
-        //     SmartDashboard.getNumber("Max Output", 0),
-        //     SmartDashboard.getNumber("Min Output", 0));
+        //     SmartDashboard.getNumber("Arm Max Output", 0),
+        //     SmartDashboard.getNumber("Arm Min Output", 0));
 
-        // m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Max Velocity", 0), 0);
-        // m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Min Velocity", 0), 0);
-        // m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Max Acceleration", 0), 0);
-        // m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Allowed Closed Loop Error", 0),0);        
+        // m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Arm Max Velocity", 0), 0);
+        // m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Arm Min Velocity", 0), 0);
+        // m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Arm Max Acceleration", 0), 0);
+        // m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Arm Allowed Closed Loop Error", 0),0);        
     }
 }
