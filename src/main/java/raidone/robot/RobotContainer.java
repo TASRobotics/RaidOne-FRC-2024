@@ -1,5 +1,6 @@
 package raidone.robot;
 
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -40,6 +41,7 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton setArm = new JoystickButton(driver, XboxController.Button.kStart.value);
+    private final JoystickButton intakeIn = new JoystickButton(driver, XboxController.Button.kA.value);
 
     private SendableChooser<Command> autoChooser;
 
@@ -47,6 +49,7 @@ public class RobotContainer {
     private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
     private final Arm arm = new Arm();
+    private final Intake intake = new Intake();
     
 
 
@@ -79,6 +82,7 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
         zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
         setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new AutoWrist(wrist)));
+        intakeIn.onTrue(new Intake_In(intake, Constants.Intake.percent));
     }
 
     /**

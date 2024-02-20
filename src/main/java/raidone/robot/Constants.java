@@ -165,5 +165,6 @@ public final class Constants {
         public static final int INTAKE_MOTOR_ID = 13;
         public static final int kForward = 1;
         public static final int kBackward = 0;
+        public static final double percent = 0.9;
     }
 }
