@@ -28,6 +28,7 @@ public class Arm extends SubsystemBase{
     private Joystick driver = new Joystick(0);
 
     public Arm(){
+        System.out.println("Arm init");
         isHomed = false;
         m_arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
         m_follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);

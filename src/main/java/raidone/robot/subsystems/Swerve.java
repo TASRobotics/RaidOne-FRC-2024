@@ -24,6 +24,7 @@ public class Swerve extends SubsystemBase {
     private Field2d field = new Field2d();
 
     public Swerve() {
+        System.out.println("Swerve init");
         imu = new Pigeon2(PIGEON_ID);
         imu.getConfigurator().apply(new Pigeon2Configuration());
         imu.setYaw(0);

@@ -24,6 +24,7 @@ public class Wrist extends SubsystemBase{
     private Joystick driver = new Joystick(0);
 
     public Wrist() {
+        System.out.println("Wrist init");
         isHomed = false;
         m_wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
         
