@@ -17,6 +17,7 @@ public class Intake {
     private SparkPIDController m_pid;
 
     public Intake(){
+        System.out.println("Intake init");
         m_roller = new CANSparkMax(INTAKE_MOTOR_ID, MotorType.kBrushless);
 
         s_beam = new Trigger(s_beam);

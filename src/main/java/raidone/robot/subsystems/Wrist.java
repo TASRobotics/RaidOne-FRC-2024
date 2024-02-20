@@ -26,6 +26,7 @@ public class Wrist extends SubsystemBase{
     private double setpoint = 0;
 
     public Wrist() {
+        System.out.println("Wrist init");
         isHomed = false;
         m_wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
         m_follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
