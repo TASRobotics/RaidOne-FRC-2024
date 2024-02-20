@@ -11,7 +11,7 @@ public class ArmHome extends Command {
     public ArmHome(Arm arm, Wrist wrist) {
         this.arm = arm;
         this.wrist = wrist;
-        addRequirements(this.arm);
+        addRequirements(this.arm, this.wrist);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ArmHome extends Command {
     public void execute() {
         if(!wrist.isHomed()){
             wrist.home();
-        }else{
+        }else if (!arm.isHomed()){
             arm.home();
         }
         

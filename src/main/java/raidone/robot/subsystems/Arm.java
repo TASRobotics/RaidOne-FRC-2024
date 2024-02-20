@@ -43,10 +43,12 @@ public class Arm extends SubsystemBase{
         m_encoder = m_arm.getEncoder();
         s_limit1 = m_arm.getForwardLimitSwitch(Type.kNormallyOpen);
         s_limit2 = m_follow.getForwardLimitSwitch(Type.kNormallyOpen);
+        
+        s_limit1.enableLimitSwitch(true);
+        s_limit2.enableLimitSwitch(true);
 
         m_arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         m_arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
-
         m_follow.follow(m_arm, true);
 
         m_pid.setP(kP);
@@ -102,7 +104,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void home(){
-        m_arm.set(-0.1);
+        m_arm.set(0.1);
     }
 
     public boolean isHomed(){
@@ -124,9 +126,9 @@ public class Arm extends SubsystemBase{
         // m_pid.setIZone(SmartDashboard.getNumber("Arm I Zone", 0));
         // m_pid.setFF(SmartDashboard.getNumber("Arm Feed Forward", 0));
 
-        if((getLimit() || m_encoder.getPosition()<0.1)){
-            stopMotors();
-        }
+        //if((getLimit() || m_encoder.getPosition()<0.1)){
+        //    stopMotors();
+        //}
 
         // m_pid.setOutputRange(
         //     SmartDashboard.getNumber("Arm Max Output", 0),
