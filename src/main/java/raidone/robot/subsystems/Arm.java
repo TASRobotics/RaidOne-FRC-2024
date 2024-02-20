@@ -2,6 +2,8 @@ package raidone.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
@@ -19,7 +21,9 @@ public class Arm extends SubsystemBase{
     private boolean isHomed;
     private SparkPIDController m_pid;
     private RelativeEncoder m_encoder;
-    private SparkLimitSwitch s_limit; 
+    private SparkLimitSwitch s_limit1;
+    private SparkLimitSwitch s_limit2;
+    private Joystick driver = new Joystick(0);
 
     public Arm(){
         isHomed = false;
@@ -29,7 +33,7 @@ public class Arm extends SubsystemBase{
 
         m_pid = m_arm.getPIDController();
         m_encoder = m_arm.getEncoder();
-        s_limit = m_arm.getForwardLimitSwitch(Type.kNormallyOpen);
+        s_limit1 = m_arm.getForwardLimitSwitch(Type.kNormallyOpen);
 
         m_pid.setP(kP);
         m_pid.setI(kI);
@@ -63,7 +67,18 @@ public class Arm extends SubsystemBase{
         m_arm.stopMotor();
     }
 
-    public void setPos(double setpoint){
+    public boolean getLimit(){
+        boolean limitStatus = s_limit1.isPressed()
+        return limitStatus;
+    }
+
+    public void setPos(){
+        double setpoint = 0;
+        if(driver.getRawButton(XboxController.Button.kA.value)){
+            setpoint = SCORINGPOS;
+        }else if(driver.getRawButton(XboxController.Button.kB.value)){
+            setpoint = INTAKEPOS;
+        }
         m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
         SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
@@ -73,7 +88,7 @@ public class Arm extends SubsystemBase{
     }
 
     public boolean isHomed(){
-        isHomed = s_limit.isPressed();
+        isHomed = s_limit1.isPressed();
         return isHomed;
     }
 

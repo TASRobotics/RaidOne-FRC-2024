@@ -7,6 +7,8 @@ import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -19,6 +21,7 @@ public class Wrist extends SubsystemBase{
     private SparkPIDController m_pid;
     private RelativeEncoder m_encoder;
     private SparkLimitSwitch s_limit;
+    private Joystick driver = new Joystick(0);
 
     public Wrist() {
         isHomed = false;
@@ -62,7 +65,13 @@ public class Wrist extends SubsystemBase{
         m_wrist.stopMotor();
     }
 
-    public void setPos(double setpoint) {
+    public void setPos() {
+        double setpoint = 0;
+        if(driver.getRawButton(XboxController.Button.kA.value)){
+            setpoint = SCORINGPOS;
+        }else if(driver.getRawButton(XboxController.Button.kB.value)){
+            setpoint = INTAKEPOS;
+        }
         m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
         SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
