@@ -1,23 +1,16 @@
 package raidone.robot;
 
-import java.sql.Driver;
-
-import org.littletonrobotics.junction.inputs.LoggedDriverStation.JoystickInputs;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
@@ -57,8 +50,6 @@ public class RobotContainer {
     // IF BLUE: 45, if red, 315
     private final Trigger turnToSource = new Trigger(() -> getLeftTrigger());
     private final Trigger turnToAmp = new Trigger(() -> getRightTrigger());
-
-    private SendableChooser<Command> autoChooser;
 
     /* Subsystems */
     private final Swerve swerve = new Swerve();
