@@ -104,7 +104,7 @@ public class Swerve extends SubsystemBase {
 
     public double getHeadingOrdinalTurn() {
         // return getPose().getRotation();
-        return Math.IEEEremainder(imu.getAngle(), 360);
+        return Math.IEEEremainder(imu.getRotation2d().getDegrees(), 360);
     }
 
     public void setHeading(Rotation2d heading) {

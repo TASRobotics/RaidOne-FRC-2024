@@ -72,7 +72,7 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> -driver.getRawAxis(rotationAxis) * 0.5,
-                        () -> true));
+                        () -> false));
 
         // Configure the button bindings
         configureButtonBindings();

@@ -10,7 +10,7 @@ public class OrdinalTurn extends PIDCommand {
     // TODO: tune PID
     public OrdinalTurn(double angle, Swerve swerve) {
         super(
-                new PIDController(0.01, 0.0, 0.0),
+                new PIDController(0.13, 0.0, 0.01),
                 swerve::getHeadingOrdinalTurn,
                 angle,
                 output -> swerve.drive(new Translation2d(0, 0), output, false, true),
@@ -18,12 +18,13 @@ public class OrdinalTurn extends PIDCommand {
 
         getController().enableContinuousInput(-180, 180);
 
-        getController().setTolerance(5, 2);
+        getController().setTolerance(3, 2);
 
     }
 
     @Override
     public boolean isFinished() {
+        System.out.println(getController().getPositionError());
         return getController().atSetpoint();
     }
 }
