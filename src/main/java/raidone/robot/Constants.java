@@ -78,7 +78,7 @@ public final class Constants {
         public static final double ROTOR_KD = 0.0001;
 
         /* Drive Motor PID Values */
-        public static final double THROTTLE_KP = 0.12; 
+        public static final double THROTTLE_KP = 2.0; 
         public static final double THROTTLE_KI = 0.0;
         public static final double THROTTLE_KD = 0.0;
         public static final double THROTTLE_KF = 0.0;
