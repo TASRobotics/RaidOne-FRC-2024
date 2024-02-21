@@ -1,14 +1,14 @@
 package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import raidone.robot.subsystems.Arm;
+import raidone.robot.subsystems.Wrist;
 
-public class ArmHome extends Command {    
-    private static Arm arm;
+public class WristHome extends Command {    
+    private static Wrist wrist;
 
-    public ArmHome(Arm arm){
-        this.arm = arm;
-        addRequirements(this.arm);
+    public WristHome(Wrist wrist) {
+        this.wrist = wrist;
+        addRequirements(this.wrist);
     }
 
     @Override
@@ -18,16 +18,16 @@ public class ArmHome extends Command {
 
     @Override
     public void execute() {
-            arm.home();
+        wrist.home();
     }
 
     @Override
     public boolean isFinished() {
-        return arm.isHomed();
+        return wrist.isHomed();
     }
 
     @Override
     public void end(boolean interrupted) {
-        arm.stopMotors();
+        wrist.stopMotors();
     }
 }

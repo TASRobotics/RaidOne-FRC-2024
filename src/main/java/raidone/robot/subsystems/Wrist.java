@@ -10,7 +10,9 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import raidone.robot.commands.WristHome;
 
 import static raidone.robot.Constants.Wrist.*;
 
@@ -84,7 +86,7 @@ public class Wrist extends SubsystemBase{
     }
 
     public void home(){
-        m_wrist.set(-0.1);
+        m_wrist.set(-0.3);
     }
 
     public boolean isHomed(){

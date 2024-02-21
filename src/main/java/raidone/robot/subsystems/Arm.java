@@ -104,7 +104,7 @@ public class Arm extends SubsystemBase{
     }
 
     public void home(){
-        m_arm.set(0.1);
+        m_arm.set(0.3);
     }
 
     public boolean isHomed(){

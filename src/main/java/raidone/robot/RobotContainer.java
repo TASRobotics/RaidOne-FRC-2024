@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -79,8 +80,8 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
         zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
-        setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new AutoWrist(wrist)));
-        home.onTrue(new ArmHome(arm, wrist));
+        // setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new AutoWrist(wrist)));
+        home.onTrue(new ParallelCommandGroup(new WristHome(wrist), new ArmHome(arm)));
     }
 
     /**
