@@ -13,6 +13,8 @@ import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.SparkMaxLimitSwitch.Direction;
+import com.revrobotics.CANSparkBase.IdleMode;
+
 
 import static raidone.robot.Constants.Arm.*;
 
@@ -37,7 +39,8 @@ public class Arm extends SubsystemBase{
         m_arm.restoreFactoryDefaults();
         m_follow.restoreFactoryDefaults();
 
-        m_arm.restoreFactoryDefaults();
+        m_arm.setIdleMode(IdleMode.kBrake);
+        m_follow.setIdleMode(IdleMode.kBrake);
 
         m_pid = m_arm.getPIDController();
         m_encoder = m_arm.getEncoder();
@@ -49,6 +52,7 @@ public class Arm extends SubsystemBase{
 
         m_arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         m_arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // m_arm.setInverted(true);
         m_follow.follow(m_arm, true);
 
         m_pid.setP(kP);
@@ -63,19 +67,6 @@ public class Arm extends SubsystemBase{
         m_pid.setSmartMotionMaxAccel(maxAcc, 0);
         m_pid.setSmartMotionAllowedClosedLoopError(allowedErr, 0);
 
-        SmartDashboard.putNumber("Arm P Gain", kP);
-        SmartDashboard.putNumber("Arm I Gain", kI);
-        SmartDashboard.putNumber("Arm D Gain", kD);
-        SmartDashboard.putNumber("Arm I Zone", kIz);
-        SmartDashboard.putNumber("Arm Feed Forward", kFF);
-        SmartDashboard.putNumber("Arm Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Arm Min Output", kMinOutput);
-
-        // display Smart Motion coefficients
-        SmartDashboard.putNumber("Arm Max Velocity", maxVel);
-        SmartDashboard.putNumber("Arm Min Velocity", minVel);
-        SmartDashboard.putNumber("Arm Max Acceleration", maxAcc);
-        SmartDashboard.putNumber("Arm Allowed Closed Loop Error", allowedErr);
         SmartDashboard.putNumber("Arm Set Position", setpoint);
     }
 
@@ -92,51 +83,34 @@ public class Arm extends SubsystemBase{
         m_arm.set(speed);
     }
 
-    public void setPos(){
-        
-        if(driver.getRawButton(XboxController.Button.kA.value)){
-            setpoint = SCORINGPOS;
-        }else if(driver.getRawButton(XboxController.Button.kB.value)){
-            setpoint = INTAKEPOS;
-        }
-        m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
+    public void setPos(double setpoint){
+        m_pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
+
     }
 
     public void home(){
-        m_arm.set(0.3);
+        m_arm.set(0.2);
+    }
+
+    public RelativeEncoder getEncoder() {
+        return m_encoder;
     }
 
     public boolean isHomed(){
+        return isHomed;
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("arm position", m_encoder.getPosition()); 
+        SmartDashboard.putString("Arm Command", this.getCurrentCommand() != null ? this.getCurrentCommand().getName():""); 
+
         if(s_limit1.isPressed() || s_limit2.isPressed()){
             isHomed = true;
             m_encoder.setPosition(0);
         }else{
             isHomed = false;
         }
-        return isHomed;
-    }
-
-    @Override
-    public void periodic(){
-        SmartDashboard.putNumber("arm position", m_encoder.getPosition());
-        // m_pid.setP(SmartDashboard.getNumber("Arm P Gain", 0));
-        // m_pid.setI(SmartDashboard.getNumber("Arm I Gain", 0));
-        // m_pid.setD(SmartDashboard.getNumber("Arm D Gain", 0));
-        // m_pid.setIZone(SmartDashboard.getNumber("Arm I Zone", 0));
-        // m_pid.setFF(SmartDashboard.getNumber("Arm Feed Forward", 0));
-
-        //if((getLimit() || m_encoder.getPosition()<0.1)){
-        //    stopMotors();
-        //}
-
-        // m_pid.setOutputRange(
-        //     SmartDashboard.getNumber("Arm Max Output", 0),
-        //     SmartDashboard.getNumber("Arm Min Output", 0));
-
-        // m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Arm Max Velocity", 0), 0);
-        // m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Arm Min Velocity", 0), 0);
-        // m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Arm Max Acceleration", 0), 0);
-        // m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Arm Allowed Closed Loop Error", 0),0);        
     }
 }

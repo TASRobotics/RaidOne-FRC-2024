@@ -2,6 +2,7 @@ package raidone.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkLimitSwitch.Type;
@@ -17,15 +18,13 @@ import raidone.robot.commands.WristHome;
 import static raidone.robot.Constants.Wrist.*;
 
 public class Wrist extends SubsystemBase{
-    private static Wrist wrist;
     private CANSparkMax m_wrist;
     private CANSparkMax m_follower;
     private boolean isHomed;
     private SparkPIDController m_pid;
     private RelativeEncoder m_encoder;
     private SparkLimitSwitch s_limit;
-    private Joystick driver = new Joystick(0);
-    private double setpoint = 0;
+    // private double setpoint = 0;
 
     public Wrist() {
         System.out.println("Wrist init");
@@ -39,6 +38,11 @@ public class Wrist extends SubsystemBase{
         m_pid = m_wrist.getPIDController();
         m_encoder = m_wrist.getEncoder();
         s_limit = m_wrist.getForwardLimitSwitch(Type.kNormallyOpen);
+
+        m_wrist.setIdleMode(IdleMode.kBrake);
+        m_follower.setIdleMode(IdleMode.kBrake);
+
+        s_limit.enableLimitSwitch(true);
 
         m_follower.follow(m_wrist, true);
 
@@ -54,33 +58,15 @@ public class Wrist extends SubsystemBase{
         m_pid.setSmartMotionMaxAccel(maxAcc, 0);
         m_pid.setSmartMotionAllowedClosedLoopError(allowedErr, 0);
 
-        SmartDashboard.putNumber("P Gain", kP);
-        SmartDashboard.putNumber("I Gain", kI);
-        SmartDashboard.putNumber("D Gain", kD);
-        SmartDashboard.putNumber("I Zone", kIz);
-        SmartDashboard.putNumber("Feed Forward", kFF);
-        SmartDashboard.putNumber("Max Output", kMaxOutput);
-        SmartDashboard.putNumber("Min Output", kMinOutput);
-
-        // display Smart Motion coefficients
-        SmartDashboard.putNumber("Max Velocity", maxVel);
-        SmartDashboard.putNumber("Min Velocity", minVel);
-        SmartDashboard.putNumber("Max Acceleration", maxAcc);
-        SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-        SmartDashboard.putNumber("Set Position", setpoint);
+        // SmartDashboard.putNumber("Wrist Set Position", setpoint);
+        
     }
 
     public void stopMotors() {
         m_wrist.stopMotor();
     }
 
-    public void setPos() {
-        
-        if(driver.getRawButton(XboxController.Button.kA.value)){
-            setpoint = SCORINGPOS;
-        }else if(driver.getRawButton(XboxController.Button.kB.value)){
-            setpoint = INTAKEPOS;
-        }
+    public void setPos(double setpoint) {
         m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
         SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
@@ -90,17 +76,22 @@ public class Wrist extends SubsystemBase{
     }
 
     public boolean isHomed(){
+        return isHomed;
+    }
+
+    public RelativeEncoder getEncoder() {
+        return m_encoder;
+    }
+
+    @Override
+    public void periodic(){
         if(s_limit.isPressed()){
             isHomed = true;
             m_encoder.setPosition(0);
         }else{
             isHomed = false;
         }
-        return isHomed;
-    }
-
-    @Override
-    public void periodic(){
+        SmartDashboard.putNumber("Wrist Position", m_encoder.getPosition());
         // m_pid.setP(SmartDashboard.getNumber("P Gain", 0));
         // m_pid.setI(SmartDashboard.getNumber("I Gain", 0));
         // m_pid.setD(SmartDashboard.getNumber("D Gain", 0));

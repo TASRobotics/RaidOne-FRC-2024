@@ -1,33 +1,36 @@
 package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+
 import raidone.robot.subsystems.Wrist;
 
-public class WristHome extends Command {    
+public class WristGo extends Command {
     private static Wrist wrist;
-
-    public WristHome(Wrist wrist) {
+    private double setpoint;
+    
+    public WristGo(Wrist wrist, double setpoint) {
         this.wrist = wrist;
+        this.setpoint = setpoint;
         addRequirements(this.wrist);
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
         
     }
 
     @Override
     public void execute() {
-        wrist.home();
+        wrist.setPos(setpoint);
     }
 
     @Override
     public boolean isFinished() {
-        return wrist.isHomed();
+        return Math.abs(wrist.getEncoder().getPosition() - setpoint) <= 0.01;
     }
-
+    
     @Override
     public void end(boolean interrupted) {
-        wrist.stopMotors();
+        super.end(interrupted);
     }
 }

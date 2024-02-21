@@ -34,14 +34,19 @@ public class RobotContainer {
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
-    // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For joystick
+    // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For
+    // joystick
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton setArm = new JoystickButton(driver, XboxController.Button.kStart.value);
+    // private final JoystickButton setArm = new JoystickButton(driver,
+    // XboxController.Button.kStart.value);
+    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton amp = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton intake = new JoystickButton(driver, XboxController.Button.kX.value);
 
     private SendableChooser<Command> autoChooser;
 
@@ -49,8 +54,6 @@ public class RobotContainer {
     private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
     private final Arm arm = new Arm();
-    
-
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -79,9 +82,19 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
-        zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
-        // setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new AutoWrist(wrist)));
-        home.onTrue(new ParallelCommandGroup(new WristHome(wrist), new ArmHome(arm)));
+        // zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new
+        // Translation2d(0,0), new Rotation2d(0)))));
+        // setArm.toggleOnTrue(new ParallelCommandGroup(new AutoArm(arm), new
+        // AutoWrist(wrist)));
+        // stow.onTrue(new ArmGo(arm, Constants.Arm.INTAKEPOS).andThen(new
+        // ArmHome(arm)));
+        amp.onTrue(new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.SCORINGPOS),
+                new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
+        intake.onTrue(new ParallelCommandGroup(
+                new SequentialCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new ArmHome(arm)),
+                new WristGo(wrist, Constants.Wrist.INTAKEPOS)));
+        home.onTrue(new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist)));
+        stow.onTrue(new SequentialCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new ArmHome(arm)));
     }
 
     /**
@@ -92,7 +105,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return null;
     }
-    
+
     public Swerve getSwerve() {
         return swerve;
     }

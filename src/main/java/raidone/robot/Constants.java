@@ -126,13 +126,13 @@ public final class Constants {
         public static final double SCORINGPOS = -20.0;
         public static final double INTAKEPOS = 0.0;
         
-        public static final double kP = 0.1;
+        public static final double kP = 0.05;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.007;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
-        public static final double kMaxOutput = 0.0;
-        public static final double kMinOutput = 0.0;
+        public static final double kMaxOutput = 1.0;
+        public static final double kMinOutput = -0.6;
         public static final double maxRPM = 0.0;
         public static final double maxVel = 0.0;
         public static final double minVel = 0.0;
@@ -144,8 +144,8 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final double SCORINGPOS = 0.0;
-        public static final double INTAKEPOS = 0.0;
+        public static final double SCORINGPOS = 12.6;
+        public static final double INTAKEPOS = 33.0;
         
         public static final double kP = 0.1;
         public static final double kI = 0.0;
