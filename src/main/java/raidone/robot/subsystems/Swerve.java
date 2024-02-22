@@ -2,7 +2,6 @@ package raidone.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -24,6 +23,7 @@ public class Swerve extends SubsystemBase {
     private Field2d field = new Field2d();
 
     public Swerve() {
+        System.out.println("Swerve init");
         imu = new Pigeon2(PIGEON_ID);
         imu.getConfigurator().apply(new Pigeon2Configuration());
         imu.setYaw(0);
