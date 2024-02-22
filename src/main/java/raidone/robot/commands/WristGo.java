@@ -26,7 +26,7 @@ public class WristGo extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(wrist.getEncoder().getPosition() - setpoint) <= 0.01;
+        return Math.abs(wrist.getEncoder().getPosition() - setpoint) <= 0.2;
     }
     
     @Override
