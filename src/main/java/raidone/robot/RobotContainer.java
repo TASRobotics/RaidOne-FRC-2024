@@ -34,8 +34,9 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    // private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton intakeIn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton intakeOut = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     // private final JoystickButton setArm = new JoystickButton(driver,
     // XboxController.Button.kStart.value);
@@ -62,7 +63,7 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> driver.getRawAxis(rotationAxis) * 0.5,
-                        () -> robotCentric.getAsBoolean()));
+                        () -> false));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -80,12 +81,6 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
         intakeIn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
-        // zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new
-        // Translation2d(0,0), new Rotation2d(0)))));
-        // setArm.toggleOnTrue(new ParallelCommandGroup(new AutoArm(arm), new
-        // AutoWrist(wrist)));
-        // stow.onTrue(new ArmGo(arm, Constants.Arm.INTAKEPOS).andThen(new
-        // ArmHome(arm)));
         amp.onTrue(new ParallelCommandGroup(
             new ArmGo(arm, Constants.Arm.SCORINGPOS), 
             new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
@@ -96,6 +91,7 @@ public class RobotContainer {
         stow.onTrue(new SequentialCommandGroup(
             new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
             new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
+        intakeOut.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
     }
 
     /**

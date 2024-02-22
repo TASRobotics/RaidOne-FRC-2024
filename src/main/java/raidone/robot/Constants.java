@@ -123,7 +123,7 @@ public final class Constants {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final double SCORINGPOS = -23.0;
+        public static final double SCORINGPOS = -24.5;
         public static final double INTAKEPOS = 0.0;
         
         public static final double kP = 0.05;
@@ -143,8 +143,8 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final double SCORINGPOS = -12.6;
-        public static final double INTAKEPOS = -37.0;
+        public static final double SCORINGPOS = -12;
+        public static final double INTAKEPOS = -33.0;
         
         public static final double kP = 0.02;
         public static final double kI = 0.0;
