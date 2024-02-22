@@ -31,7 +31,6 @@ public class Wrist extends SubsystemBase{
         isHomed = false;
         m_wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
         m_follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
-        m_wrist.
         m_wrist.restoreFactoryDefaults();
         m_follower.restoreFactoryDefaults();
         
