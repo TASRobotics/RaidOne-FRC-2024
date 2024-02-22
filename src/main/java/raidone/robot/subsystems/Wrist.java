@@ -33,6 +33,8 @@ public class Wrist extends SubsystemBase{
         m_follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
         m_wrist.restoreFactoryDefaults();
         m_follower.restoreFactoryDefaults();
+
+        m_wrist.setInverted(true);
         
 
         m_pid = m_wrist.getPIDController();
@@ -51,12 +53,6 @@ public class Wrist extends SubsystemBase{
         m_pid.setD(kD);
         m_pid.setIZone(kIz);
         m_pid.setFF(kFF);
-        m_pid.setOutputRange(kMinOutput, kMaxOutput);
-
-        m_pid.setSmartMotionMaxVelocity(maxVel, 0);
-        m_pid.setSmartMotionMinOutputVelocity(minVel, 0);
-        m_pid.setSmartMotionMaxAccel(maxAcc, 0);
-        m_pid.setSmartMotionAllowedClosedLoopError(allowedErr, 0);
 
         // SmartDashboard.putNumber("Wrist Set Position", setpoint);
         
@@ -68,12 +64,12 @@ public class Wrist extends SubsystemBase{
     }
 
     public void setPos(double setpoint) {
-        m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
+        m_pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
 
     public void home(){
-        m_wrist.set(-0.3);
+        m_wrist.set(0.3);
     }
 
     public boolean isHomed(){

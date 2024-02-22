@@ -143,20 +143,20 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final double SCORINGPOS = 12.6;
-        public static final double INTAKEPOS = 33.0;
+        public static final double SCORINGPOS = -12.6;
+        public static final double INTAKEPOS = -37.0;
         
-        public static final double kP = 0.002;
+        public static final double kP = 0.02;
         public static final double kI = 0.0;
-        public static final double kD = 0.0002;
+        public static final double kD = 0.002;
         public static final double kIz = 0.0;
-        public static final double kFF = 0.00005;
+        public static final double kFF = 0.0;
         public static final double kMaxOutput = 1.0;
         public static final double kMinOutput = -1.0;
-        public static final double maxVel = 1500.0;
-        public static final double minVel = 0.0;
-        public static final double maxAcc = 1000.0;
-        public static final double allowedErr = 0.0;
+        public static final double maxVel = 2000.0;
+        public static final double minVel = 250.0;
+        public static final double maxAcc = 2000.0;
+        public static final double allowedErr = 2.0;
     }
 
     public static final class Intake{

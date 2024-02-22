@@ -1,5 +1,7 @@
 package raidone.robot;
 
+import static raidone.robot.Constants.Wrist.INTAKEPOS;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -88,13 +90,16 @@ public class RobotContainer {
         // AutoWrist(wrist)));
         // stow.onTrue(new ArmGo(arm, Constants.Arm.INTAKEPOS).andThen(new
         // ArmHome(arm)));
-        amp.onTrue(new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.SCORINGPOS),
-                new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
+        amp.onTrue(new ParallelCommandGroup(
+            new ArmGo(arm, Constants.Arm.SCORINGPOS), 
+            new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
         intake.onTrue(new ParallelCommandGroup(
                 new SequentialCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new ArmHome(arm)),
                 new WristGo(wrist, Constants.Wrist.INTAKEPOS)));
         home.onTrue(new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist)));
-        stow.onTrue(new SequentialCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new ArmHome(arm)));
+        stow.onTrue(new SequentialCommandGroup(
+            new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
+            new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
     }
 
     /**
