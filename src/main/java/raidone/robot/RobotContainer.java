@@ -1,18 +1,13 @@
 package raidone.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
@@ -40,15 +35,12 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kX.value);
     // private final JoystickButton setArm = new JoystickButton(driver,
     // XboxController.Button.kStart.value);
     private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton amp = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton intake = new JoystickButton(driver, XboxController.Button.kX.value);
-
-    private SendableChooser<Command> autoChooser;
 
     /* Subsystems */
     private final Swerve swerve = new Swerve();

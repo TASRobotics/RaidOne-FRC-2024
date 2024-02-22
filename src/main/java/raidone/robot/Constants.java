@@ -131,12 +131,12 @@ public final class Constants {
         public static final double kD = 0.007;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
-        public static final double kMaxOutput = 1.0;
-        public static final double kMinOutput = -0.6;
-        public static final double maxVel = 0.0;
-        public static final double minVel = 0.0;
-        public static final double maxAcc = 0.0;
-        public static final double allowedErr = 0.0;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = -0.6;
+        public static final double MAX_VEL = 0.0;
+        public static final double MIN_VEL = 0.0;
+        public static final double MAX_ACCEL = 0.0;
+        public static final double ALLOWED_ERROR = 0.0;
     }
 
     public static final class Wrist{
@@ -151,17 +151,17 @@ public final class Constants {
         public static final double kD = 0.0002;
         public static final double kIz = 0.0;
         public static final double kFF = 0.00005;
-        public static final double kMaxOutput = 1.0;
-        public static final double kMinOutput = -1.0;
-        public static final double maxVel = 1500.0;
-        public static final double minVel = 0.0;
-        public static final double maxAcc = 1000.0;
-        public static final double allowedErr = 0.0;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = -1.0;
+        public static final double MAX_VEL = 1500.0;
+        public static final double MIN_VEL = 0.0;
+        public static final double MAX_ACCEL = 1000.0;
+        public static final double ALLOWED_ERROR = 0.0;
     }
 
     public static final class Intake{
         public static final int INTAKE_MOTOR_ID = 13;
-        public static final int kForward = 1;
-        public static final int kBackward = 0;
+        public static final int FORWARD = 1;
+        public static final int BACKWARD = 0;
     }
 }
