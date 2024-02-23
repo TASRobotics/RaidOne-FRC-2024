@@ -15,14 +15,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Wrist.*;
 
 public class Wrist extends SubsystemBase {
-    private CANSparkMax wrist;
-    private CANSparkMax follower;
-    private boolean isHomed;
+    private CANSparkMax wrist, follower;
     private SparkPIDController pid;
     private RelativeEncoder encoder;
     private SparkLimitSwitch limit;
+    private boolean isHomed;
 
-    public Wrist() {
+    public static Wrist wristSys = new Wrist();
+
+    private Wrist() {
         System.out.println("Wrist init");
         isHomed = false;
         wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
@@ -90,5 +91,9 @@ public class Wrist extends SubsystemBase {
         } else {
             isHomed = false;
         }
+    }
+
+    public static Wrist system() {
+        return wristSys;
     }
 }

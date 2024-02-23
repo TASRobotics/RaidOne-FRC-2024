@@ -6,8 +6,8 @@ import raidone.robot.subsystems.Wrist;
 public class WristHome extends Command {
     private Wrist wrist;
 
-    public WristHome(Wrist wrist) {
-        this.wrist = wrist;
+    public WristHome() {
+        this.wrist = Wrist.wristSys;
         addRequirements(this.wrist);
     }
 

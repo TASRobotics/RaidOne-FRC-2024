@@ -8,8 +8,8 @@ public class WristGo extends Command {
     private Wrist wrist;
     private double setpoint;
 
-    public WristGo(Wrist wrist, double setpoint) {
-        this.wrist = wrist;
+    public WristGo(double setpoint) {
+        this.wrist = Wrist.wristSys;
         this.setpoint = setpoint;
         addRequirements(this.wrist);
     }

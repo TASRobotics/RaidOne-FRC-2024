@@ -63,9 +63,6 @@ public class RobotContainer {
     private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
-    // Declare subsystems
-    private final Wrist wrist = new Wrist();
-
     // Get the triggers
     public boolean getTrigger(boolean isRight) {
         if (isRight)
@@ -92,15 +89,15 @@ public class RobotContainer {
         intakeOut.onTrue(new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
-                new ParallelCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
-                new ParallelCommandGroup(new ArmHome(), new WristHome(wrist))));
-        home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome(wrist)));
+                new ParallelCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new WristGo(0)).withTimeout(1),
+                new ParallelCommandGroup(new ArmHome(), new WristHome())));
+        home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
         amp.onTrue(new ParallelCommandGroup(
                 new ArmGo(Constants.Arm.SCORINGPOS),
-                new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
+                new WristGo(Constants.Wrist.SCORINGPOS)));
         intakePos.onTrue(new ParallelCommandGroup(
                 new SequentialCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new ArmHome()),
-                new WristGo(wrist, Constants.Wrist.INTAKEPOS)));
+                new WristGo(Constants.Wrist.INTAKEPOS)));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));
