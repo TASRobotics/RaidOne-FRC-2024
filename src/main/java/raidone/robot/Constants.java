@@ -16,7 +16,7 @@ public final class Constants {
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4.0) * Math.PI;
         public static final double WHEEL_DIAMETER_M = Units.inchesToMeters(4.0);
 
-        public static final double THROTTLE_GEAR_RATIO = (6.75 / 1.0);
+        public static final double THROTTLE_GEAR_RATIO = (6.12 / 1.0);
         public static final double ROTOR_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
         
         public static final double THROTTLE_VEL_CONVERSION_FACTOR = 
@@ -62,15 +62,15 @@ public final class Constants {
         
         // Throttle feedforward constants
         public static final double THROTTLE_KS = 0.00; // 0.32
-        public static final double THROTTLE_KV = 2.7; // 1.51
+        public static final double THROTTLE_KV = 2.53; // 1.51
         public static final double THROTTLE_KA = 10.0; // 0.27
 
         // Pathing consants
-        public static final double TRANSLATION_KP = 0.000001;
+        public static final double TRANSLATION_KP = 0.31;
         public static final double TRANSLATION_KI = 0.0;
         public static final double TRANSLATION_KD = 0.0;
 
-        public static final double ROTATION_KP = 0.01;
+        public static final double ROTATION_KP = 1.05;
         public static final double ROTATION_KI = 0.0;
         public static final double ROTATION_KD = 0.0;
         
