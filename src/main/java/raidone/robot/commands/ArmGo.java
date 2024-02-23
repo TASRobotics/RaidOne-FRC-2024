@@ -4,19 +4,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import raidone.robot.subsystems.Arm;
 
-public class ArmGo extends Command {    
-    private static Arm arm;
+public class ArmGo extends Command {
+    private Arm arm;
     private double setpoint;
 
     public ArmGo(Arm arm, double setpoint) {
         this.arm = arm;
         this.setpoint = setpoint;
         addRequirements(this.arm);
-    }
-
-    @Override
-    public void initialize(){
-
     }
 
     @Override

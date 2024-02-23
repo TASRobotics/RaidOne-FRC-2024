@@ -7,7 +7,6 @@ import raidone.robot.subsystems.Swerve;
 
 public class OrdinalTurn extends PIDCommand {
 
-    // TODO: tune PID
     public OrdinalTurn(double angle, Swerve swerve) {
         super(
                 new PIDController(0.13, 0.0, 0.01),
@@ -17,7 +16,6 @@ public class OrdinalTurn extends PIDCommand {
                 swerve);
 
         getController().enableContinuousInput(-180, 180);
-
         getController().setTolerance(3, 2);
 
     }

@@ -11,10 +11,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.CANSparkBase.IdleMode;
 
-
 import static raidone.robot.Constants.Arm.*;
 
-public class Arm extends SubsystemBase{
+public class Arm extends SubsystemBase {
     private CANSparkMax arm;
     private CANSparkMax follow;
     private boolean isHomed;
@@ -22,9 +21,8 @@ public class Arm extends SubsystemBase{
     private RelativeEncoder encoder;
     private SparkLimitSwitch limit1;
     private SparkLimitSwitch limit2;
-    private double setpoint = 0;
 
-    public Arm(){
+    public Arm() {
         System.out.println("Arm init");
         isHomed = false;
         arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
@@ -40,13 +38,12 @@ public class Arm extends SubsystemBase{
         encoder = arm.getEncoder();
         limit1 = arm.getForwardLimitSwitch(Type.kNormallyOpen);
         limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
-        
+
         limit1.enableLimitSwitch(true);
         limit2.enableLimitSwitch(true);
 
         arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        // arm.setInverted(true);
         follow.follow(arm, true);
 
         pid.setP(kP);
@@ -60,30 +57,22 @@ public class Arm extends SubsystemBase{
         pid.setSmartMotionMinOutputVelocity(MIN_VEL, 0);
         pid.setSmartMotionMaxAccel(MAX_ACCEL, 0);
         pid.setSmartMotionAllowedClosedLoopError(ALLOWED_ERROR, 0);
-
-        SmartDashboard.putNumber("Arm Set Position", setpoint);
     }
 
-    public void stopMotors(){
+    public void stopMotors() {
         arm.stopMotor();
     }
 
-    public boolean getLimit(){
-        boolean limitStatus = limit1.isPressed() || limit2.isPressed();
-        return limitStatus;
+    public boolean getLimit() {
+        return limit1.isPressed() || limit2.isPressed();
     }
 
-    public void run(double speed){
-        arm.set(speed);
-    }
-
-    public void setPos(double setpoint){
+    public void setPos(double setpoint) {
         pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         SmartDashboard.putNumber("processVariable", encoder.getPosition());
-
     }
 
-    public void home(){
+    public void home() {
         arm.set(0.2);
     }
 
@@ -91,19 +80,18 @@ public class Arm extends SubsystemBase{
         return encoder;
     }
 
-    public boolean isHomed(){
+    public boolean isHomed() {
         return isHomed;
     }
 
     @Override
-    public void periodic(){
-        SmartDashboard.putNumber("arm position", encoder.getPosition()); 
-        SmartDashboard.putString("Arm Command", this.getCurrentCommand() != null ? this.getCurrentCommand().getName():""); 
-
-        if(limit1.isPressed() || limit2.isPressed()){
+    public void periodic() {
+        // TODO: Remove this in favor of only chekcking when we need to (isfinished in a
+        // command most probably)
+        if (limit1.isPressed() || limit2.isPressed()) {
             isHomed = true;
             encoder.setPosition(0);
-        }else{
+        } else {
             isHomed = false;
         }
     }
