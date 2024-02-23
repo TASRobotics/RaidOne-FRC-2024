@@ -91,7 +91,7 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
         
-        intakeOn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
+        intakeOn.toggleOnTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
         
         intakeOut.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
             // noteStatus = false;        
