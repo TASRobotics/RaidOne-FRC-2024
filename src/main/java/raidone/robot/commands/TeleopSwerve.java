@@ -28,7 +28,7 @@ public class TeleopSwerve extends Command {
         this.robotCentricSup = robotCentricSup;
     }
 
-    @Override
+    @Override  
     public void execute() {
         /* Get Values, Deadband*/
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.STICK_DEADBAND);
@@ -40,7 +40,7 @@ public class TeleopSwerve extends Command {
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
             rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY, 
             !robotCentricSup.getAsBoolean(), 
-            false
+            true
         );
     }
 }
