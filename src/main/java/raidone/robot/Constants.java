@@ -143,7 +143,7 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final double SCORINGPOS = -12;
+        public static final double SCORINGPOS = -15;
         public static final double INTAKEPOS = -33.0;
         
         public static final double kP = 0.02;

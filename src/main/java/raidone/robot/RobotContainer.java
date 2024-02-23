@@ -1,9 +1,5 @@
 package raidone.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -94,7 +90,7 @@ public class RobotContainer {
                         swerve,
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
-                        () -> driver.getRawAxis(rotationAxis) * 0.5,
+                        () -> -driver.getRawAxis(rotationAxis) * 0.5,
                         () -> false));
 
         // Configure the button bindings
@@ -130,9 +126,9 @@ public class RobotContainer {
             new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
                 
         turnToSource.onTrue(
-                new OrdinalTurn(45, swerve));
+                new OrdinalTurn(135, swerve)); // blue = 135; red = 225?
         turnToAmp.onTrue(
-                new OrdinalTurn(90, swerve));
+                new OrdinalTurn(270, swerve)); // blue = 270; red = 90?
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
         ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
