@@ -234,6 +234,10 @@ public class Swerve extends SubsystemBase {
         moduleFR.resetToAbsolute();
     }
 
+    public double getHeadingOrdinalTurn(){
+        return Math.IEEEremainder(imu.getRotation2d().getDegrees(), 360);
+    }
+
     /**
      * Gets robot relative speeds
      * 

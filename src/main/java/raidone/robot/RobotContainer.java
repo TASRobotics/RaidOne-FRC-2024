@@ -69,15 +69,18 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake", new ParallelCommandGroup(
                 new ArmGo(arm, Constants.Arm.INTAKEPOS),
                 new WristGo(wrist, Constants.Wrist.INTAKEPOS))
-                        .andThen(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake))));
+                .andThen(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake))));
 
         NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
                 new ArmGo(arm, Constants.Arm.SCORINGPOS),
                 new WristGo(wrist, Constants.Wrist.SCORINGPOS))
-                        .andThen(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1)));
+                .andThen(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1)));
 
         NamedCommands.registerCommand("Home", new ParallelCommandGroup(
                 new ArmHome(arm), new WristHome(wrist)));
+
+        NamedCommands.registerCommand("TurnTo0", new OrdinalTurn(0, swerve));
+        NamedCommands.registerCommand("TurnTo90", new OrdinalTurn(90, swerve));
 
         swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -91,10 +94,10 @@ public class RobotContainer {
         configureButtonBindings();
 
         autoChooser = AutoBuilder.buildAutoChooser();
-        // do it like this to manually set the angle when you start with an auto that starts with a non-zero angle
+        // do it like this to manually set the angle when you start with an auto that
+        // starts with a non-zero angle
         autoChooser.addOption("preloadauto", new SequentialCommandGroup(
-            new InstantCommand(()  -> swerve.getImu().setYaw(90)), new PathPlannerAuto("TestAuto")
-        ));
+                new InstantCommand(() -> swerve.getImu().setYaw(90)), new PathPlannerAuto("TestAuto")));
         SmartDashboard.putData(autoChooser);
 
     }

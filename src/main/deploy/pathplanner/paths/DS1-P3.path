@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 3.2707561149719457,
+        "y": 6.935104675896556
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 2.920596552093578,
+        "y": 6.837838130652567
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "End P2"
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.07
+        "x": 1.811757936312081,
+        "y": 7.20745100257973
       },
       "prevControl": {
-        "x": 1.0,
-        "y": 7.07
+        "x": 1.7339447001168882,
+        "y": 6.419591986103404
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -6.970000000000027,
     "velocity": 0
   },
   "useDefaultConstraints": true
