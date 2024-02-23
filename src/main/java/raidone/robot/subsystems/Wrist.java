@@ -8,6 +8,7 @@ import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -51,6 +52,15 @@ public class Wrist extends SubsystemBase{
         // SmartDashboard.putNumber("Wrist Set Position", setpoint);
         
         
+    }
+
+    public void trapezoidToPID(State output) {
+        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);
+        SmartDashboard.putNumber("Wrist Trapazoid setpoint", output.position);
+    }
+
+    public State currentState() {
+        return new State(wrist.getEncoder().getPosition(), wrist.getEncoder().getVelocity());
     }
 
     public void stopMotors() {

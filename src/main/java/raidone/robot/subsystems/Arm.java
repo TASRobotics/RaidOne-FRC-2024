@@ -62,11 +62,8 @@ public class Arm extends SubsystemBase {
     }
 
     public void trapezoidToPID(State output) {
-        // TODO: replace with spark position PID call here
-        // velocity can be ignored???
-        // System.out.println(output.position + "---" + output.velocity);
         pid.setReference(output.position, CANSparkMax.ControlType.kPosition);
-        SmartDashboard.putNumber("Trapazoid setpoint", output.position);
+        SmartDashboard.putNumber("Arm Trapazoid setpoint", output.position);
     }
 
     public State currentState() {

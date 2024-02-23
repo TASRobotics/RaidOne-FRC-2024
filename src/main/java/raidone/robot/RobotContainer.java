@@ -81,7 +81,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
-        intakeIn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
+        // intakeIn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
+        intakeIn.onTrue(new TrapezoidGenerator(wrist, new TrapezoidProfile.State(Constants.Wrist.SCORINGPOS, 0)));
         amp.onTrue(new ParallelCommandGroup(
             new ArmGo(arm, Constants.Arm.SCORINGPOS), 
             new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
