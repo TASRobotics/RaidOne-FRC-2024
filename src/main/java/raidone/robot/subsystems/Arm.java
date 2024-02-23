@@ -14,8 +14,6 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import static raidone.robot.Constants.Arm.*;
 
-import java.util.function.Consumer;
-
 public class Arm extends SubsystemBase {
     private CANSparkMax arm;
     private CANSparkMax follow;
@@ -24,7 +22,6 @@ public class Arm extends SubsystemBase {
     private RelativeEncoder encoder;
     private SparkLimitSwitch limit1;
     private SparkLimitSwitch limit2;
-    private double setpoint = 0;
 
     public Arm() {
         System.out.println("Arm init");
@@ -48,7 +45,6 @@ public class Arm extends SubsystemBase {
 
         arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        // arm.setInverted(true);
         follow.follow(arm, true);
 
         pid.setP(kP);
@@ -57,8 +53,6 @@ public class Arm extends SubsystemBase {
         pid.setIZone(kIz);
         pid.setFF(kFF);
         pid.setOutputRange(MIN_OUTPUT, MAX_OUTPUT);
-
-        SmartDashboard.putNumber("Arm Set Position", setpoint);
     }
 
     public void trapezoidToPID(State output) {
@@ -75,18 +69,12 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean getLimit() {
-        boolean limitStatus = limit1.isPressed() || limit2.isPressed();
-        return limitStatus;
-    }
-
-    public void run(double speed) {
-        arm.set(speed);
+        return limit1.isPressed() || limit2.isPressed();
     }
 
     public void setPos(double setpoint) {
         pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         SmartDashboard.putNumber("processVariable", encoder.getPosition());
-
     }
 
     public void home() {
@@ -103,10 +91,8 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("arm position", encoder.getPosition());
-        SmartDashboard.putString("Arm Command",
-                this.getCurrentCommand() != null ? this.getCurrentCommand().getName() : "");
-
+        // TODO: Remove this in favor of only chekcking when we need to (isfinished in a
+        // command most probably)
         if (limit1.isPressed() || limit2.isPressed()) {
             isHomed = true;
             encoder.setPosition(0);

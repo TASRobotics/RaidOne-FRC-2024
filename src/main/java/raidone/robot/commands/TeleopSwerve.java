@@ -10,15 +10,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-
-public class TeleopSwerve extends Command {    
-    private Swerve swerve;    
+public class TeleopSwerve extends Command {
+    private Swerve swerve;
     private DoubleSupplier translationSup;
     private DoubleSupplier strafeSup;
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
 
-    public TeleopSwerve(Swerve swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
+    public TeleopSwerve(Swerve swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup,
+            DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         this.swerve = swerve;
         addRequirements(swerve);
 
@@ -30,17 +30,16 @@ public class TeleopSwerve extends Command {
 
     @Override
     public void execute() {
-        /* Get Values, Deadband*/
+        /* Get Values, Deadband */
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.STICK_DEADBAND);
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.STICK_DEADBAND);
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.STICK_DEADBAND);
 
         /* Drive */
         swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
-            rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY, 
-            !robotCentricSup.getAsBoolean(), 
-            true
-        );
+                new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED),
+                rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY_RPS,
+                !robotCentricSup.getAsBoolean(),
+                true);
     }
 }

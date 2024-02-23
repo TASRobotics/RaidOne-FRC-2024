@@ -28,7 +28,6 @@ public class Swerve extends SubsystemBase {
         imu.getConfigurator().apply(new Pigeon2Configuration());
         imu.setYaw(0);
 
-        
         FLModule = new SwerveModule(THROTTLE_I_ID, ROTOR_I_ID, CAN_CODER_I_ID, MODULE_I_OFFSET, false);
         BLModule = new SwerveModule(THROTTLE_II_ID, ROTOR_II_ID, CAN_CODER_II_ID, MODULE_II_OFFSET, false);
         BRModule = new SwerveModule(THROTTLE_III_ID, ROTOR_III_ID, CAN_CODER_III_ID, MODULE_III_OFFSET, true);
@@ -50,10 +49,10 @@ public class Swerve extends SubsystemBase {
                                 rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED);
 
-        FLModule.setDesiredState(swerveModuleStates[0], isOpenLoop); //3
-        BLModule.setDesiredState(swerveModuleStates[2], isOpenLoop); //0
-        BRModule.setDesiredState(swerveModuleStates[3], isOpenLoop); //1
-        FRModule.setDesiredState(swerveModuleStates[1], isOpenLoop); //2
+        FLModule.setDesiredState(swerveModuleStates[0], isOpenLoop); // 3
+        BLModule.setDesiredState(swerveModuleStates[2], isOpenLoop); // 0
+        BRModule.setDesiredState(swerveModuleStates[3], isOpenLoop); // 1
+        FRModule.setDesiredState(swerveModuleStates[1], isOpenLoop); // 2
 
     }
 
@@ -61,10 +60,10 @@ public class Swerve extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED);
 
-        FLModule.setDesiredState(desiredStates[0], true); //3
-        BLModule.setDesiredState(desiredStates[2], true); //0
-        BRModule.setDesiredState(desiredStates[3], true); //1
-        FRModule.setDesiredState(desiredStates[1], true); //2
+        FLModule.setDesiredState(desiredStates[0], true); // 3
+        BLModule.setDesiredState(desiredStates[2], true); // 0
+        BRModule.setDesiredState(desiredStates[3], true); // 1
+        FRModule.setDesiredState(desiredStates[1], true); // 2
 
     }
 
@@ -102,6 +101,10 @@ public class Swerve extends SubsystemBase {
         return getPose().getRotation();
     }
 
+    public double getHeadingOrdinalTurn() {
+        return Math.IEEEremainder(imu.getRotation2d().getDegrees(), 360);
+    }
+
     public void setHeading(Rotation2d heading) {
         swerveOdometry.resetPosition(getRotation(), getModulePositions(),
                 new Pose2d(getPose().getTranslation(), heading));
@@ -111,10 +114,6 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.resetPosition(getRotation(), getModulePositions(),
                 new Pose2d(getPose().getTranslation(), new Rotation2d()));
     }
-
-    // public Rotation2d getRotation() {
-    // return Rotation2d.fromDegrees(imu.getYaw().getValue());
-    // }
 
     public Rotation2d getRotation() {
         return imu.getRotation2d();
@@ -146,6 +145,6 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("X", getPose().getX());
 
         field.setRobotPose(getPose());
-        SmartDashboard.putData("Field", field); 
+        SmartDashboard.putData("Field", field);
     }
 }

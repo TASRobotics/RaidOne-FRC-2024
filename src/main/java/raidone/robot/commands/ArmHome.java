@@ -3,22 +3,17 @@ package raidone.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import raidone.robot.subsystems.Arm;
 
-public class ArmHome extends Command {    
-    private static Arm arm;
+public class ArmHome extends Command {
+    private Arm arm;
 
-    public ArmHome(Arm arm){
+    public ArmHome(Arm arm) {
         this.arm = arm;
         addRequirements(this.arm);
     }
 
     @Override
-    public void initialize(){
-
-    }
-
-    @Override
     public void execute() {
-            arm.home();
+        arm.home();
     }
 
     @Override

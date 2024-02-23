@@ -14,14 +14,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static raidone.robot.Constants.Wrist.*;
 
-public class Wrist extends SubsystemBase{
+public class Wrist extends SubsystemBase {
     private CANSparkMax wrist;
     private CANSparkMax follower;
     private boolean isHomed;
     private SparkPIDController pid;
     private RelativeEncoder encoder;
     private SparkLimitSwitch limit;
-    // private double setpoint = 0;
 
     public Wrist() {
         System.out.println("Wrist init");
@@ -30,7 +29,7 @@ public class Wrist extends SubsystemBase{
         follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
         wrist.restoreFactoryDefaults();
         follower.restoreFactoryDefaults();
-        
+
         wrist.setInverted(true);
 
         pid = wrist.getPIDController();
@@ -49,9 +48,6 @@ public class Wrist extends SubsystemBase{
         pid.setD(kD);
         pid.setIZone(kIz);
         pid.setFF(kFF);
-        // SmartDashboard.putNumber("Wrist Set Position", setpoint);
-        
-        
     }
 
     public void trapezoidToPID(State output) {
@@ -72,11 +68,11 @@ public class Wrist extends SubsystemBase{
         SmartDashboard.putNumber("processVariable", encoder.getPosition());
     }
 
-    public void home(){
+    public void home() {
         wrist.set(0.3);
     }
 
-    public boolean isHomed(){
+    public boolean isHomed() {
         return isHomed;
     }
 
@@ -85,27 +81,14 @@ public class Wrist extends SubsystemBase{
     }
 
     @Override
-    public void periodic(){
-        if(limit.isPressed()){
+    public void periodic() {
+        // TODO: Remove this in favor of only chekcking when we need to (isfinished in a
+        // command most probably)
+        if (limit.isPressed()) {
             isHomed = true;
             encoder.setPosition(0);
-        }else{
+        } else {
             isHomed = false;
         }
-        SmartDashboard.putNumber("Wrist Position", encoder.getPosition());
-        // pid.setP(SmartDashboard.getNumber("P Gain", 0));
-        // pid.setI(SmartDashboard.getNumber("I Gain", 0));
-        // pid.setD(SmartDashboard.getNumber("D Gain", 0));
-        // pid.setIZone(SmartDashboard.getNumber("I Zone", 0));
-        // pid.setFF(SmartDashboard.getNumber("Feed Forward", 0));
-
-        // pid.setOutputRange(
-        //     SmartDashboard.getNumber("Max Output", 0),
-        //     SmartDashboard.getNumber("Min Output", 0));
-
-        // pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Max Velocity", 0), 0);
-        // pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Min Velocity", 0), 0);
-        // pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Max Acceleration", 0), 0);
-        // pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Allowed Closed Loop Error", 0),0); 
     }
 }
