@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
+import raidone.robot.commands.ClimbGo;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -25,7 +26,7 @@ import raidone.robot.subsystems.*;
 public class RobotContainer {
     // Controllers
     private final XboxController driver = new XboxController(0);
-    private final Joystick driver2 = new Joystick(1);
+    // private final Joystick driver2 = new Joystick(1);
 
     // Driver joystick axes
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -43,14 +44,14 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
 
     // Intake buttons
-    private final JoystickButton intakeIn = new JoystickButton(driver2, greenButtonL);
-    private final JoystickButton intakeOut = new JoystickButton(driver2, greenButtonR);
+    // private final JoystickButton intakeIn = new JoystickButton(driver2, greenButtonL);
+    // private final JoystickButton intakeOut = new JoystickButton(driver2, greenButtonR);
 
     // Arm & wrist position buttons
-    private final JoystickButton stow = new JoystickButton(driver2, yellowButtonR);
-    private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton amp = new JoystickButton(driver2, pinkButton);
-    private final JoystickButton intakePos = new JoystickButton(driver2, yellowButtonL);
+    // private final JoystickButton stow = new JoystickButton(driver2, yellowButtonR);
+    // private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton amp = new JoystickButton(driver2, pinkButton);
+    // private final JoystickButton intakePos = new JoystickButton(driver2, yellowButtonL);
 
     // Ordinal turn buttons
     private final POVButton ordinalTurnUp = new POVButton(driver, 0);
@@ -60,11 +61,16 @@ public class RobotContainer {
     private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
+    // Climb binds
+    private final JoystickButton fuckItWeBall = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton fuckItWeBall2 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+
     // Declare subsystems
     private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
     private final Arm arm = new Arm();
     private final Intake intake = new Intake();
+    private final Climb climb = new Climb();
 
     // Get the triggers
     public boolean getTrigger(boolean isRight) {
@@ -89,19 +95,19 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
 
-        intakeIn.toggleOnTrue(new IntakeIn(intake, Constants.Intake.PERCENT).andThen(new IntakeRetract(intake)));
-        intakeOut.onTrue(new IntakeOut(intake, Constants.Intake.PERCENT).withTimeout(1));
+        // intakeIn.toggleOnTrue(new IntakeIn(intake, Constants.Intake.PERCENT).andThen(new IntakeRetract(intake)));
+        // intakeOut.onTrue(new IntakeOut(intake, Constants.Intake.PERCENT).withTimeout(1));
 
-        stow.onTrue(new SequentialCommandGroup(
-                new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
-                new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
-        home.onTrue(new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist)));
-        amp.onTrue(new ParallelCommandGroup(
-                new ArmGo(arm, Constants.Arm.SCORINGPOS),
-                new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
-        intakePos.onTrue(new ParallelCommandGroup(
-                new SequentialCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new ArmHome(arm)),
-                new WristGo(wrist, Constants.Wrist.INTAKEPOS)));
+        // stow.onTrue(new SequentialCommandGroup(
+        //         new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
+        //         new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
+        // home.onTrue(new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist)));
+        // amp.onTrue(new ParallelCommandGroup(
+        //         new ArmGo(arm, Constants.Arm.SCORINGPOS),
+        //         new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
+        // intakePos.onTrue(new ParallelCommandGroup(
+        //         new SequentialCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new ArmHome(arm)),
+        //         new WristGo(wrist, Constants.Wrist.INTAKEPOS)));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
         ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
@@ -111,6 +117,9 @@ public class RobotContainer {
                 new OrdinalTurn(135, swerve)); // blue = 135; red = 225
         turnToAmp.onTrue(
                 new OrdinalTurn(270, swerve)); // blue = 270; red = 90
+        
+        fuckItWeBall.toggleOnTrue(new ClimbGo(climb, 0.5));
+        fuckItWeBall2.toggleOnTrue(new ClimbGo(climb, -1 * 0.5));
     }
 
     public Command getAutonomousCommand() {

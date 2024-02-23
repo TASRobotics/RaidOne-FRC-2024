@@ -144,4 +144,9 @@ public final class Constants {
         public static final int INTAKE_MOTOR_ID = 13;
         public static final double PERCENT = 0.9;
     }
+
+    public static final class Climb {
+        public static final int CLIMB_MOTOR_ID = 13;
+        public static final int CLIMB_FOLLOW_ID = 14;
+    }
 }
