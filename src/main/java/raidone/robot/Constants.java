@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 
@@ -119,6 +120,9 @@ public final class Constants {
         public static final double MIN_VEL = 0.0;
         public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 0.0;
+
+        public static final Constraints ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
+                Constants.Arm.MAX_ACCEL_RPSS);
     }
 
     public static final class Wrist {
@@ -140,7 +144,10 @@ public final class Constants {
         public static final double MIN_VEL = 250.0;
         public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 2.0;
-    } 
+
+        public static final Constraints WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
+                Constants.Wrist.MAX_ACCEL_RPSS);
+    }
 
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 13;

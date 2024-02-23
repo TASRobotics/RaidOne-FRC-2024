@@ -1,6 +1,5 @@
 package raidone.robot;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -13,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import raidone.robot.commands.*;
+import static raidone.robot.commands.TrapezoidGenerator.*;
 // import static raidone.robot.Constants.*;
 import raidone.robot.subsystems.*;
 
@@ -89,15 +89,15 @@ public class RobotContainer {
         intakeOut.onTrue(new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
-                new ParallelCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new WristGo(0)).withTimeout(1),
+                new ParallelCommandGroup(armProfile(Constants.Arm.INTAKEPOS), wristProfile(Constants.Wrist.INTAKEPOS)).withTimeout(1),
                 new ParallelCommandGroup(new ArmHome(), new WristHome())));
         home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
         amp.onTrue(new ParallelCommandGroup(
-                new ArmGo(Constants.Arm.SCORINGPOS),
-                new WristGo(Constants.Wrist.SCORINGPOS)));
+                armProfile(Constants.Arm.SCORINGPOS),
+                wristProfile(Constants.Wrist.SCORINGPOS)));
         intakePos.onTrue(new ParallelCommandGroup(
-                new SequentialCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new ArmHome()),
-                new WristGo(Constants.Wrist.INTAKEPOS)));
+                new SequentialCommandGroup(armProfile(Constants.Arm.INTAKEPOS), new ArmHome()),
+                wristProfile(Constants.Wrist.INTAKEPOS)));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));
