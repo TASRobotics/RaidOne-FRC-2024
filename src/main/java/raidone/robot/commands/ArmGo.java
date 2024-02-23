@@ -8,8 +8,8 @@ public class ArmGo extends Command {
     private Arm arm;
     private double setpoint;
 
-    public ArmGo(Arm arm, double setpoint) {
-        this.arm = arm;
+    public ArmGo(double setpoint) {
+        this.arm = Arm.system();
         this.setpoint = setpoint;
         addRequirements(this.arm);
     }

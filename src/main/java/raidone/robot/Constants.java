@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -103,8 +104,8 @@ public final class Constants {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final double SCORINGPOS = -24.5;
-        public static final double INTAKEPOS = 0.0;
+        public static final State SCORINGPOS = new State(-24.5, 0);
+        public static final State INTAKEPOS = new State(0.0, 0);
 
         public static final double kP = 0.05;
         public static final double kI = 0.0;
@@ -124,8 +125,8 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final double SCORINGPOS = -15;
-        public static final double INTAKEPOS = -33.0;
+        public static final State SCORINGPOS = new State(-15, 0);
+        public static final State INTAKEPOS = new State(-33.0, 0);
 
         public static final double kP = 0.02;
         public static final double kI = 0.0;

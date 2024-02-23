@@ -6,8 +6,8 @@ import raidone.robot.subsystems.Arm;
 public class ArmHome extends Command {
     private Arm arm;
 
-    public ArmHome(Arm arm) {
-        this.arm = arm;
+    public ArmHome() {
+        this.arm = Arm.system();
         addRequirements(this.arm);
     }
 

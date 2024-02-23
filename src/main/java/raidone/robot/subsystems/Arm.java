@@ -15,15 +15,15 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import static raidone.robot.Constants.Arm.*;
 
 public class Arm extends SubsystemBase {
-    private CANSparkMax arm;
-    private CANSparkMax follow;
-    private boolean isHomed;
+    private CANSparkMax arm, follow;
     private SparkPIDController pid;
     private RelativeEncoder encoder;
-    private SparkLimitSwitch limit1;
-    private SparkLimitSwitch limit2;
+    private SparkLimitSwitch limit1, limit2;
+    private boolean isHomed;
 
-    public Arm() {
+    private static Arm armSys = new Arm();
+
+    private Arm() {
         System.out.println("Arm init");
         isHomed = false;
         arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
@@ -99,5 +99,9 @@ public class Arm extends SubsystemBase {
         } else {
             isHomed = false;
         }
+    }
+
+    public static Arm system() {
+        return armSys;
     }
 }

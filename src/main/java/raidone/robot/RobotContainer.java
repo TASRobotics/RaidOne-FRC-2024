@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import raidone.robot.commands.*;
+// import static raidone.robot.Constants.*;
 import raidone.robot.subsystems.*;
 
 /**
@@ -65,7 +66,6 @@ public class RobotContainer {
     // Declare subsystems
     private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
-    private final Arm arm = new Arm();
     private final Intake intake = new Intake();
 
     // Get the triggers
@@ -95,14 +95,14 @@ public class RobotContainer {
         intakeOut.onTrue(new IntakeOut(intake, Constants.Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
-                new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
-                new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
-        home.onTrue(new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist)));
+                new ParallelCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
+                new ParallelCommandGroup(new ArmHome(), new WristHome(wrist))));
+        home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome(wrist)));
         amp.onTrue(new ParallelCommandGroup(
-                new ArmGo(arm, Constants.Arm.SCORINGPOS),
+                new ArmGo(Constants.Arm.SCORINGPOS),
                 new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
         intakePos.onTrue(new ParallelCommandGroup(
-                new SequentialCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new ArmHome(arm)),
+                new SequentialCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new ArmHome()),
                 new WristGo(wrist, Constants.Wrist.INTAKEPOS)));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
