@@ -62,8 +62,8 @@ public class RobotContainer {
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
     // Climb binds
-    private final JoystickButton fuckItWeBall = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton fuckItWeBall2 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton climbDown = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     // Declare subsystems
     private final Swerve swerve = new Swerve();
@@ -118,8 +118,8 @@ public class RobotContainer {
         turnToAmp.onTrue(
                 new OrdinalTurn(270, swerve)); // blue = 270; red = 90
         
-        fuckItWeBall.toggleOnTrue(new ClimbGo(climb, 0.5));
-        fuckItWeBall2.toggleOnTrue(new ClimbGo(climb, -1 * 0.5));
+        climbDown.toggleOnTrue(new ClimbGo(climb, Constants.Climb.BOTTOM_POS_ROT));
+        climbUp.toggleOnTrue(new ClimbGo(climb, Constants.Climb.TOP_POS_ROT));
     }
 
     public Command getAutonomousCommand() {

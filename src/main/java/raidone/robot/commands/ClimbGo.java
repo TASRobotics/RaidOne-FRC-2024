@@ -2,7 +2,6 @@ package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import raidone.robot.subsystems.Climb;
-import raidone.robot.subsystems.Arm;
 
 public class ClimbGo extends Command {
     private Climb climb;
