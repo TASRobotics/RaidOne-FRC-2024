@@ -1,5 +1,6 @@
 package raidone.robot;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -91,7 +92,8 @@ public class RobotContainer {
         stow.onTrue(new SequentialCommandGroup(
             new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
             new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
-        intakeOut.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
+        // intakeOut.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
+        intakeOut.onTrue(new TrapezoidGenerator(arm, new TrapezoidProfile.State(Constants.Arm.SCORINGPOS, 0)));
     }
 
     /**

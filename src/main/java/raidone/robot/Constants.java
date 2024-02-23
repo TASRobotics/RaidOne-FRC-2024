@@ -133,9 +133,9 @@ public final class Constants {
         public static final double kFF = 0.0;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -0.6;
-        public static final double MAX_VEL = 0.0;
+        public static final double MAX_VEL_RPS = 24.5 / 2;
         public static final double MIN_VEL = 0.0;
-        public static final double MAX_ACCEL = 0.0;
+        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 0.0;
     }
 
@@ -153,9 +153,9 @@ public final class Constants {
         public static final double kFF = 0.0;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_VEL = 2000.0;
+        public static final double MAX_VEL_RPS = 33.0 / 2;
         public static final double MIN_VEL = 250.0;
-        public static final double MAX_ACCEL = 2000.0;
+        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 2.0;
     }
 
