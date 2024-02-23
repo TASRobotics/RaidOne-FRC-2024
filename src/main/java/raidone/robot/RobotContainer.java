@@ -46,7 +46,13 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     /* Subsystems */
-    private final Swerve swerve = new Swerve();    
+    private final Swerve swerve = new Swerve();
+    private final Wrist wrist = new Wrist();
+    private final Arm arm = new Arm();
+    private final Intake intake = new Intake();
+    
+    public static boolean noteStatus = false;
+    
 
     // private Autos autos = new Autos(swerve);
 
