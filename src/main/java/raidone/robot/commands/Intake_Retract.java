@@ -1,7 +1,10 @@
 package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import raidone.robot.RobotContainer;
 import raidone.robot.subsystems.Intake;
+
+import raidone.robot.RobotContainer;
 
 
 public class Intake_Retract extends Command{
@@ -29,7 +32,8 @@ public class Intake_Retract extends Command{
     @Override
     public void end(boolean interrupted) {
         intake.stop();
-    }
+        RobotContainer.noteStatus = true;
+    }  
 
 
 }

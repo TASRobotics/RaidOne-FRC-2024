@@ -1,6 +1,7 @@
 package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import raidone.robot.RobotContainer;
 import raidone.robot.subsystems.Intake;
 
 public class Intake_Out extends Command{
@@ -30,5 +31,6 @@ public class Intake_Out extends Command{
     @Override
     public void end(boolean interrupted) {
         intake.stop();
+        RobotContainer.noteStatus = false;
     }
 }

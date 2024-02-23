@@ -24,6 +24,7 @@ import raidone.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    private final Joystick driver2 = new Joystick(1);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -31,13 +32,22 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
     // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For
     // joystick
+    private final int pinkButton = XboxController.Button.kY.value;
+    private final int greenButtonL = XboxController.Button.kB.value;
+    private final int greenButtonR = XboxController.Button.kA.value;
+    private final int yellowButtonL = XboxController.Button.kX.value;
+    private final int yellowButtonR = XboxController.Button.kStart.value;
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    // private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton intakeIn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton intakeOut = new JoystickButton(driver, XboxController.Button.kStart.value);
 
+    private final JoystickButton leftStage = new JoystickButton(driver2, yellowButtonL);
+    private final JoystickButton rightStage = new JoystickButton(driver2, yellowButtonR);
+    private final JoystickButton trap = new JoystickButton(driver, pinkButton);
+    // private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton intakeOn = new JoystickButton(driver2, greenButtonL);
+
+    private final JoystickButton climb = new JoystickButton(driver2, greenButtonR);
     // private final JoystickButton setArm = new JoystickButton(driver,
     // XboxController.Button.kStart.value);
     private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
@@ -51,7 +61,7 @@ public class RobotContainer {
     private final Arm arm = new Arm();
     private final Intake intake = new Intake();
     
-
+    public static boolean noteStatus = false;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -80,7 +90,16 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
-        intakeIn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
+        
+        if(!noteStatus){
+            intakeOn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
+            
+        }else{
+            intakeOn.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
+            noteStatus = false;
+        }
+        
+
         amp.onTrue(new ParallelCommandGroup(
             new ArmGo(arm, Constants.Arm.SCORINGPOS), 
             new WristGo(wrist, Constants.Wrist.SCORINGPOS)));
@@ -91,7 +110,6 @@ public class RobotContainer {
         stow.onTrue(new SequentialCommandGroup(
             new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
             new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
-        intakeOut.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
     }
 
     /**
