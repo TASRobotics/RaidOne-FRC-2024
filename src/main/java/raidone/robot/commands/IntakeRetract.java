@@ -6,8 +6,8 @@ import raidone.robot.subsystems.Intake;
 public class IntakeRetract extends Command {
     private Intake intake;
 
-    public IntakeRetract(Intake in) {
-        intake = in;
+    public IntakeRetract() {
+        intake = Intake.system();
     }
 
     @Override

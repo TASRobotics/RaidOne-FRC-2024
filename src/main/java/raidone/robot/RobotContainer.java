@@ -66,7 +66,6 @@ public class RobotContainer {
     // Declare subsystems
     private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
-    private final Intake intake = new Intake();
 
     // Get the triggers
     public boolean getTrigger(boolean isRight) {
@@ -91,8 +90,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
 
-        intakeIn.toggleOnTrue(new IntakeIn(intake, Constants.Intake.PERCENT).andThen(new IntakeRetract(intake)));
-        intakeOut.onTrue(new IntakeOut(intake, Constants.Intake.PERCENT).withTimeout(1));
+        intakeIn.toggleOnTrue(new IntakeIn(Constants.Intake.PERCENT).andThen(new IntakeRetract()));
+        intakeOut.onTrue(new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
                 new ParallelCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),

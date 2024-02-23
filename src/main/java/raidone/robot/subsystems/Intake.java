@@ -13,14 +13,13 @@ import static raidone.robot.Constants.Intake.*;
 public class Intake extends SubsystemBase {
     private CANSparkMax roller;
     private SparkLimitSwitch beam;
-    public SparkPIDController pid;
 
-    public Intake() {
+    private static Intake intakeSys = new Intake();
+
+    private Intake() {
         roller = new CANSparkMax(INTAKE_MOTOR_ID, MotorType.kBrushless);
         roller.setIdleMode(IdleMode.kBrake);
         beam = roller.getForwardLimitSwitch(Type.kNormallyOpen);
-        pid = roller.getPIDController();
-
     }
 
     public boolean getLimit() {
@@ -46,5 +45,9 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+    }
+
+    public static Intake system() {
+        return intakeSys;
     }
 }
