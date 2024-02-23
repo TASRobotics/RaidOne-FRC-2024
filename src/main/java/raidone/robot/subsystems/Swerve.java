@@ -243,6 +243,10 @@ public class Swerve extends SubsystemBase {
         return SWERVE_DRIVE_KINEMATICS.toChassisSpeeds(getModuleStates());
     }
 
+    public Pigeon2 getImu() {
+        return imu;
+    }
+
     /**
      * <ul>
      * <li>Robot relative driving</li>

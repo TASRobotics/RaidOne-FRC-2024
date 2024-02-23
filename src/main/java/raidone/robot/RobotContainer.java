@@ -1,6 +1,8 @@
 package raidone.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import raidone.robot.Auto.Autos;
 import raidone.robot.commands.*;
@@ -70,6 +73,10 @@ public class RobotContainer {
         configureButtonBindings();
 
         autoChooser = AutoBuilder.buildAutoChooser();
+        // do it like this to manually set the angle when you start with an auto that starts with a non-zero angle
+        autoChooser.addOption("preloadauto", new SequentialCommandGroup(
+            new InstantCommand(()  -> swerve.getImu().setYaw(90)), new PathPlannerAuto("TestAuto")
+        ));
         SmartDashboard.putData(autoChooser);
 
     }

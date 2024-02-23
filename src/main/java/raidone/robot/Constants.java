@@ -103,5 +103,4 @@ public final class Constants {
     }
 
     public static final double STICK_DEADBAND = 0.03;
-
 }
