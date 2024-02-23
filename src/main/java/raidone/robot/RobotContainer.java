@@ -1,5 +1,9 @@
 package raidone.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -8,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
@@ -23,10 +29,10 @@ import raidone.robot.subsystems.*;
  */
 public class RobotContainer {
     /* Controllers */
-    private final Joystick driver = new Joystick(0);
+    private final XboxController driver = new XboxController(0);
     private final Joystick driver2 = new Joystick(1);
 
-    /* Drive Controls */
+    /* Drive Controls */    
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value; // For controller
@@ -55,6 +61,14 @@ public class RobotContainer {
     private final JoystickButton amp = new JoystickButton(driver2, pinkButton);
     private final JoystickButton intakeBtn = new JoystickButton(driver2, yellowButtonL);
 
+    private final POVButton ordinalTurnUp = new POVButton(driver, 0);
+    private final POVButton ordinalTurnDown = new POVButton(driver, 180);
+    private final POVButton ordinalTurnLeft = new POVButton(driver, 270);
+    private final POVButton ordinalTurnRight = new POVButton(driver, 90);
+
+    private final Trigger turnToSource = new Trigger(() -> getLeftTrigger());
+    private final Trigger turnToAmp = new Trigger(() -> getRightTrigger());
+
     /* Subsystems */
     private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
@@ -62,6 +76,14 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     
     public static boolean noteStatus = false;
+
+    public boolean getRightTrigger() {
+        return driver.getRightTriggerAxis() > 0.7;
+    }
+
+    public boolean getLeftTrigger() {
+        return driver.getLeftTriggerAxis() > 0.7;
+    }
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -106,6 +128,16 @@ public class RobotContainer {
         stow.onTrue(new SequentialCommandGroup(
             new ParallelCommandGroup(new ArmGo(arm, Constants.Arm.INTAKEPOS), new WristGo(wrist, 0)).withTimeout(1),
             new ParallelCommandGroup(new ArmHome(arm), new WristHome(wrist))));
+                
+        turnToSource.onTrue(
+                new OrdinalTurn(45, swerve));
+        turnToAmp.onTrue(
+                new OrdinalTurn(90, swerve));
+
+        ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
+        ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
+        ordinalTurnLeft.onTrue(new OrdinalTurn(270, swerve));
+        ordinalTurnRight.onTrue(new OrdinalTurn(90, swerve));
     }
 
     /**

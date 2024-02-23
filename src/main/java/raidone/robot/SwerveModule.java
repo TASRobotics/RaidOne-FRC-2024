@@ -18,11 +18,13 @@ public class SwerveModule {
     private CANSparkMax throttle;
     private CANcoder CANCoder;
     private RelativeEncoder throttleEncoder;
-    public CANcoderConfiguration CANCoderConfig;
+    private CANcoderConfiguration CANCoderConfig;
 
     private PIDController rotorPID;
+    private PIDController throttlePID;
 
-    public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset, boolean throttleInversion) {
+    public SwerveModule(int throttleID, int rotorID, int canCoderID, double moduleAngleOffset,
+            boolean throttleInversion) {
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
         throttleEncoder = throttle.getEncoder();
 
@@ -45,12 +47,16 @@ public class SwerveModule {
         CANCoder.getConfigurator().apply(CANCoderConfig);
 
         rotorPID = new PIDController(
-            Constants.Swerve.ROTOR_KP,
-            Constants.Swerve.ROTOR_KI,
-            Constants.Swerve.ROTOR_KD
-        );
+                Constants.Swerve.ROTOR_KP,
+                Constants.Swerve.ROTOR_KI,
+                Constants.Swerve.ROTOR_KD);
 
         rotorPID.enableContinuousInput(-180, 180);
+
+        throttlePID = new PIDController(
+                Constants.Swerve.THROTTLE_KP,
+                Constants.Swerve.THROTTLE_KI,
+                Constants.Swerve.THROTTLE_KD);
 
         throttle.setIdleMode(IdleMode.kBrake);
         throttle.setInverted(throttleInversion);
@@ -65,28 +71,17 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         rotor.set(rotorPID.calculate(getState().angle.getDegrees(), desiredState.angle.getDegrees()));
-        // rotorPID.setReference(desiredState.angle.getRotations(), ControlType.kPosition);
-        
+
         setSpeed(desiredState, isOpenLoop);
     }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
         if (isOpenLoop) {
-            // driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED;
             throttle.set(desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED);
+        } else {
+            throttle.set(throttlePID.calculate(getState().speedMetersPerSecond, desiredState.speedMetersPerSecond)
+                    / Constants.Swerve.MAX_SPEED);
         }
-        // } else {
-        // driveVelocity.Velocity =
-        // Conversions.MPSToRPS(desiredState.speedMetersPerSecond,
-        // Constants.Swerve.WHEEL_CIRCUMFERENCE);
-        // driveVelocity.FeedForward =
-        // driveFeedForward.calculate(desiredState.speedMetersPerSecond);
-        // mDriveMotor.setControl(driveVelocity);
-        // }
-    }
-
-    public void throttleGo(){
-        throttle.set(0.25);
     }
 
     public SwerveModuleState getState() {

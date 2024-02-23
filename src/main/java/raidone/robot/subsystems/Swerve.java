@@ -102,6 +102,11 @@ public class Swerve extends SubsystemBase {
         return getPose().getRotation();
     }
 
+    public double getHeadingOrdinalTurn() {
+        // return getPose().getRotation();
+        return Math.IEEEremainder(imu.getRotation2d().getDegrees(), 360);
+    }
+
     public void setHeading(Rotation2d heading) {
         swerveOdometry.resetPosition(getRotation(), getModulePositions(),
                 new Pose2d(getPose().getTranslation(), heading));
