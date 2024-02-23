@@ -18,11 +18,13 @@ import raidone.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
     private Pigeon2 imu;
-    public SwerveModule FLModule, BLModule, BRModule, FRModule;
-    public SwerveDriveOdometry swerveOdometry;
+    private SwerveModule FLModule, BLModule, BRModule, FRModule;
+    private SwerveDriveOdometry swerveOdometry;
     private Field2d field = new Field2d();
 
-    public Swerve() {
+    private static Swerve swerveSys = new Swerve();
+
+    private Swerve() {
         System.out.println("Swerve init");
         imu = new Pigeon2(PIGEON_ID);
         imu.getConfigurator().apply(new Pigeon2Configuration());
@@ -146,5 +148,9 @@ public class Swerve extends SubsystemBase {
 
         field.setRobotPose(getPose());
         SmartDashboard.putData("Field", field);
+    }
+
+    public static Swerve system() {
+        return swerveSys;
     }
 }

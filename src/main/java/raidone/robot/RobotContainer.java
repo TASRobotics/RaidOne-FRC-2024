@@ -64,7 +64,6 @@ public class RobotContainer {
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
     // Declare subsystems
-    private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
 
     // Get the triggers
@@ -76,9 +75,8 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
-        swerve.setDefaultCommand(
+        Swerve.system().setDefaultCommand(
                 new TeleopSwerve(
-                        swerve,
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> -driver.getRawAxis(rotationAxis) * 0.5,
@@ -88,7 +86,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
+        zeroGyro.onTrue(new InstantCommand(() -> Swerve.system().zeroHeading()));
 
         intakeIn.toggleOnTrue(new IntakeIn(Constants.Intake.PERCENT).andThen(new IntakeRetract()));
         intakeOut.onTrue(new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
@@ -104,14 +102,14 @@ public class RobotContainer {
                 new SequentialCommandGroup(new ArmGo(Constants.Arm.INTAKEPOS), new ArmHome()),
                 new WristGo(wrist, Constants.Wrist.INTAKEPOS)));
 
-        ordinalTurnUp.onTrue(new OrdinalTurn(0, swerve));
-        ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
-        ordinalTurnLeft.onTrue(new OrdinalTurn(270, swerve));
-        ordinalTurnRight.onTrue(new OrdinalTurn(90, swerve));
+        ordinalTurnUp.onTrue(new OrdinalTurn(0));
+        ordinalTurnDown.onTrue(new OrdinalTurn(180));
+        ordinalTurnLeft.onTrue(new OrdinalTurn(270));
+        ordinalTurnRight.onTrue(new OrdinalTurn(90));
         turnToSource.onTrue(
-                new OrdinalTurn(135, swerve)); // blue = 135; red = 225
+                new OrdinalTurn(135)); // blue = 135; red = 225
         turnToAmp.onTrue(
-                new OrdinalTurn(270, swerve)); // blue = 270; red = 90
+                new OrdinalTurn(270)); // blue = 270; red = 90
     }
 
     public Command getAutonomousCommand() {
