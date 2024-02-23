@@ -1,6 +1,8 @@
 package raidone.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
+import static raidone.robot.commands.TrapezoidGenerator.armProfile;
+import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,11 +12,16 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import raidone.robot.commands.*;
-import static raidone.robot.commands.TrapezoidGenerator.*;
-// import static raidone.robot.Constants.*;
-import raidone.robot.subsystems.*;
+import raidone.robot.Constants.Arm;
+import raidone.robot.Constants.Intake;
+import raidone.robot.Constants.Wrist;
+import raidone.robot.commands.ArmHome;
+import raidone.robot.commands.IntakeIn;
+import raidone.robot.commands.IntakeOut;
+import raidone.robot.commands.IntakeRetract;
+import raidone.robot.commands.OrdinalTurn;
+import raidone.robot.commands.TeleopSwerve;
+import raidone.robot.commands.WristHome;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -63,6 +70,9 @@ public class RobotContainer {
     private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
+    // Subsystem references
+    raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
+
     // Get the triggers
     public boolean getTrigger(boolean isRight) {
         if (isRight)
@@ -72,7 +82,7 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
-        Swerve.system().setDefaultCommand(
+        swerve.setDefaultCommand(
                 new TeleopSwerve(
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
@@ -83,21 +93,21 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        zeroGyro.onTrue(new InstantCommand(() -> Swerve.system().zeroHeading()));
+        zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
 
-        intakeIn.toggleOnTrue(new IntakeIn(Constants.Intake.PERCENT).andThen(new IntakeRetract()));
-        intakeOut.onTrue(new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
+        intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract()));
+        intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
-                new ParallelCommandGroup(armProfile(Constants.Arm.INTAKEPOS), wristProfile(Constants.Wrist.INTAKEPOS)).withTimeout(1),
+                new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.INTAKEPOS)).withTimeout(1),
                 new ParallelCommandGroup(new ArmHome(), new WristHome())));
         home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
         amp.onTrue(new ParallelCommandGroup(
-                armProfile(Constants.Arm.SCORINGPOS),
-                wristProfile(Constants.Wrist.SCORINGPOS)));
+                armProfile(Arm.SCORINGPOS),
+                wristProfile(Wrist.SCORINGPOS)));
         intakePos.onTrue(new ParallelCommandGroup(
-                new SequentialCommandGroup(armProfile(Constants.Arm.INTAKEPOS), new ArmHome()),
-                wristProfile(Constants.Wrist.INTAKEPOS)));
+                new SequentialCommandGroup(armProfile(Arm.INTAKEPOS), new ArmHome()),
+                wristProfile(Wrist.INTAKEPOS)));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));
