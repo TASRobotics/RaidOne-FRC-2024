@@ -30,7 +30,7 @@ public class Intake_Out extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        intake.stop();
         RobotContainer.noteStatus = false;
+        intake.stop();
     }
 }

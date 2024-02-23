@@ -47,13 +47,13 @@ public class RobotContainer {
     // private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton intakeOn = new JoystickButton(driver2, greenButtonL);
 
-    private final JoystickButton climb = new JoystickButton(driver2, greenButtonR);
+    private final JoystickButton intakeOut = new JoystickButton(driver2, greenButtonR);
     // private final JoystickButton setArm = new JoystickButton(driver,
     // XboxController.Button.kStart.value);
-    private final JoystickButton stow = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton stow = new JoystickButton(driver2, yellowButtonR);
     private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton amp = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton intakeBtn = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton amp = new JoystickButton(driver2, pinkButton);
+    private final JoystickButton intakeBtn = new JoystickButton(driver2, yellowButtonL);
 
     /* Subsystems */
     private final Swerve swerve = new Swerve();
@@ -91,14 +91,10 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
         
-        if(!noteStatus){
-            intakeOn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
-            
-        }else{
-            intakeOn.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
-            noteStatus = false;
-        }
+        intakeOn.onTrue(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake)));
         
+        intakeOut.onTrue(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1));
+            // noteStatus = false;        
 
         amp.onTrue(new ParallelCommandGroup(
             new ArmGo(arm, Constants.Arm.SCORINGPOS), 
