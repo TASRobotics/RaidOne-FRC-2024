@@ -1,6 +1,9 @@
 package raidone.robot;
 
+import static raidone.robot.Constants.Intake.percent;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import raidone.robot.Auto.Autos;
 import raidone.robot.commands.*;
@@ -50,9 +55,8 @@ public class RobotContainer {
     private final Wrist wrist = new Wrist();
     private final Arm arm = new Arm();
     private final Intake intake = new Intake();
-    
+
     public static boolean noteStatus = false;
-    
 
     // private Autos autos = new Autos(swerve);
 
@@ -60,9 +64,19 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        // Commands for auto
+        NamedCommands.registerCommand("Intake", new ParallelCommandGroup(
+                new ArmGo(arm, Constants.Arm.INTAKEPOS),
+                new WristGo(wrist, Constants.Wrist.INTAKEPOS))
+                        .andThen(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake))));
 
-        //* When creating commands for the autos:
-        // NamedCommands.registerCommand("exampleCommand", exampleSubsystem.exampleCommand());
+        NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
+                new ArmGo(arm, Constants.Arm.SCORINGPOS),
+                new WristGo(wrist, Constants.Wrist.SCORINGPOS))
+                        .andThen(new Intake_Out(intake, Constants.Intake.percent).withTimeout(1)));
+
+        NamedCommands.registerCommand("Home", new ParallelCommandGroup(
+                new ArmHome(arm), new WristHome(wrist)));
 
         swerve.setDefaultCommand(
                 new TeleopSwerve(
