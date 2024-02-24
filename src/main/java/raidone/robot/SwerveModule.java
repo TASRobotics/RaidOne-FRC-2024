@@ -50,6 +50,9 @@ public class SwerveModule {
         throttle.restoreFactoryDefaults();
         rotor.restoreFactoryDefaults();
 
+        throttle.setSmartCurrentLimit(35);
+        rotor.setSmartCurrentLimit(40);
+
 
         throttle.setIdleMode(IdleMode.kBrake);
         throttle.setInverted(throttleInversion);
@@ -145,6 +148,16 @@ public class SwerveModule {
         return new SwerveModulePosition(
                 throttleEncoder.getPosition(),
                 Rotation2d.fromRotations(CANCoder.getPosition().getValue()));
+    }
+
+    public void setCoast(){
+        throttle.setIdleMode(IdleMode.kCoast);
+        rotor.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void setBrake(){
+        throttle.setIdleMode(IdleMode.kBrake);
+        rotor.setIdleMode(IdleMode.kBrake);
     }
 
     /**

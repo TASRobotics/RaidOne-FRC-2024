@@ -297,6 +297,20 @@ public class Swerve extends SubsystemBase {
         );
     }
 
+    public void setCoast(){
+        moduleBL.setCoast();
+        moduleBR.setCoast();
+        moduleFL.setCoast();
+        moduleFR.setCoast();
+    }
+
+     public void setBrake(){
+        moduleBL.setBrake();
+        moduleBR.setBrake();
+        moduleFL.setBrake();
+        moduleFR.setBrake();
+    }
+
     @Override
     public void periodic() {
         swerveOdometry.update(getRotation(), getModulePositions());

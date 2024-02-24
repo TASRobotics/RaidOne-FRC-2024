@@ -55,28 +55,28 @@ public final class Constants {
         public static final double ROTOR_KD = 0.0001;
         
         // Throttle PID constants 
-        public static final double THROTTLE_KP = 0.0; // 0.12 
+        public static final double THROTTLE_KP = 0.1; // 0.12 
         public static final double THROTTLE_KI = 0.0;
         public static final double THROTTLE_KD = 0.0;
-        public static final double THROTTLE_KF = 1.0 / 6000.0;
+        public static final double THROTTLE_KF = 0.0; // 1.0 / 6000.0
         
         // Throttle feedforward constants
         public static final double THROTTLE_KS = 0.00; // 0.32
-        public static final double THROTTLE_KV = 2.53; // 1.51
-        public static final double THROTTLE_KA = 10.0; // 0.27
+        public static final double THROTTLE_KV = 2.6; // 1.51
+        public static final double THROTTLE_KA = 0.4; // 0.27 // 10 18
 
         // Pathing consants
-        public static final double TRANSLATION_KP = 0.31;
+        public static final double TRANSLATION_KP = 11.0; // .31
         public static final double TRANSLATION_KI = 0.0;
         public static final double TRANSLATION_KD = 0.0;
 
-        public static final double ROTATION_KP = 1.05;
+        public static final double ROTATION_KP = 0.0;
         public static final double ROTATION_KI = 0.0;
         public static final double ROTATION_KD = 0.0;
         
         // Swerve Profiling Values 
         //* Meters per Second 
-        public static final double MAX_SPEED_MPS = 4.5; 
+        public static final double MAX_SPEED_MPS = 4.0; 
         //* Radians per Second 
         public static final double MAX_ANGULAR_VELOCITY = 10.0;
 
@@ -102,7 +102,7 @@ public final class Constants {
         public static final double MODULE_RF_OFFSET = -0.104004;
     }
 
-    public static final double STICK_DEADBAND = 0.03;
+    public static final double STICK_DEADBAND = 0.01;
 
     public static final class Arm{
         public static final int ARM_MOTOR_ID = 9;
@@ -128,7 +128,7 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final double SCORINGPOS = -12;
+        public static final double SCORINGPOS = -16;
         public static final double INTAKEPOS = -33.0;
         
         public static final double kP = 0.02;

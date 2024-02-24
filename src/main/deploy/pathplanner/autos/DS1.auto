@@ -5,7 +5,7 @@
       "x": 0.6931926660061846,
       "y": 7.071277839238143
     },
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,13 @@
         {
           "type": "named",
           "data": {
-            "name": "OrdinalTurnZero"
+            "name": "Home"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TurnTo0"
           }
         },
         {
@@ -49,15 +55,34 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "DS1-P3"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Home"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "DS1-P3"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Amp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Home"
           }
         }
       ]
