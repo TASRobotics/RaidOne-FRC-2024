@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -99,15 +100,12 @@ public class RobotContainer {
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
-                new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.INTAKEPOS)).withTimeout(1),
-                new ParallelCommandGroup(new ArmHome(), new WristHome())));
+            new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.HOMEPOS)),
+            new ParallelCommandGroup(new ArmHome(), new WristHome())));
         home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
-        amp.onTrue(new ParallelCommandGroup(
-                armProfile(Arm.SCORINGPOS),
-                wristProfile(Wrist.SCORINGPOS)));
-        intakePos.onTrue(new ParallelCommandGroup(
-                new SequentialCommandGroup(armProfile(Arm.INTAKEPOS), new ArmHome()),
-                wristProfile(Wrist.INTAKEPOS)));
+        amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS))
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.INTAKEPOS)));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));

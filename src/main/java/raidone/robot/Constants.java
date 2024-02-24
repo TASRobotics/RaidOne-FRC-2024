@@ -130,6 +130,7 @@ public final class Constants {
 
         public static final State SCORINGPOS = new State(-15, 0);
         public static final State INTAKEPOS = new State(-33.0, 0);
+        public static final State HOMEPOS = new State(0.0, 0);
 
         public static final double kP = 0.02;
         public static final double kI = 0.0;
