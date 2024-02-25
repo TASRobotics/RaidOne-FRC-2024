@@ -100,10 +100,12 @@ public class RobotContainer {
      */
     public RobotContainer() {
         // Commands for auto
-        NamedCommands.registerCommand("Intake", new ParallelCommandGroup(
+        NamedCommands.registerCommand("ArmIntake", new ParallelCommandGroup(
                 new ArmGo(arm, Constants.Arm.INTAKEPOS),
-                new WristGo(wrist, Constants.Wrist.INTAKEPOS).withTimeout(1))
-                .andThen(new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake))));
+                new WristGo(wrist, Constants.Wrist.INTAKEPOS).withTimeout(1)));
+
+        NamedCommands.registerCommand("IntakeNote", new ParallelCommandGroup(
+                new Intake_In(intake, Constants.Intake.percent).andThen(new Intake_Retract(intake))));
 
         NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
                 new ArmGo(arm, Constants.Arm.SCORINGPOS).withTimeout(1.25),
