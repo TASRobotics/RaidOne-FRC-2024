@@ -50,10 +50,6 @@ public class SwerveModule {
         throttle.restoreFactoryDefaults();
         rotor.restoreFactoryDefaults();
 
-        throttle.setSmartCurrentLimit(35);
-        rotor.setSmartCurrentLimit(40);
-
-
         throttle.setIdleMode(IdleMode.kBrake);
         throttle.setInverted(throttleInversion);
 
