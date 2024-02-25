@@ -50,27 +50,27 @@ public final class Constants {
         public static final double CLOSED_LOOP_RAMP = 0.0;
         
         // Rotor PID constants 
-        public static final double ROTOR_KP = 0.008;
+        public static final double ROTOR_KP = 0.011;
         public static final double ROTOR_KI = 0.0;
-        public static final double ROTOR_KD = 0.0001;
+        public static final double ROTOR_KD = 0.0;
         
         // Throttle PID constants 
-        public static final double THROTTLE_KP = 0.1; // 0.12 
+        public static final double THROTTLE_KP = 0.35; // 0.12 
         public static final double THROTTLE_KI = 0.0;
         public static final double THROTTLE_KD = 0.0;
         public static final double THROTTLE_KF = 0.0; // 1.0 / 6000.0
         
         // Throttle feedforward constants
         public static final double THROTTLE_KS = 0.00; // 0.32
-        public static final double THROTTLE_KV = 2.6; // 1.51
-        public static final double THROTTLE_KA = 0.4; // 0.27 // 10 18
+        public static final double THROTTLE_KV = 2.7; // 1.51
+        public static final double THROTTLE_KA = 0.0; // 0.27 // 10 18 0.4
 
         // Pathing consants
-        public static final double TRANSLATION_KP = 11.0; // .31
-        public static final double TRANSLATION_KI = 0.0;
+        public static final double TRANSLATION_KP = 0.5; // .31
+        public static final double TRANSLATION_KI = 0.025; //025
         public static final double TRANSLATION_KD = 0.0;
 
-        public static final double ROTATION_KP = 0.0;
+        public static final double ROTATION_KP = 2.2; //1.8
         public static final double ROTATION_KI = 0.0;
         public static final double ROTATION_KD = 0.0;
         
@@ -78,7 +78,7 @@ public final class Constants {
         //* Meters per Second 
         public static final double MAX_SPEED_MPS = 4.0; 
         //* Radians per Second 
-        public static final double MAX_ANGULAR_VELOCITY = 10.0;
+        public static final double MAX_ANGULAR_VELOCITY = 5.0;
 
         // SwerveModule ID & Offsets
         public static final int THROTTLE_LF_ID = 1;
