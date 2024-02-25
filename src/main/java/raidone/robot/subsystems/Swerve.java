@@ -324,6 +324,8 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("actual vel mps", getModuleStates()[0].speedMetersPerSecond);
 
         field.setRobotPose(getPose());
-        SmartDashboard.putData("Field", field); 
+        SmartDashboard.putData("Field", field);
+
+        SmartDashboard.putNumber("Robot heading", getHeading().getDegrees());
     }
 }
