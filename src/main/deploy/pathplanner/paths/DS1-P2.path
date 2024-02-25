@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.97,
-        "y": 7.89
+        "x": 2.1110910659898954,
+        "y": 7.828042125585175
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9426654524399094,
-        "y": 7.792733454756008
+        "x": 2.1110910659898954,
+        "y": 7.628042125585175
       },
       "isLocked": false,
       "linkedName": "End P1"
     },
     {
       "anchor": {
-        "x": 3.2707561149719457,
-        "y": 6.935104675896556
+        "x": 2.330644222286596,
+        "y": 7.066185560282396
       },
       "prevControl": {
-        "x": 2.2786373534832376,
-        "y": 7.081004493762541
+        "x": 2.1324009606929266,
+        "y": 7.092635687554377
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,10 +32,10 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 145.0,
+    "maxAngularAcceleration": 72.5
   },
   "goalEndState": {
     "velocity": 0,
