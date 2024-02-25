@@ -6,6 +6,7 @@ import static raidone.robot.Constants.Wrist.WRIST_CONSTRAINTS;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
+import raidone.robot.Constants;
 import raidone.robot.subsystems.Arm;
 import raidone.robot.subsystems.Wrist;
 
@@ -13,7 +14,7 @@ public final class TrapezoidGenerator {
 
     public static TrapezoidProfileCommand armProfile(State goal) {
         return new TrapezoidProfileCommand(
-            new TrapezoidProfile(ARM_CONSTRAINTS), 
+            Constants.Arm.ARM_Profile, 
             Arm.system()::trapezoidToPID, 
             () -> goal, 
             Arm.system()::currentState, 
@@ -22,7 +23,7 @@ public final class TrapezoidGenerator {
 
     public static TrapezoidProfileCommand wristProfile(State goal) {
         return new TrapezoidProfileCommand(
-            new TrapezoidProfile(WRIST_CONSTRAINTS),
+            Constants.Wrist.WRIST_Profile,
             Wrist.system()::trapezoidToPID,
             () -> goal,
             Wrist.system()::currentState,

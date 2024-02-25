@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isRetracted() {
-        return Math.abs(roller.getEncoder().getPosition()) > 8;
+        return Math.abs(roller.getEncoder().getPosition()) > 2;
     }
 
     @Override

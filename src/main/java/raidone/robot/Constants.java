@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
@@ -121,31 +122,34 @@ public final class Constants {
         public static final double ALLOWED_ERROR = 0.0;
 
         public static final Constraints ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
-                Constants.Arm.MAX_ACCEL_RPSS);
+            Constants.Arm.MAX_ACCEL_RPSS);
+        public static TrapezoidProfile ARM_Profile = new TrapezoidProfile(ARM_CONSTRAINTS);
     }
 
     public static final class Wrist {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
+        
         public static final State SCORINGPOS = new State(-15, 0);
         public static final State INTAKEPOS = new State(-33.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
-
+        
         public static final double kP = 0.02;
         public static final double kI = 0.0;
         public static final double kD = 0.002;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
-
+        
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
         public static final double MAX_VEL_RPS = 33.0 / 2;
         public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 2.0;
-
+        
         public static final Constraints WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
-                Constants.Wrist.MAX_ACCEL_RPSS);
+            Constants.Wrist.MAX_ACCEL_RPSS);
+        public static TrapezoidProfile WRIST_Profile = new TrapezoidProfile(WRIST_CONSTRAINTS);
     }
 
     public static final class Intake {
