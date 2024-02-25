@@ -191,8 +191,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // return autoChooser.getSelected();
-        // return new PathPlannerAuto("Rebuild");
-        return new PathPlannerAuto("TuneAuto");
+        return new PathPlannerAuto("Rebuild");
 
     }
 
