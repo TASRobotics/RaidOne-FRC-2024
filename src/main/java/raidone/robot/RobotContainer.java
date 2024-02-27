@@ -1,5 +1,6 @@
 package raidone.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,6 +61,8 @@ public class RobotContainer {
     private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
+    private boolean redAlliance;
+
     // Declare subsystems
     private final Swerve swerve = new Swerve();
     private final Wrist wrist = new Wrist();
@@ -83,7 +86,16 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(rotationAxis) * 0.5,
                         () -> false));
 
+        var alliance = DriverStation.getAlliance();
+
+        if (alliance.isPresent()) {
+            redAlliance = alliance.get() == DriverStation.Alliance.Red;
+        } else { //if no alliance default to red
+            redAlliance = false;
+        }
+
         configureButtonBindings();
+
     }
 
     private void configureButtonBindings() {
@@ -107,10 +119,11 @@ public class RobotContainer {
         ordinalTurnDown.onTrue(new OrdinalTurn(180, swerve));
         ordinalTurnLeft.onTrue(new OrdinalTurn(270, swerve));
         ordinalTurnRight.onTrue(new OrdinalTurn(90, swerve));
+
         turnToSource.onTrue(
-                new OrdinalTurn(135, swerve)); // blue = 135; red = 225
+                new OrdinalTurn(redAlliance ? 225 : 135, swerve)); // blue = 135; red = 225
         turnToAmp.onTrue(
-                new OrdinalTurn(270, swerve)); // blue = 270; red = 90
+                new OrdinalTurn(redAlliance? 90 : 270, swerve)); // blue = 270; red = 90
     }
 
     public Command getAutonomousCommand() {
