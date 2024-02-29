@@ -1,9 +1,5 @@
 package raidone.robot.commands;
 
-import static raidone.robot.Constants.Arm.ARM_CONSTRAINTS;
-import static raidone.robot.Constants.Wrist.WRIST_CONSTRAINTS;
-
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
 import raidone.robot.Constants;
