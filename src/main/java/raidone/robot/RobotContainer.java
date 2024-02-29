@@ -1,7 +1,12 @@
 package raidone.robot;
 
+import static raidone.robot.Constants.Arm.CONSTRAINTPOS;
+import static raidone.robot.Constants.Wrist.HOMEPOS;
 import static raidone.robot.commands.TrapezoidGenerator.armProfile;
 import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
+
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -13,12 +18,15 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import raidone.robot.Constants.*;
+import raidone.robot.commands.ArmGo;
 import raidone.robot.commands.ArmHome;
+import raidone.robot.commands.ClimbHome;
 import raidone.robot.commands.IntakeIn;
 import raidone.robot.commands.IntakeOut;
 import raidone.robot.commands.IntakeRetract;
 import raidone.robot.commands.OrdinalTurn;
 import raidone.robot.commands.TeleopSwerve;
+import raidone.robot.commands.WristGo;
 import raidone.robot.commands.WristHome;
 
 /**
@@ -56,7 +64,8 @@ public class RobotContainer {
 
     // Arm & wrist position buttons
     private final JoystickButton stow = new JoystickButton(driver2, yellowButtonR);
-    // private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton home = new JoystickButton(driver,
+    // XboxController.Button.kRightBumper.value);
     private final JoystickButton amp = new JoystickButton(driver2, pinkButton);
     private final JoystickButton intakePos = new JoystickButton(driver2, yellowButtonL);
 
@@ -67,6 +76,9 @@ public class RobotContainer {
     private final POVButton ordinalTurnRight = new POVButton(driver, 90);
     private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
+
+    private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton climbHome = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     // Subsystem references
     private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
@@ -81,6 +93,27 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
+
+        // Commands for auto
+        NamedCommands.registerCommand("ArmIntake", new ParallelCommandGroup(
+                armProfile(Arm.INTAKEPOS),
+                wristProfile(Wrist.INTAKEPOS)));
+
+        NamedCommands.registerCommand("IntakeNote", new ParallelCommandGroup(
+                new IntakeIn(Constants.Intake.PERCENT)));
+
+        NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
+                armProfile(Arm.SCORINGPOS),
+                wristProfile(Wrist.SCORINGPOS)));
+
+        NamedCommands.registerCommand("AmpScore", new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
+
+        NamedCommands.registerCommand("Home", new ParallelCommandGroup(
+                new ArmHome(), new WristHome()));
+
+        NamedCommands.registerCommand("TurnTo0", new OrdinalTurn(0));
+        NamedCommands.registerCommand("TurnTo90", new OrdinalTurn(90));
+
         swerve.setDefaultCommand(
                 new TeleopSwerve(
                         () -> -driver.getRawAxis(translationAxis),
@@ -97,12 +130,27 @@ public class RobotContainer {
         intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract()));
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
+        // Old stow:
+        // stow.onTrue(new SequentialCommandGroup(
+        // new ParallelCommandGroup(armProfile(Arm.INTAKEPOS),
+        // wristProfile(Wrist.HOMEPOS)),
+        // new ParallelCommandGroup(new ArmHome(), new WristHome())));
+
         stow.onTrue(new SequentialCommandGroup(
-            new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.HOMEPOS)),
-            new ParallelCommandGroup(new ArmHome(), new WristHome())));
-        // home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
+                armProfile(Arm.CONSTRAINTPOS),
+                wristProfile(Wrist.HOMEPOS),
+                new ParallelCommandGroup(
+                        new ArmHome(), new WristHome())));
+
         amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS)));
-        intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.INTAKEPOS)));
+
+        // Old Intake:
+        // intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS),
+        // wristProfile(Wrist.INTAKEPOS)));
+        
+        intakePos.onTrue(new SequentialCommandGroup(
+                new ParallelCommandGroup(armProfile(CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
+                new ArmHome()));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));
@@ -112,9 +160,12 @@ public class RobotContainer {
                 new OrdinalTurn(135)); // blue = 135; red = 225
         turnToAmp.onTrue(
                 new OrdinalTurn(270)); // blue = 270; red = 90
+
+        climbHome.toggleOnTrue(new ClimbHome(0.5));
+        climbUp.toggleOnTrue(new ClimbHome(0.5));
     }
 
     public Command getAutonomousCommand() {
-        return null;
+        return new PathPlannerAuto("Rebuild");
     }
 }

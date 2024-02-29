@@ -122,6 +122,8 @@ public final class Constants {
         public static final State SCORINGPOS = new State(-24.5, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
 
+        public static final State CONSTRAINTPOS = new State(15, 0);
+
         public static final double kP = 0.05;
         public static final double kI = 0.0;
         public static final double kD = 0.007;
@@ -168,5 +170,15 @@ public final class Constants {
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 13;
         public static final double PERCENT = 1.0;
+    }
+
+    public static final class Climb {
+        public static final int CLIMB_MOTOR_ID = 14;
+        public static final int CLIMB_FOLLOW_ID = 15;
+        public static final double CLIMB_KP = 0.01;
+        public static final double CLIMB_KI = 0.0;
+        public static final double CLIMB_KD = 0.0;
+        public static final double BOTTOM_POS_ROT = 0.0;
+        public static final double TOP_POS_ROT = 430.0;
     }
 }
