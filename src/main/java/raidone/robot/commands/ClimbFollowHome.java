@@ -4,27 +4,27 @@ import edu.wpi.first.wpilibj2.command.Command;
 import raidone.robot.Constants;
 import raidone.robot.subsystems.Climb;
 
-public class ClimbUp extends Command {
+public class ClimbFollowHome extends Command {
     private Climb climb;
     private double speed;
 
-    public ClimbUp(double speed) {
+    public ClimbFollowHome( double speed) {
         this.climb = Climb.system();
         this.speed = speed;
     }
 
     @Override
     public void execute() {
-        climb.runClimb(speed);
+        climb.runFollow(-1 * speed);
     }
 
     @Override
     public boolean isFinished() {
-        return climb.getClimbEncoderPos() >= Constants.Climb.TOP_POS_ROT;
+        return climb.getFollowLimit();
     }
 
     @Override
     public void end(boolean interrupted) {
-        climb.stopClimbMotor();
+        climb.stopFollowMotor();
     }
 } 

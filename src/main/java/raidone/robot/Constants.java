@@ -122,7 +122,7 @@ public final class Constants {
         public static final State SCORINGPOS = new State(-24.5, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
 
-        public static final State CONSTRAINTPOS = new State(15, 0);
+        public static final State CONSTRAINTPOS = new State(-7, 0);
 
         public static final double kP = 0.05;
         public static final double kI = 0.0;
@@ -147,7 +147,7 @@ public final class Constants {
 
         
         public static final State SCORINGPOS = new State(-15, 0);
-        public static final State INTAKEPOS = new State(-33.0, 0);
+        public static final State INTAKEPOS = new State(-36.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
         
         public static final double kP = 0.02;
@@ -179,6 +179,6 @@ public final class Constants {
         public static final double CLIMB_KI = 0.0;
         public static final double CLIMB_KD = 0.0;
         public static final double BOTTOM_POS_ROT = 0.0;
-        public static final double TOP_POS_ROT = 430.0;
+        public static final double TOP_POS_ROT = 350.0;
     }
 }

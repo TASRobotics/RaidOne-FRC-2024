@@ -1,7 +1,5 @@
 package raidone.robot;
 
-import static raidone.robot.Constants.Arm.CONSTRAINTPOS;
-import static raidone.robot.Constants.Wrist.HOMEPOS;
 import static raidone.robot.commands.TrapezoidGenerator.armProfile;
 import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
 
@@ -18,15 +16,16 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import raidone.robot.Constants.*;
-import raidone.robot.commands.ArmGo;
 import raidone.robot.commands.ArmHome;
+import raidone.robot.commands.ClimbFollowHome;
+import raidone.robot.commands.ClimbFollowUp;
 import raidone.robot.commands.ClimbHome;
+import raidone.robot.commands.ClimbUp;
 import raidone.robot.commands.IntakeIn;
 import raidone.robot.commands.IntakeOut;
 import raidone.robot.commands.IntakeRetract;
 import raidone.robot.commands.OrdinalTurn;
 import raidone.robot.commands.TeleopSwerve;
-import raidone.robot.commands.WristGo;
 import raidone.robot.commands.WristHome;
 
 /**
@@ -138,8 +137,8 @@ public class RobotContainer {
 
         stow.onTrue(new SequentialCommandGroup(
                 armProfile(Arm.CONSTRAINTPOS),
-                wristProfile(Wrist.HOMEPOS),
-                new ParallelCommandGroup(
+                new WristHome(),
+                new ParallelCommandGroup( 
                         new ArmHome(), new WristHome())));
 
         amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS)));
@@ -147,9 +146,9 @@ public class RobotContainer {
         // Old Intake:
         // intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS),
         // wristProfile(Wrist.INTAKEPOS)));
-        
+
         intakePos.onTrue(new SequentialCommandGroup(
-                new ParallelCommandGroup(armProfile(CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
+                new SequentialCommandGroup(armProfile(Arm.CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
                 new ArmHome()));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
@@ -161,8 +160,14 @@ public class RobotContainer {
         turnToAmp.onTrue(
                 new OrdinalTurn(270)); // blue = 270; red = 90
 
-        climbHome.toggleOnTrue(new ClimbHome(0.5));
-        climbUp.toggleOnTrue(new ClimbHome(0.5));
+        climbHome.toggleOnTrue(new ParallelCommandGroup(
+            new ClimbHome(0.5),
+            new ClimbFollowHome(0.5)            
+        ));
+        climbUp.toggleOnTrue(new ParallelCommandGroup(
+            new ClimbUp(1.0),
+            new ClimbFollowUp(1.0)
+        ));
     }
 
     public Command getAutonomousCommand() {

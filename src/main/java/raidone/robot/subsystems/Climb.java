@@ -1,11 +1,9 @@
 package raidone.robot.subsystems;
 
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionVoltage;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,14 +21,17 @@ public class Climb extends SubsystemBase {
 
     private Climb() {
         climbFX = new TalonFX(Constants.Climb.CLIMB_MOTOR_ID);
+        climbFX.getConfigurator().apply(new TalonFXConfiguration());
         climbLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         climbLimitSwitchConfigs.withReverseLimitAutosetPositionEnable(true);
         climbLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0.0;
         climbFX.getConfigurator().apply(climbLimitSwitchConfigs);
 
         followFX = new TalonFX(Constants.Climb.CLIMB_FOLLOW_ID);
-        followerConfig = new Follower(Constants.Climb.CLIMB_MOTOR_ID, true);
-        followFX.setControl(followerConfig);
+        followFX.getConfigurator().apply(new TalonFXConfiguration());
+        followFX.setInverted(true);
+        // followerConfig = new Follower(Constants.Climb.CLIMB_MOTOR_ID, true);
+        // followFX.setControl(followerConfig);
 
         followerLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         followerLimitSwitchConfigs.withForwardLimitAutosetPositionEnable(true);
@@ -38,19 +39,39 @@ public class Climb extends SubsystemBase {
         followFX.getConfigurator().apply(followerLimitSwitchConfigs);
     }
 
-    public double getEncoderPos(){
+    public double getClimbEncoderPos() {
         return climbFX.getPosition().getValueAsDouble();
     }
 
-    public void run(double speed){
+    public double getFollowEncoderPos() {
+        return followFX.getPosition().getValueAsDouble();
+    }
+
+    public void runClimb(double speed) {
         climbFX.set(speed);
     }
 
-    public void stopMotors() {
+    public void runFollow(double speed) {
+        followFX.set(-1 * speed);
+    }
+
+    public void stopClimbMotor() {
         climbFX.stopMotor();
     }
 
-    public static Climb system(){
+    public void stopFollowMotor() {
+        followFX.stopMotor();
+    }
+
+    public boolean getClimbLimit() {
+        return climbFX.getReverseLimit().getValue().value == 0;
+    }
+
+    public boolean getFollowLimit() {
+        return followFX.getForwardLimit().getValue().value == 0;
+    }
+
+    public static Climb system() {
         return climbSys;
     }
 }
