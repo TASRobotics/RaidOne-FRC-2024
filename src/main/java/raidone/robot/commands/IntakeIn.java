@@ -7,8 +7,13 @@ public class IntakeIn extends Command {
     private Intake intake;
     private double percent;
 
+<<<<<<< HEAD
     public IntakeIn(double p) {
         intake = Intake.system();
+=======
+    public IntakeIn(Intake in, double p) {
+        intake = in;
+>>>>>>> auto
         percent = p;
     }
 

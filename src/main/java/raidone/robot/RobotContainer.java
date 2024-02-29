@@ -13,9 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import raidone.robot.Constants.Arm;
-import raidone.robot.Constants.Intake;
-import raidone.robot.Constants.Wrist;
+import raidone.robot.Constants.*;
 import raidone.robot.commands.ArmHome;
 import raidone.robot.commands.IntakeIn;
 import raidone.robot.commands.IntakeOut;
@@ -59,7 +57,7 @@ public class RobotContainer {
 
     // Arm & wrist position buttons
     private final JoystickButton stow = new JoystickButton(driver2, yellowButtonR);
-    private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    // private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton amp = new JoystickButton(driver2, pinkButton);
     private final JoystickButton intakePos = new JoystickButton(driver2, yellowButtonL);
 
@@ -72,7 +70,7 @@ public class RobotContainer {
     private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
     // Subsystem references
-    raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
+    private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
 
     // Get the triggers
     public boolean getTrigger(boolean isRight) {
@@ -102,7 +100,7 @@ public class RobotContainer {
         stow.onTrue(new SequentialCommandGroup(
             new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.HOMEPOS)),
             new ParallelCommandGroup(new ArmHome(), new WristHome())));
-        home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
+        // home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
         amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS))
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
         intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.INTAKEPOS)));
