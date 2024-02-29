@@ -107,9 +107,9 @@ public final class Constants {
         public static final int CAN_CODER_BR_ID = 3;
         public static final double MODULE_BR_OFFSET = -0.532959;
 
-        public static final int THROTTLE_FR_ID = 5;
-        public static final int ROTOR_FR_ID = 6;
-        public static final int CAN_CODER_FR_ID = 3;
+        public static final int THROTTLE_FR_ID = 7;
+        public static final int ROTOR_FR_ID = 8;
+        public static final int CAN_CODER_FR_ID = 4;
         public static final double MODULE_FR_OFFSET = -0.104004;
 
         public static final double STICK_DEADBAND = 0.01;
@@ -167,6 +167,6 @@ public final class Constants {
 
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 13;
-        public static final double PERCENT = 0.9;
+        public static final double PERCENT = 1.0;
     }
 }

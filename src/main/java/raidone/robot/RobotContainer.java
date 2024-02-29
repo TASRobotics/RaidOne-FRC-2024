@@ -77,6 +77,7 @@ public class RobotContainer {
         if (isRight)
             return driver.getRightTriggerAxis() > 0.5;
         else
+
             return driver.getLeftTriggerAxis() > 0.5;
     }
 
@@ -101,8 +102,7 @@ public class RobotContainer {
             new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.HOMEPOS)),
             new ParallelCommandGroup(new ArmHome(), new WristHome())));
         // home.onTrue(new ParallelCommandGroup(new ArmHome(), new WristHome()));
-        amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS))
-            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS)));
         intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS), wristProfile(Wrist.INTAKEPOS)));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
