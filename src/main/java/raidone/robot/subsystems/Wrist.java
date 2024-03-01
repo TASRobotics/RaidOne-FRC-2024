@@ -24,31 +24,31 @@ public class Wrist extends SubsystemBase {
     public static Wrist wristSys = new Wrist();
 
     private Wrist() {
-        System.out.println("Wrist init");
-        isHomed = false;
+        System.out.println("Wrist Subsystem Init");
+
         wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
-        follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
         wrist.restoreFactoryDefaults();
-        follower.restoreFactoryDefaults();
-
         wrist.setInverted(true);
-
-        pid = wrist.getPIDController();
-        encoder = wrist.getEncoder();
-        limit = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
-
         wrist.setIdleMode(IdleMode.kBrake);
+
+        follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
+        follower.restoreFactoryDefaults();
         follower.setIdleMode(IdleMode.kBrake);
-
-        limit.enableLimitSwitch(true);
-
         follower.follow(wrist, true);
 
+        pid = wrist.getPIDController();
         pid.setP(kP);
         pid.setI(kI);
         pid.setD(kD);
         pid.setIZone(kIz);
         pid.setFF(kFF);
+
+        encoder = wrist.getEncoder();
+
+        limit = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
+        limit.enableLimitSwitch(true);
+
+        isHomed = false;
     }
 
     public void trapezoidToPID(State output) {

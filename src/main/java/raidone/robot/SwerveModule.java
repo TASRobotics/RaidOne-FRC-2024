@@ -42,43 +42,18 @@ public class SwerveModule {
             boolean throttleInversion) {
 
         throttle = new CANSparkMax(throttleID, MotorType.kBrushless);
-        throttle.setSmartCurrentLimit(Constants.Swerve.THROTTLE_CURRENT_LIMIT);
-
-        throttleEncoder = throttle.getEncoder();
-
-        rotor = new CANSparkMax(rotorID, MotorType.kBrushless);
-        rotor.setSmartCurrentLimit(Constants.Swerve.ROTOR_CURRENT_LIMIT);
-
-        CANCoder = new CANcoder(canCoderID);
-
         throttle.restoreFactoryDefaults();
-        rotor.restoreFactoryDefaults();
-
+        throttle.setSmartCurrentLimit(Constants.Swerve.THROTTLE_CURRENT_LIMIT);
         throttle.setIdleMode(IdleMode.kBrake);
         throttle.setInverted(throttleInversion);
 
+        throttleEncoder = throttle.getEncoder();
         throttleEncoder.setVelocityConversionFactor(
                 Constants.Swerve.THROTTLE_VEL_CONVERSION_FACTOR);
         throttleEncoder.setPositionConversionFactor(
                 Constants.Swerve.THROTTLE_POS_CONVERSTION_FACTOR);
 
-        rotor.setInverted(true);
-        rotor.setIdleMode(IdleMode.kBrake);
-
-        CANCoder.getConfigurator().apply(new CANcoderConfiguration()
-                .withMagnetSensor(new MagnetSensorConfigs()
-                        .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
-                        .withMagnetOffset(moduleAngleOffset)));
-
-        rotorPID = new PIDController(
-                Constants.Swerve.ROTOR_KP,
-                Constants.Swerve.ROTOR_KI,
-                Constants.Swerve.ROTOR_KD);
-
-        rotorPID.enableContinuousInput(-180, 180);
-
         throttleVelController = throttle.getPIDController();
-
         throttleVelController.setP(Constants.Swerve.THROTTLE_KP, 0);
         throttleVelController.setI(Constants.Swerve.THROTTLE_KI, 0);
         throttleVelController.setD(Constants.Swerve.THROTTLE_KD, 0);
@@ -91,6 +66,23 @@ public class SwerveModule {
                 Constants.Swerve.THROTTLE_KV,
                 Constants.Swerve.THROTTLE_KA);
 
+        rotor = new CANSparkMax(rotorID, MotorType.kBrushless);
+        rotor.restoreFactoryDefaults();
+        rotor.setSmartCurrentLimit(Constants.Swerve.ROTOR_CURRENT_LIMIT);
+        rotor.setInverted(true);
+        rotor.setIdleMode(IdleMode.kBrake);
+
+        CANCoder = new CANcoder(canCoderID);
+        CANCoder.getConfigurator().apply(new CANcoderConfiguration()
+                .withMagnetSensor(new MagnetSensorConfigs()
+                        .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
+                        .withMagnetOffset(moduleAngleOffset)));
+
+        rotorPID = new PIDController(
+                Constants.Swerve.ROTOR_KP,
+                Constants.Swerve.ROTOR_KI,
+                Constants.Swerve.ROTOR_KD);
+        rotorPID.enableContinuousInput(-180, 180);
     }
 
     /**

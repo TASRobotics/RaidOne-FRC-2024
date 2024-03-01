@@ -20,23 +20,25 @@ public class Climb extends SubsystemBase {
     private static Climb climbSys = new Climb();
 
     private Climb() {
-        climbFX = new TalonFX(Constants.Climb.CLIMB_MOTOR_ID);
-        climbFX.getConfigurator().apply(new TalonFXConfiguration());
+        System.out.println("Climb Subsystem Init");
+
         climbLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         climbLimitSwitchConfigs.withReverseLimitAutosetPositionEnable(true);
         climbLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0.0;
-        climbFX.getConfigurator().apply(climbLimitSwitchConfigs);
 
-        followFX = new TalonFX(Constants.Climb.CLIMB_FOLLOW_ID);
-        followFX.getConfigurator().apply(new TalonFXConfiguration());
-        followFX.setInverted(true);
-        // followerConfig = new Follower(Constants.Climb.CLIMB_MOTOR_ID, true);
-        // followFX.setControl(followerConfig);
+        climbFX = new TalonFX(Constants.Climb.CLIMB_MOTOR_ID);
+        climbFX.getConfigurator().apply(new TalonFXConfiguration());
+        climbFX.getConfigurator().apply(climbLimitSwitchConfigs);
 
         followerLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         followerLimitSwitchConfigs.withForwardLimitAutosetPositionEnable(true);
         followerLimitSwitchConfigs.ForwardLimitAutosetPositionValue = 0.0;
+
+        followFX = new TalonFX(Constants.Climb.CLIMB_FOLLOW_ID);
+        followFX.getConfigurator().apply(new TalonFXConfiguration());
+        followFX.setInverted(true);
         followFX.getConfigurator().apply(followerLimitSwitchConfigs);
+
     }
 
     public double getClimbEncoderPos() {

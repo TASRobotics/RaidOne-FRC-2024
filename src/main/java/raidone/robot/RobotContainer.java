@@ -11,24 +11,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import raidone.robot.Constants.*;
-import raidone.robot.commands.ArmHome;
-import raidone.robot.commands.ClimbFollowHome;
-import raidone.robot.commands.ClimbFollowUp;
-import raidone.robot.commands.ClimbHome;
-import raidone.robot.commands.ClimbUp;
-import raidone.robot.commands.IntakeIn;
-import raidone.robot.commands.IntakeOut;
-import raidone.robot.commands.IntakeRetract;
-import raidone.robot.commands.OrdinalTurn;
-import raidone.robot.commands.TeleopSwerve;
-import raidone.robot.commands.WristHome;
+import raidone.robot.commands.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since

@@ -53,11 +53,6 @@ public final class Constants {
 
         public static final double OPEN_LOOP_RAMP = 0.25;
 
-        /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
-         * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-        // public static final double OPEN_LOOP_RAMP = 0.25;
-        // public static final double CLOSED_LOOP_RAMP = 0.0;
-
         /* Angle Motor PID Values */
         public static final double ROTOR_KP = 0.011;
         public static final double ROTOR_KI = 0.0;

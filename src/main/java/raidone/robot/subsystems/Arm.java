@@ -15,43 +15,47 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import static raidone.robot.Constants.Arm.*;
 
 public class Arm extends SubsystemBase {
-    private CANSparkMax arm, follow;
-    private SparkPIDController pid;
+    private CANSparkMax arm;
+    private CANSparkMax follow;
+
     private RelativeEncoder encoder;
+    private SparkPIDController pid;
     private SparkLimitSwitch limit1, limit2;
     private boolean isHomed;
 
     private static Arm armSys = new Arm();
 
     private Arm() {
-        System.out.println("Arm init");
-        isHomed = false;
+        System.out.println("Arm Subsystem init");
+
         arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
-        follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
-
         arm.restoreFactoryDefaults();
-        follow.restoreFactoryDefaults();
-
         arm.setIdleMode(IdleMode.kBrake);
-        follow.setIdleMode(IdleMode.kBrake);
-
-        pid = arm.getPIDController();
-        encoder = arm.getEncoder();
-        limit1 = arm.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit1.enableLimitSwitch(true);
-        limit2.enableLimitSwitch(true);
-
         arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+        follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
+        follow.restoreFactoryDefaults();
+        follow.setIdleMode(IdleMode.kBrake);
         follow.follow(arm, true);
 
+        pid = arm.getPIDController();
         pid.setP(kP);
         pid.setI(kI);
         pid.setD(kD);
         pid.setIZone(kIz);
         pid.setFF(kFF);
         pid.setOutputRange(MIN_OUTPUT, MAX_OUTPUT);
+
+        encoder = arm.getEncoder();
+
+        limit1 = arm.getForwardLimitSwitch(Type.kNormallyOpen);
+        limit1.enableLimitSwitch(true);
+
+        limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
+        limit2.enableLimitSwitch(true);
+
+        isHomed = false;
     }
 
     public void trapezoidToPID(State output) {

@@ -37,6 +37,7 @@ public class Swerve extends SubsystemBase {
     private static Swerve swerveSys = new Swerve();
 
     private Swerve() {
+        System.out.println("Swerve Subsystem Init");
 
         moduleFL = new SwerveModule(
             THROTTLE_FL_ID,
