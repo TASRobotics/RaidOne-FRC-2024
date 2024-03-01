@@ -38,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "ArmIntake"
           }
         },
         {
@@ -49,12 +49,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "DS1-P2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeNote"
                 }
               }
             ]

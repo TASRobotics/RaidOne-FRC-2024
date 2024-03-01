@@ -44,12 +44,14 @@ public final class Constants {
         public static final double ROTOR_CURRENT_THRESHOLD_TIME = 0.1;
         public static final boolean ANGLE_ENABLE_CURRENT_LIMIT = true;
         
-        public static final int THROTTLE_CURRENT_LIMIT = 35;
+        public static final int THROTTLE_CURRENT_LIMIT = 40;
         public static final int THROTTLE_CURRENT_THRESHOLD = 60;
         public static final double THROTTLE_CURRENT_THRESHOLD_TIME = 0.1;
         public static final boolean THROTTLE_ENABLE_CURRENT_LIMIT = true;
-        
+
         public static final double VOLTAGE_COMPENSATION = 12.0;
+
+        public static final double OPEN_LOOP_RAMP = 0.25;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
@@ -122,7 +124,8 @@ public final class Constants {
         public static final State SCORINGPOS = new State(-24.5, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
 
-        public static final State CONSTRAINTPOS = new State(-7, 0);
+        public static final State CONSTRAINTPOS = new State(-13, 0);
+        public static final State PRE_CONSTRAINTPOS = new State(-15, 0);
 
         public static final double kP = 0.05;
         public static final double kI = 0.0;
@@ -147,7 +150,7 @@ public final class Constants {
 
         
         public static final State SCORINGPOS = new State(-15, 0);
-        public static final State INTAKEPOS = new State(-36.0, 0);
+        public static final State INTAKEPOS = new State(-38.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
         
         public static final double kP = 0.02;

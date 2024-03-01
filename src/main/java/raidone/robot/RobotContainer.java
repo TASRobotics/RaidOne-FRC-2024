@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -94,9 +96,9 @@ public class RobotContainer {
     public RobotContainer() {
 
         // Commands for auto
-        NamedCommands.registerCommand("ArmIntake", new ParallelCommandGroup(
-                armProfile(Arm.INTAKEPOS),
-                wristProfile(Wrist.INTAKEPOS)));
+        NamedCommands.registerCommand("ArmIntake", new SequentialCommandGroup(
+                new SequentialCommandGroup(armProfile(Arm.CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
+                new ArmHome()));
 
         NamedCommands.registerCommand("IntakeNote", new ParallelCommandGroup(
                 new IntakeIn(Constants.Intake.PERCENT)));
@@ -138,7 +140,7 @@ public class RobotContainer {
         stow.onTrue(new SequentialCommandGroup(
                 armProfile(Arm.CONSTRAINTPOS),
                 new WristHome(),
-                new ParallelCommandGroup( 
+                new ParallelCommandGroup(
                         new ArmHome(), new WristHome())));
 
         amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS)));
@@ -147,8 +149,18 @@ public class RobotContainer {
         // intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS),
         // wristProfile(Wrist.INTAKEPOS)));
 
-        intakePos.onTrue(new SequentialCommandGroup(
-                new SequentialCommandGroup(armProfile(Arm.CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
+        // intakePos.onTrue(new SequentialCommandGroup(
+        //         armProfile(Arm.CONSTRAINTPOS),
+        //         new  ParallelRaceGroup(
+        //             wristProfile(Wrist.INTAKEPOS),
+        //             armProfile(Arm.PRE_CONSTRAINTPOS)),
+        //         new ArmHome()));
+
+         intakePos.onTrue(new SequentialCommandGroup(
+                armProfile(Arm.CONSTRAINTPOS).withTimeout(0.8),
+                new  ParallelCommandGroup(
+                    wristProfile(Wrist.INTAKEPOS),
+                    armProfile(Arm.PRE_CONSTRAINTPOS)),
                 new ArmHome()));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
@@ -161,13 +173,11 @@ public class RobotContainer {
                 new OrdinalTurn(270)); // blue = 270; red = 90
 
         climbHome.toggleOnTrue(new ParallelCommandGroup(
-            new ClimbHome(0.5),
-            new ClimbFollowHome(0.5)            
-        ));
+                new ClimbHome(0.5),
+                new ClimbFollowHome(0.5)));
         climbUp.toggleOnTrue(new ParallelCommandGroup(
-            new ClimbUp(1.0),
-            new ClimbFollowUp(1.0)
-        ));
+                new ClimbUp(1.0),
+                new ClimbFollowUp(1.0)));
     }
 
     public Command getAutonomousCommand() {
