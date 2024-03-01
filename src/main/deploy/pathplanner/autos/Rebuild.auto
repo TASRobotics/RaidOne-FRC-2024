@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "AmpScore"
@@ -33,12 +39,6 @@
           "type": "named",
           "data": {
             "name": "Home"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ArmIntake"
           }
         },
         {

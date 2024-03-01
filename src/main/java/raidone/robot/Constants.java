@@ -2,6 +2,7 @@ package raidone.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -116,20 +117,27 @@ public final class Constants {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final State SCORINGPOS = new State(-24.5, 0);
+        public static final State SCORINGPOS = new State(-28, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
 
         public static final State CONSTRAINTPOS = new State(-13, 0);
         public static final State PRE_CONSTRAINTPOS = new State(-15, 0);
 
-        public static final double kP = 0.05;
+        public static final double kP = 0.17;
         public static final double kI = 0.0;
         public static final double kD = 0.007;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
 
+        public static final double kS = 0.25;
+        public static final double kG = 0.35;//0.47;
+        public static final double kV = 12.24;//0.6;
+        public static final double kA = 0.01;
+
+        public static final ArmFeedforward FEED_FORWARD = new ArmFeedforward(kS, kG, kV, kA);
+
         public static final double MAX_OUTPUT = 1.0;
-        public static final double MIN_OUTPUT = -0.6;
+        public static final double MIN_OUTPUT = -1.0;
         public static final double MAX_VEL_RPS = 24.5 / 2;
         public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 0.0;
@@ -144,16 +152,24 @@ public final class Constants {
         public static final int WRIST_FOLLOW_ID = 12;
 
         
-        public static final State SCORINGPOS = new State(-15, 0);
-        public static final State INTAKEPOS = new State(-38.0, 0);
+        public static final State SCORINGPOS = new State(-18, 0);
+        public static final State INTAKEPOS = new State(-33.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
+
         
-        public static final double kP = 0.02;
+        public static final double kP = 0.08;
         public static final double kI = 0.0;
         public static final double kD = 0.002;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
         
+        public static final double kS = 0.3;
+        public static final double kG = 0.21;
+        public static final double kV = 4.9;
+        public static final double kA = 0.01;
+        
+        public static final ArmFeedforward FEED_FORWARD = new ArmFeedforward(kS, kG, kV, kA);
+
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
         public static final double MAX_VEL_RPS = 33.0 / 2;

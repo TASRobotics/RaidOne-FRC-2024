@@ -119,37 +119,25 @@ public class RobotContainer {
         intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract()));
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
-        // Old stow:
-        // stow.onTrue(new SequentialCommandGroup(
-        // new ParallelCommandGroup(armProfile(Arm.INTAKEPOS),
-        // wristProfile(Wrist.HOMEPOS)),
-        // new ParallelCommandGroup(new ArmHome(), new WristHome())));
-
-        stow.onTrue(new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS),
+        stow.onTrue(new ParallelCommandGroup(
                 new WristHome(),
-                new ParallelCommandGroup(
-                        new ArmHome(), new WristHome())));
+                new ArmHome()));
+ 
+        amp.onTrue(new ParallelCommandGroup(
+                armProfile(Arm.SCORINGPOS),
+                wristProfile(Wrist.SCORINGPOS)));
 
-        amp.onTrue(new ParallelCommandGroup(armProfile(Arm.SCORINGPOS), wristProfile(Wrist.SCORINGPOS)));
-
-        // Old Intake:
-        // intakePos.onTrue(new ParallelCommandGroup(armProfile(Arm.INTAKEPOS),
-        // wristProfile(Wrist.INTAKEPOS)));
+        // amp.onTrue(new ParallelCommandGroup(
+        //         armProfile(Arm.SCORINGPOS),
+        //         wristProfile(Wrist.SCORINGPOS)));
 
         // intakePos.onTrue(new SequentialCommandGroup(
-        //         armProfile(Arm.CONSTRAINTPOS),
-        //         new  ParallelRaceGroup(
-        //             wristProfile(Wrist.INTAKEPOS),
-        //             armProfile(Arm.PRE_CONSTRAINTPOS)),
-        //         new ArmHome()));
-
-         intakePos.onTrue(new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS).withTimeout(0.8),
-                new  ParallelCommandGroup(
-                    wristProfile(Wrist.INTAKEPOS),
-                    armProfile(Arm.PRE_CONSTRAINTPOS)),
-                new ArmHome()));
+        //     armProfile(Arm.CONSTRAINTPOS),
+        //     wristProfile(Wrist.INTAKEPOS),
+        //     armProfile(Arm.INTAKEPOS),
+        //     new ParallelCommandGroup(
+        //         new ArmHome(),
+        //         wristProfile(Wrist.INTAKEPOS))));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));

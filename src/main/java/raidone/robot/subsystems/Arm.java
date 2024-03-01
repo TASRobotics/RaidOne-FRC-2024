@@ -21,6 +21,7 @@ public class Arm extends SubsystemBase {
     private RelativeEncoder encoder;
     private SparkPIDController pid;
     private SparkLimitSwitch limit1, limit2;
+
     private boolean isHomed;
 
     private static Arm armSys = new Arm();
@@ -33,6 +34,7 @@ public class Arm extends SubsystemBase {
         arm.setIdleMode(IdleMode.kBrake);
         arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        arm.setSmartCurrentLimit(20);
 
         follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
         follow.restoreFactoryDefaults();
@@ -40,12 +42,13 @@ public class Arm extends SubsystemBase {
         follow.follow(arm, true);
 
         pid = arm.getPIDController();
-        pid.setP(kP);
-        pid.setI(kI);
-        pid.setD(kD);
-        pid.setIZone(kIz);
-        pid.setFF(kFF);
+        pid.setP(kP, 0);
+        pid.setI(kI, 0);
+        pid.setD(kD, 0);
+        pid.setIZone(kIz, 0);
+        pid.setFF(kFF, 0);
         pid.setOutputRange(MIN_OUTPUT, MAX_OUTPUT);
+
 
         encoder = arm.getEncoder();
 
@@ -59,7 +62,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void trapezoidToPID(State output) {
-        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);
+        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0, FEED_FORWARD.calculate(output.position, output.velocity));
         SmartDashboard.putNumber("Arm Trapazoid setpoint", output.position);
     }
 

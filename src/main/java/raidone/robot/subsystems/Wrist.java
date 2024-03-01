@@ -30,6 +30,7 @@ public class Wrist extends SubsystemBase {
         wrist.restoreFactoryDefaults();
         wrist.setInverted(true);
         wrist.setIdleMode(IdleMode.kBrake);
+        wrist.setSmartCurrentLimit(12);
 
         follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
         follower.restoreFactoryDefaults();
@@ -37,11 +38,11 @@ public class Wrist extends SubsystemBase {
         follower.follow(wrist, true);
 
         pid = wrist.getPIDController();
-        pid.setP(kP);
-        pid.setI(kI);
-        pid.setD(kD);
-        pid.setIZone(kIz);
-        pid.setFF(kFF);
+        pid.setP(kP, 0);
+        pid.setI(kI, 0);
+        pid.setD(kD, 0);
+        pid.setIZone(kIz, 0);
+        pid.setFF(kFF, 0);
 
         encoder = wrist.getEncoder();
 
@@ -52,7 +53,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public void trapezoidToPID(State output) {
-        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);
+        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0, FEED_FORWARD.calculate(output.position, output.velocity));
         SmartDashboard.putNumber("Wrist Trapazoid setpoint", output.position);
     }
 
