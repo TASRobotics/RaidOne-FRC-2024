@@ -120,6 +120,7 @@ public class RobotContainer {
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new ParallelCommandGroup(
+                armProfile(Arm.CONSTRAINTPOS),
                 new WristHome(),
                 new ArmHome()));
  
@@ -127,17 +128,11 @@ public class RobotContainer {
                 armProfile(Arm.SCORINGPOS),
                 wristProfile(Wrist.SCORINGPOS)));
 
-        // amp.onTrue(new ParallelCommandGroup(
-        //         armProfile(Arm.SCORINGPOS),
-        //         wristProfile(Wrist.SCORINGPOS)));
-
-        // intakePos.onTrue(new SequentialCommandGroup(
-        //     armProfile(Arm.CONSTRAINTPOS),
-        //     wristProfile(Wrist.INTAKEPOS),
-        //     armProfile(Arm.INTAKEPOS),
-        //     new ParallelCommandGroup(
-        //         new ArmHome(),
-        //         wristProfile(Wrist.INTAKEPOS))));
+        intakePos.onTrue(new SequentialCommandGroup(
+            armProfile(Arm.CONSTRAINTPOS),
+            wristProfile(Wrist.INTAKEPOS),
+            new ArmHome()
+        ));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));
