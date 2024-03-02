@@ -19,9 +19,11 @@ public class Intake extends SubsystemBase {
         System.out.println("Intake Subsystem Init");
 
         roller = new CANSparkMax(INTAKE_MOTOR_ID, MotorType.kBrushless);
+        roller.restoreFactoryDefaults();
         roller.setIdleMode(IdleMode.kBrake);
 
         beam = roller.getForwardLimitSwitch(Type.kNormallyOpen);
+        beam.enableLimitSwitch(false);
     }
 
     public boolean getLimit() {

@@ -119,7 +119,7 @@ public class RobotContainer {
         intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract()));
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
-        stow.onTrue(new ParallelCommandGroup(
+        stow.onTrue(new SequentialCommandGroup(
                 armProfile(Arm.CONSTRAINTPOS),
                 new WristHome(),
                 new ArmHome()));
