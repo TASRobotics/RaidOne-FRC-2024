@@ -11,11 +11,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-    
+
     public static final class Swerve {
-        
+
         public static final int PIGEON_ID = 1;
-        
+
         // Swerve dimensions & conversions
         public static final double TRACK_WIDTH = Units.inchesToMeters(23.0);
         public static final double WHEEL_BASE = Units.inchesToMeters(23.0);
@@ -24,27 +24,26 @@ public final class Constants {
 
         public static final double THROTTLE_GEAR_RATIO = (6.12 / 1.0);
         public static final double ROTOR_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
-        
-        public static final double THROTTLE_VEL_CONVERSION_FACTOR = 
-        (1 / THROTTLE_GEAR_RATIO / 60) * WHEEL_DIAMETER_M * Math.PI;
-        
-        public static final double THROTTLE_POS_CONVERSTION_FACTOR = 
-        (1 / THROTTLE_GEAR_RATIO) * WHEEL_DIAMETER_M * Math.PI;
 
-        
-        // Swerve Kinematics        
+        public static final double THROTTLE_VEL_CONVERSION_FACTOR = (1 / THROTTLE_GEAR_RATIO / 60) * WHEEL_DIAMETER_M
+                * Math.PI;
+
+        public static final double THROTTLE_POS_CONVERSTION_FACTOR = (1 / THROTTLE_GEAR_RATIO) * WHEEL_DIAMETER_M
+                * Math.PI;
+
+        // Swerve Kinematics
         public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-            new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-            new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-            new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-            new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
-        
-        // Swerve Current Limiting 
+                new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+                new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+                new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+                new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
+
+        // Swerve Current Limiting
         public static final int ROTOR_CURRENT_LIMIT = 25;
         public static final int ROTOR_CURRENT_THRESHOLD = 40;
         public static final double ROTOR_CURRENT_THRESHOLD_TIME = 0.1;
         public static final boolean ANGLE_ENABLE_CURRENT_LIMIT = true;
-        
+
         public static final int THROTTLE_CURRENT_LIMIT = 40;
         public static final int THROTTLE_CURRENT_THRESHOLD = 60;
         public static final double THROTTLE_CURRENT_THRESHOLD_TIME = 0.1;
@@ -58,33 +57,33 @@ public final class Constants {
         public static final double ROTOR_KP = 0.011;
         public static final double ROTOR_KI = 0.0;
         public static final double ROTOR_KD = 0.0;
-        
-        // Throttle PID constants 
-        public static final double THROTTLE_KP = 0.35; // 0.12 
+
+        // Throttle PID constants
+        public static final double THROTTLE_KP = 0.35; // 0.12
         public static final double THROTTLE_KI = 0.0;
         public static final double THROTTLE_KD = 0.0;
         public static final double THROTTLE_KF = 0.0;
 
         /* Drive Motor Characterization Values From SYSID */
-        public static final double THROTTLE_KS = 0.00; 
+        public static final double THROTTLE_KS = 0.00;
         public static final double THROTTLE_KV = 2.7;
         public static final double THROTTLE_KA = 0.0;
 
-        // Translation pathing PID constants 
-        public static final double TRANSLATION_KP = 0.5; // 0.12 
+        // Translation pathing PID constants
+        public static final double TRANSLATION_KP = 0.5; // 0.12
         public static final double TRANSLATION_KI = 0.025;
         public static final double TRANSLATION_KD = 0.0;
 
-        // Rotation pathing PID constants 
-        public static final double ROTATION_KP = 2.2; // 0.12 
+        // Rotation pathing PID constants
+        public static final double ROTATION_KP = 2.2; // 0.12
         public static final double ROTATION_KI = 0.0;
         public static final double ROTATION_KD = 0.0;
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 4.0; 
+        public static final double MAX_SPEED = 4.0;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 5.0; 
+        public static final double MAX_ANGULAR_VELOCITY = 5.0;
 
         /* Neutral Modes */
         public static final NeutralModeValue ROTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -114,14 +113,13 @@ public final class Constants {
     }
 
     public static final class Arm {
-        public static final int ARM_MOTOR_ID = 9;
-        public static final int ARM_FOLLOW_ID = 10;
+        public static final int ARM_MOTOR_ID = 10;
+        public static final int ARM_FOLLOW_ID = 9;
 
-        public static final State SCORINGPOS = new State(-28, 0);
+        public static final State SCORINGPOS = new State(-29, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
 
-        public static final State CONSTRAINTPOS = new State(-13, 0);
-        public static final State PRE_CONSTRAINTPOS = new State(-15, 0);
+        public static final State CONSTRAINTPOS = new State(-15, 0);
 
         public static final double kP = 0.17;
         public static final double kI = 0.0;
@@ -130,8 +128,8 @@ public final class Constants {
         public static final double kFF = 0.0;
 
         public static final double kS = 0.25;
-        public static final double kG = 0.35;//0.47;
-        public static final double kV = 12.24;//0.6;
+        public static final double kG = 0.35;// 0.47;
+        public static final double kV = 12.24;// 0.6;
         public static final double kA = 0.01;
 
         public static final ArmFeedforward FEED_FORWARD = new ArmFeedforward(kS, kG, kV, kA);
@@ -141,9 +139,10 @@ public final class Constants {
         public static final double MAX_VEL_RPS = 24.5 / 2;
         public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 0.0;
+        public static final int CURRENT_LIMIT = 20;
 
         public static final Constraints ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
-            Constants.Arm.MAX_ACCEL_RPSS);
+                Constants.Arm.MAX_ACCEL_RPSS);
         public static TrapezoidProfile ARM_Profile = new TrapezoidProfile(ARM_CONSTRAINTS);
     }
 
@@ -151,23 +150,21 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        
         public static final State SCORINGPOS = new State(-18, 0);
-        public static final State INTAKEPOS = new State(-33.0, 0);
+        public static final State INTAKEPOS = new State(-48.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
 
-        
         public static final double kP = 0.08;
         public static final double kI = 0.0;
         public static final double kD = 0.002;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
-        
+
         public static final double kS = 0.3;
         public static final double kG = 0.21;
         public static final double kV = 4.9;
         public static final double kA = 0.01;
-        
+
         public static final ArmFeedforward FEED_FORWARD = new ArmFeedforward(kS, kG, kV, kA);
 
         public static final double MAX_OUTPUT = 1.0;
@@ -175,9 +172,10 @@ public final class Constants {
         public static final double MAX_VEL_RPS = 33.0 / 2;
         public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 2.0;
-        
+        public static final int CURRENT_LIMIT = 10;
+
         public static final Constraints WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
-            Constants.Wrist.MAX_ACCEL_RPSS);
+                Constants.Wrist.MAX_ACCEL_RPSS);
         public static TrapezoidProfile WRIST_Profile = new TrapezoidProfile(WRIST_CONSTRAINTS);
     }
 

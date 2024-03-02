@@ -30,7 +30,7 @@ public class Wrist extends SubsystemBase {
         wrist.restoreFactoryDefaults();
         wrist.setInverted(true);
         wrist.setIdleMode(IdleMode.kBrake);
-        wrist.setSmartCurrentLimit(12);
+        wrist.setSmartCurrentLimit(CURRENT_LIMIT);
 
         follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
         follower.restoreFactoryDefaults();
@@ -71,7 +71,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public void home() {
-        wrist.set(0.3);
+        wrist.set(0.5);
     }
 
     public boolean isHomed() {
