@@ -35,7 +35,6 @@ public class Arm extends SubsystemBase {
         arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
         arm.setSmartCurrentLimit(CURRENT_LIMIT);
-        arm.setInverted(true);
 
         follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
         follow.restoreFactoryDefaults();
@@ -85,7 +84,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void home() {
-        arm.set(0.35);
+        arm.set(0.4);
     }
 
     public RelativeEncoder getEncoder() {

@@ -107,7 +107,7 @@ public class RobotContainer {
                 new TeleopSwerve(
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
-                        () -> -driver.getRawAxis(rotationAxis) * 0.5,
+                        () -> -driver.getRawAxis(rotationAxis) * 0.6,
                         () -> false));
 
         configureButtonBindings();

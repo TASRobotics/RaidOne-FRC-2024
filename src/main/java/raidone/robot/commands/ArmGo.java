@@ -27,5 +27,5 @@ public class ArmGo extends Command {
     @Override
     public void end(boolean interrupted) {
         arm.stopMotors();
-    }
+    }   
 }
