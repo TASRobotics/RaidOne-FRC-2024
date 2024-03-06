@@ -22,8 +22,6 @@ public class Arm extends SubsystemBase {
     private SparkPIDController pid;
     private SparkLimitSwitch limit1, limit2;
 
-    private boolean isHomed;
-
     private static Arm armSys = new Arm();
 
     private Arm() {
@@ -57,8 +55,6 @@ public class Arm extends SubsystemBase {
 
         limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
         limit2.enableLimitSwitch(true);
-
-        isHomed = false;
     }
 
     public void trapezoidToPID(State output) {
@@ -74,10 +70,6 @@ public class Arm extends SubsystemBase {
         arm.stopMotor();
     }
 
-    public boolean getLimit() {
-        return limit1.isPressed() || limit2.isPressed();
-    }
-
     public void setPos(double setpoint) {
         pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
         SmartDashboard.putNumber("processVariable", encoder.getPosition());
@@ -91,21 +83,14 @@ public class Arm extends SubsystemBase {
         return encoder;
     }
 
-    public boolean isHomed() {
-        return isHomed;
+    public boolean getLimit(){
+        if (limit1.isPressed() || limit2.isPressed())
+            encoder.setPosition(0);
+        return limit1.isPressed() || limit2.isPressed();
     }
 
     @Override
-    public void periodic() {
-        // TODO: Remove this in favor of only chekcking when we need to (isfinished in a
-        // command most probably)
-        if (limit1.isPressed() || limit2.isPressed()) {
-            isHomed = true;
-            encoder.setPosition(0);
-        } else {
-            isHomed = false;
-        }
-    }
+    public void periodic() {}
 
     public static Arm system() {
         return armSys;

@@ -18,7 +18,7 @@ public class WristHome extends Command {
 
     @Override
     public boolean isFinished() {
-        return wrist.isHomed();
+        return wrist.getLimit();
     }
 
     @Override

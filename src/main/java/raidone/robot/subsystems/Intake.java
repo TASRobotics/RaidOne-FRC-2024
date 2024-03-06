@@ -49,8 +49,7 @@ public class Intake extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-    }
+    public void periodic() {}
 
     public static Intake system() {
         return intakeSys;

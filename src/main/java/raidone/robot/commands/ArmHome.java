@@ -18,7 +18,7 @@ public class ArmHome extends Command {
 
     @Override
     public boolean isFinished() {
-        return arm.isHomed();
+        return arm.getLimit();
     }
 
     @Override

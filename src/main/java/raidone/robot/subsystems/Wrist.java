@@ -19,7 +19,6 @@ public class Wrist extends SubsystemBase {
     private SparkPIDController pid;
     private RelativeEncoder encoder;
     private SparkLimitSwitch limit;
-    private boolean isHomed;
 
     public static Wrist wristSys = new Wrist();
 
@@ -48,8 +47,6 @@ public class Wrist extends SubsystemBase {
 
         limit = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
         limit.enableLimitSwitch(true);
-
-        isHomed = false;
     }
 
     public void trapezoidToPID(State output) {
@@ -74,25 +71,18 @@ public class Wrist extends SubsystemBase {
         wrist.set(0.5);
     }
 
-    public boolean isHomed() {
-        return isHomed;
-    }
-
     public RelativeEncoder getEncoder() {
         return encoder;
     }
 
-    @Override
-    public void periodic() {
-        // TODO: Remove this in favor of only chekcking when we need to (isfinished in a
-        // command most probably)
-        if (limit.isPressed()) {
-            isHomed = true;
+    public boolean getLimit(){
+        if(limit.isPressed())
             encoder.setPosition(0);
-        } else {
-            isHomed = false;
-        }
+        return limit.isPressed();
     }
+
+    @Override
+    public void periodic() {}
 
     public static Wrist system() {
         return wristSys;
