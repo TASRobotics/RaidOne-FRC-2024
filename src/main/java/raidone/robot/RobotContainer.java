@@ -6,12 +6,14 @@ import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -116,7 +118,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
 
-        intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract()));
+        intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract())
+                .andThen(new ParallelCommandGroup(
+                        new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble, 1)),
+                        new WaitCommand(0.5))).andThen(new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble, 0))));
+                
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
