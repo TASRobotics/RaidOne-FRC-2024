@@ -68,6 +68,7 @@ public class RobotContainer {
 
     private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton climbHome = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton climbManualHome = new JoystickButton(driver, XboxController.Button.kA.value);
 
     // Subsystem references
     private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
@@ -144,11 +145,15 @@ public class RobotContainer {
                 new OrdinalTurn(270)); // blue = 270; red = 90
 
         climbHome.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbHome(0.5),
-                new ClimbFollowHome(0.5)));
+                new ClimbUp(Constants.Climb.BOTTOM_POS_ROT),
+                new ClimbFollowUp(Constants.Climb.BOTTOM_POS_ROT)));
+        climbManualHome.toggleOnTrue(new ParallelCommandGroup(
+            new ClimbHome(),
+            new ClimbFollowHome()
+        ));
         climbUp.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbUp(1.0),
-                new ClimbFollowUp(1.0)));
+                new ClimbUp(Constants.Climb.CLIMB_TOP_POS_ROT),
+                new ClimbFollowUp(Constants.Climb.FOLLOW_TOP_POS_ROT)));
     }
 
     public Command getAutonomousCommand() {

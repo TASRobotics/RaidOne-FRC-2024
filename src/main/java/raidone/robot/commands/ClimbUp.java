@@ -6,25 +6,26 @@ import raidone.robot.subsystems.Climb;
 
 public class ClimbUp extends Command {
     private Climb climb;
-    private double speed;
+    private double position;
 
-    public ClimbUp(double speed) {
+    public ClimbUp(double position) {
         this.climb = Climb.system();
-        this.speed = speed;
+        this.position = position;
+        addRequirements(climb);
     }
 
     @Override
     public void execute() {
-        climb.runClimb(speed);
+        climb.runClimb(position);
     }
 
     @Override
     public boolean isFinished() {
-        return climb.getClimbEncoderPos() >= Constants.Climb.TOP_POS_ROT;
+        return Math.abs(climb.getClimbEncoderPos() - position) < 0.2 || position >= 0 ? false : climb.getClimbLimit();
     }
 
     @Override
     public void end(boolean interrupted) {
         climb.stopClimbMotor();
     }
-} 
+}

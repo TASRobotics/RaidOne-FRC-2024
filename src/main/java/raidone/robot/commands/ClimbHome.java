@@ -5,16 +5,15 @@ import raidone.robot.subsystems.Climb;
 
 public class ClimbHome extends Command {
     private Climb climb;
-    private double speed;
 
-    public ClimbHome(double speed) {
+    public ClimbHome() {
         this.climb = Climb.system();
-        this.speed = speed;
+        addRequirements(climb);
     }
 
     @Override
     public void execute() {
-        climb.runClimb(-1 * speed);
+        climb.climbHome();
     }
 
     @Override

@@ -5,25 +5,26 @@ import raidone.robot.subsystems.Climb;
 
 public class ClimbFollowHome extends Command {
     private Climb climb;
-    private double speed;
 
-    public ClimbFollowHome( double speed) {
+    public ClimbFollowHome() {
         this.climb = Climb.system();
-        this.speed = speed;
+        // addRequirements(climb);
     }
 
     @Override
     public void execute() {
-        climb.runFollow(-1 * speed);
+        climb.followHome();
     }
 
     @Override
     public boolean isFinished() {
-        return climb.getFollowLimit();
+        // System.out.println(climb.getFollowLimit());
+        // return climb.getFollowLimit();
+        return true;
     }
 
     @Override
     public void end(boolean interrupted) {
-        climb.stopFollowMotor();
+        climb.stopClimbMotor();
     }
-} 
+}
