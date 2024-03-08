@@ -1,5 +1,9 @@
 package raidone.robot;
 
+import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.FireAnimation;
+import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -192,5 +196,16 @@ public final class Constants {
         public static final double CLIMB_KD = 0.0;
         public static final double BOTTOM_POS_ROT = 0.0;
         public static final double TOP_POS_ROT = 350.0;
+    }
+
+    public static final class LED {
+        public static final StrobeAnimation ROLLER_ON = new StrobeAnimation(0, 255, 0);
+        public static final RainbowAnimation HOME_POS = new RainbowAnimation();
+        public static final StrobeAnimation INTAKE_POSING = new StrobeAnimation(0, 255, 255);
+        public static final StrobeAnimation SCORING_POSING = new StrobeAnimation(255, 255, 0);
+        public static final FireAnimation NOTE_PRESENT = new FireAnimation();
+        public static final int[] INTAKE_POS = new int[]{0, 255, 255};
+        public static final int[] SCORING_POS = new int[]{255, 255, 0};
+        public static final int[] CLIMB_READY = new int[]{255, 0, 0};
     }
 }

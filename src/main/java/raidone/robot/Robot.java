@@ -6,6 +6,11 @@ package raidone.robot;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
+import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
+import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.RainbowAnimation;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -54,6 +59,7 @@ public class Robot extends LoggedRobot {
         // and running subsystem periodic() methods. This must be called from the
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
+
         CommandScheduler.getInstance().run();
     }
 
