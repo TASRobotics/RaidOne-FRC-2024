@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import com.ctre.phoenix6.controls.Follower;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import raidone.robot.Constants;
@@ -71,6 +72,11 @@ public class Climb extends SubsystemBase {
 
     public boolean getFollowLimit() {
         return followFX.getForwardLimit().getValue().value == 0;
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Follow Encoder Pos", getFollowEncoderPos());
     }
 
     public static Climb system() {

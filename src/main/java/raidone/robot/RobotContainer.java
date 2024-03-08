@@ -68,6 +68,7 @@ public class RobotContainer {
 
     private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton climbHome = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton climbSlowHome = new JoystickButton(driver, XboxController.Button.kA.value);
 
     // Subsystem references
     private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
@@ -123,16 +124,15 @@ public class RobotContainer {
                 armProfile(Arm.CONSTRAINTPOS),
                 new WristHome(),
                 new ArmHome()));
- 
+
         amp.onTrue(new ParallelCommandGroup(
                 armProfile(Arm.SCORINGPOS),
                 wristProfile(Wrist.SCORINGPOS)));
 
         intakePos.onTrue(new SequentialCommandGroup(
-            armProfile(Arm.CONSTRAINTPOS),
-            wristProfile(Wrist.INTAKEPOS),
-            new ArmHome()
-        ));
+                armProfile(Arm.CONSTRAINTPOS),
+                wristProfile(Wrist.INTAKEPOS),
+                new ArmHome()));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));
@@ -144,11 +144,21 @@ public class RobotContainer {
                 new OrdinalTurn(270)); // blue = 270; red = 90
 
         climbHome.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbHome(0.5),
-                new ClimbFollowHome(0.5)));
+                new ClimbDownHalf(Constants.Climb.UP_SPEED_PCT),
+                new ClimbFollowDownHalf(Constants.Climb.UP_SPEED_PCT))
+                .andThen(
+                        new ParallelCommandGroup(
+                                new ClimbHome(Constants.Climb.DOWN_SPEED_PCT),
+                                new ClimbFollowHome(Constants.Climb.DOWN_SPEED_PCT))));
+                                
         climbUp.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbUp(1.0),
-                new ClimbFollowUp(1.0)));
+                new ClimbUp(Constants.Climb.UP_SPEED_PCT),
+                new ClimbFollowUp(Constants.Climb.UP_SPEED_PCT)));
+
+        climbSlowHome.toggleOnTrue(new ParallelCommandGroup(
+            new ClimbHome(Constants.Climb.DOWN_SPEED_PCT), 
+            new ClimbFollowHome(Constants.Climb.DOWN_SPEED_PCT) 
+        ));
     }
 
     public Command getAutonomousCommand() {
