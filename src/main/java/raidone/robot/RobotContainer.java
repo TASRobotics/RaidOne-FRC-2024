@@ -3,11 +3,14 @@ package raidone.robot;
 import static raidone.robot.commands.TrapezoidGenerator.armProfile;
 import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -69,6 +72,9 @@ public class RobotContainer {
     private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton climbHome = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
+    // Autochooser
+    private final SendableChooser<Command> chooser;
+
     // Subsystem references
     private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
 
@@ -102,6 +108,9 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("TurnTo0", new OrdinalTurn(0));
         NamedCommands.registerCommand("TurnTo90", new OrdinalTurn(90));
+
+        chooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto", chooser);
 
         swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -152,6 +161,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Rebuild");
+        return chooser.getSelected();
     }
 }
