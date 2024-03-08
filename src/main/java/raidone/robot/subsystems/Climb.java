@@ -37,20 +37,19 @@ public class Climb extends SubsystemBase {
         //TODO: ADD CURRENT LIMIT (35 Amp)
 
         climbSlot0Configs = new Slot0Configs();
-        climbSlot0Configs.kS = Constants.Climb.CLIMB_KS;
-        climbSlot0Configs.kV = Constants.Climb.CLIMB_KV;
-        climbSlot0Configs.kA = Constants.Climb.CLIMB_KA;
-
-        climbSlot0Configs.kP = Constants.Climb.CLIMB_KP;
-        climbSlot0Configs.kI = Constants.Climb.CLIMB_KI;
-        climbSlot0Configs.kD = Constants.Climb.CLIMB_KD;
+        climbSlot0Configs.kS = Constants.Climb.kS;
+        climbSlot0Configs.kV = Constants.Climb.kV;
+        climbSlot0Configs.kA = Constants.Climb.kA;
+        climbSlot0Configs.kP = Constants.Climb.kP;
+        climbSlot0Configs.kI = Constants.Climb.kI;
+        climbSlot0Configs.kD = Constants.Climb.kD;
 
         climbMotionMagicConfigs = new MotionMagicConfigs();
         climbMotionMagicConfigs.MotionMagicCruiseVelocity = Constants.Climb.MOTION_MAGIC_MAX_VELOCITY_RPS;
         climbMotionMagicConfigs.MotionMagicAcceleration = Constants.Climb.MOTION_MAGIC_ACCELERAION_RPS2;
         climbMotionMagicConfigs.MotionMagicJerk = Constants.Climb.MOTION_MAGIC_JERK_RPS3;
 
-        climbFX = new TalonFX(Constants.Climb.CLIMB_MOTOR_ID);
+        climbFX = new TalonFX(Constants.Climb.MOTOR_ID);
         climbFX.getConfigurator().apply(new TalonFXConfiguration());
         climbFX.getConfigurator().apply(climbLimitSwitchConfigs);
         climbFX.getConfigurator().apply(climbSlot0Configs);
@@ -63,20 +62,20 @@ public class Climb extends SubsystemBase {
         followerLimitSwitchConfigs.ForwardLimitAutosetPositionValue = 0.0;
 
         followSlot0Configs = new Slot0Configs();
-        followSlot0Configs.kS = Constants.Climb.CLIMB_KS;
-        followSlot0Configs.kV = Constants.Climb.CLIMB_KV;
-        followSlot0Configs.kA = Constants.Climb.CLIMB_KA;
+        followSlot0Configs.kS = Constants.Climb.kS;
+        followSlot0Configs.kV = Constants.Climb.kV;
+        followSlot0Configs.kA = Constants.Climb.kA;
 
-        followSlot0Configs.kP = Constants.Climb.CLIMB_KP;
-        followSlot0Configs.kI = Constants.Climb.CLIMB_KI;
-        followSlot0Configs.kD = Constants.Climb.CLIMB_KD;
+        followSlot0Configs.kP = Constants.Climb.kP;
+        followSlot0Configs.kI = Constants.Climb.kI;
+        followSlot0Configs.kD = Constants.Climb.kD;
 
         followMotionMagicConfigs = new MotionMagicConfigs();
         followMotionMagicConfigs.MotionMagicCruiseVelocity = Constants.Climb.MOTION_MAGIC_MAX_VELOCITY_RPS;
         followMotionMagicConfigs.MotionMagicAcceleration = Constants.Climb.MOTION_MAGIC_ACCELERAION_RPS2;
         followMotionMagicConfigs.MotionMagicJerk = Constants.Climb.MOTION_MAGIC_JERK_RPS3;
 
-        followFX = new TalonFX(Constants.Climb.CLIMB_FOLLOW_ID);
+        followFX = new TalonFX(Constants.Climb.FOLLOW_ID);
         followFX.getConfigurator().apply(new TalonFXConfiguration());
         followFX.setInverted(true);
         followFX.getConfigurator().apply(followerLimitSwitchConfigs);
@@ -125,6 +124,13 @@ public class Climb extends SubsystemBase {
 
     public boolean getFollowLimit() {
         return followFX.getForwardLimit().getValue().value == 0;
+    }
+
+    public boolean climbAtPos(){
+        return climbFX.getClosedLoopError().getValueAsDouble() <= Constants.Climb.ALLOWED_ERROR_ROT;
+    }
+    public boolean followAtPos(){
+        return followFX.getClosedLoopError().getValueAsDouble() <= Constants.Climb.ALLOWED_ERROR_ROT;
     }
 
     public static Climb system() {

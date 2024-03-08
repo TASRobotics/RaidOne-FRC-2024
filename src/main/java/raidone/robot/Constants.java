@@ -186,22 +186,25 @@ public final class Constants {
     }
 
     public static final class Climb {
-        public static final int CLIMB_MOTOR_ID = 14;
-        public static final int CLIMB_FOLLOW_ID = 15;
+        public static final int MOTOR_ID = 14;
+        public static final int FOLLOW_ID = 15;
 
-        public static final double CLIMB_GEAR_RATIO = 16.0 / 1.0;
+        public static final double GEAR_RATIO = 16.0 / 1.0;
 
-        public static final double CLIMB_KS = 0.15;
-        public static final double CLIMB_KV = 4.8;
-        public static final double CLIMB_KA = 0.0;
+        public static final double kS = 0.15;
+        public static final double kV = 4.8;
+        public static final double kA = 0.0;
+        
+        public static final double kP = 0.01;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
 
-        public static final double CLIMB_KP = 0.01;
-        public static final double CLIMB_KI = 0.0;
-        public static final double CLIMB_KD = 0.0;
-
-        public static final double MOTION_MAGIC_MAX_VELOCITY_RPS = 80 / CLIMB_GEAR_RATIO;
+        public static final double MOTION_MAGIC_MAX_VELOCITY_RPS = 80 / GEAR_RATIO;
         public static final double MOTION_MAGIC_ACCELERAION_RPS2 = MOTION_MAGIC_MAX_VELOCITY_RPS * 2;
         public static final double MOTION_MAGIC_JERK_RPS3 = MOTION_MAGIC_ACCELERAION_RPS2 * 10;
+        
+        public static final double ALLOWED_ERROR_ROT = 1;
+        
 
         public static final double BOTTOM_POS_ROT = -10.0;
         public static final double CLIMB_TOP_POS_ROT = 50.0;

@@ -1,8 +1,6 @@
 package raidone.robot.commands;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.Command;
-import raidone.robot.Constants;
 import raidone.robot.subsystems.Climb;
 
 public class ClimbFollowUp extends Command {
