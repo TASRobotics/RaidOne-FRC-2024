@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.36,
+      "y": 7.44
+    },
+    "rotation": -90.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DS1-2-P1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DS1-2-P2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DS1-2-P3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
