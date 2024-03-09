@@ -116,7 +116,7 @@ public final class Constants {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final State SCORINGPOS = new State(-24, 0);
+        public static final State SCORINGPOS = new State(-30, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
 
         public static final State CONSTRAINTPOS = new State(-13, 0);

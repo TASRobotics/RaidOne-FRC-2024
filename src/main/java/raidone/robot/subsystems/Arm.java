@@ -30,8 +30,8 @@ public class Arm extends SubsystemBase {
         arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
         arm.restoreFactoryDefaults();
         arm.setIdleMode(IdleMode.kBrake);
-        arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
-        arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
+        // arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
         arm.setSmartCurrentLimit(CURRENT_LIMIT);
 
         follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
@@ -90,7 +90,9 @@ public class Arm extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
+    }
 
     public static Arm system() {
         return armSys;
