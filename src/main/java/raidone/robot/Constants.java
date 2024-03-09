@@ -113,8 +113,8 @@ public final class Constants {
     }
 
     public static final class Arm {
-        public static final int ARM_MOTOR_ID = 9;
-        public static final int ARM_FOLLOW_ID = 10;
+        public static final int MOTOR_ID = 9;
+        public static final int FOLLOW_ID = 10;
 
         public static final State SCORINGPOS = new State(-24, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
@@ -147,8 +147,8 @@ public final class Constants {
     }
 
     public static final class Wrist {
-        public static final int WRIST_MOTOR_ID = 11;
-        public static final int WRIST_FOLLOW_ID = 12;
+        public static final int MOTOR_ID = 11;
+        public static final int FOLLOW_ID = 12;
 
         public static final State SCORINGPOS = new State(-18, 0);
         public static final State INTAKEPOS = new State(-48.0, 0);
@@ -191,6 +191,8 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 16.0 / 1.0;
 
+        public static final double CURRENT_LIMIT = 16.0 / 1.0;
+
         public static final double kS = 0.15;
         public static final double kV = 4.8;
         public static final double kA = 0.0;
@@ -205,8 +207,10 @@ public final class Constants {
         
         public static final double ALLOWED_ERROR_ROT = 1;
         
-
-        public static final double BOTTOM_POS_ROT = -10.0;
+        public static final double HOME_SPEED_RPS = -1 * 0.2;
+        public static final double FOLLOW_HOME_SPEED_RPS = 0.2;
+        
+        public static final double BOTTOM_POS_ROT = 0.0;
         public static final double CLIMB_TOP_POS_ROT = 50.0;
         public static final double FOLLOW_TOP_POS_ROT = -1 * 50.0;
     }

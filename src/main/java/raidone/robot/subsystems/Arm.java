@@ -3,6 +3,8 @@ package raidone.robot.subsystems;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import raidone.robot.Constants;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
@@ -27,14 +29,14 @@ public class Arm extends SubsystemBase {
     private Arm() {
         System.out.println("Arm Subsystem init");
 
-        arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
+        arm = new CANSparkMax(Constants.Climb.MOTOR_ID, MotorType.kBrushless);
         arm.restoreFactoryDefaults();
         arm.setIdleMode(IdleMode.kBrake);
         arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
         arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
         arm.setSmartCurrentLimit(CURRENT_LIMIT);
 
-        follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
+        follow = new CANSparkMax(Constants.Climb.FOLLOW_ID, MotorType.kBrushless);
         follow.restoreFactoryDefaults();
         follow.setIdleMode(IdleMode.kBrake);
         follow.follow(arm, true);

@@ -144,16 +144,9 @@ public class RobotContainer {
         turnToAmp.onTrue(
                 new OrdinalTurn(270)); // blue = 270; red = 90
 
-        climbHome.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbUp(Constants.Climb.BOTTOM_POS_ROT),
-                new ClimbFollowUp(Constants.Climb.BOTTOM_POS_ROT)));
-        climbManualHome.toggleOnTrue(new ParallelCommandGroup(
-            new ClimbHome(),
-            new ClimbFollowHome()
-        ));
-        climbUp.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbUp(Constants.Climb.CLIMB_TOP_POS_ROT),
-                new ClimbFollowUp(Constants.Climb.FOLLOW_TOP_POS_ROT)));
+        climbUp.toggleOnTrue(new ClimberUp(Constants.Climb.CLIMB_TOP_POS_ROT, Constants.Climb.FOLLOW_TOP_POS_ROT));
+        climbHome.onTrue(new ClimberUp(Constants.Climb.BOTTOM_POS_ROT, Constants.Climb.BOTTOM_POS_ROT));
+        climbManualHome.toggleOnTrue(new ClimberDown());
     }
 
     public Command getAutonomousCommand() {

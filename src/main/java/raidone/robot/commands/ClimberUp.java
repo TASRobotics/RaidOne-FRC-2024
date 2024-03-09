@@ -1,9 +1,9 @@
 package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import raidone.robot.Constants;
 import raidone.robot.subsystems.Climb;
 
+// PID up command
 public class ClimberUp extends Command {
     private Climb climb;
     private double climbSetpoint, followSetpoint;
@@ -32,7 +32,7 @@ public class ClimberUp extends Command {
 
     @Override
     public boolean isFinished() {
-        return climb.climbAtPos() && climb.followAtPos();
+        return (climb.climbAtPos() && climb.followAtPos()) || (climb.getClimbLimit() && climb.getFollowLimit());
     }
 
     @Override

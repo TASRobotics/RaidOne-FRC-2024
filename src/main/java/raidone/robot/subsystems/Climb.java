@@ -1,5 +1,6 @@
 package raidone.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -14,12 +15,14 @@ import raidone.robot.Constants;
 
 public class Climb extends SubsystemBase {
     private TalonFX climbFX;
+    private CurrentLimitsConfigs climbCurrentLimitsConfigs;
     private HardwareLimitSwitchConfigs climbLimitSwitchConfigs;
     private Slot0Configs climbSlot0Configs;
     private MotionMagicConfigs climbMotionMagicConfigs;
     private MotionMagicVoltage climbRequest;
 
     private TalonFX followFX;
+    private CurrentLimitsConfigs followCurrentLimitsConfigs;
     private HardwareLimitSwitchConfigs followerLimitSwitchConfigs;
     private Slot0Configs followSlot0Configs;
     private MotionMagicConfigs followMotionMagicConfigs;
@@ -30,11 +33,13 @@ public class Climb extends SubsystemBase {
     private Climb() {
         System.out.println("Climb Subsystem Init");
 
+        climbCurrentLimitsConfigs = new CurrentLimitsConfigs();
+        climbCurrentLimitsConfigs.SupplyCurrentLimit = Constants.Climb.CURRENT_LIMIT;
+        climbCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
+
         climbLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         climbLimitSwitchConfigs.withReverseLimitAutosetPositionEnable(true);
         climbLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0.0;
-
-        //TODO: ADD CURRENT LIMIT (35 Amp)
 
         climbSlot0Configs = new Slot0Configs();
         climbSlot0Configs.kS = Constants.Climb.kS;
@@ -54,8 +59,13 @@ public class Climb extends SubsystemBase {
         climbFX.getConfigurator().apply(climbLimitSwitchConfigs);
         climbFX.getConfigurator().apply(climbSlot0Configs);
         climbFX.getConfigurator().apply(climbMotionMagicConfigs);
+        climbFX.getConfigurator().apply(climbCurrentLimitsConfigs);
 
+        
 
+        followCurrentLimitsConfigs = new CurrentLimitsConfigs();
+        followCurrentLimitsConfigs.SupplyCurrentLimit = Constants.Climb.CURRENT_LIMIT;
+        followCurrentLimitsConfigs.SupplyCurrentLimitEnable = true;
 
         followerLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         followerLimitSwitchConfigs.withForwardLimitAutosetPositionEnable(true);
@@ -81,6 +91,7 @@ public class Climb extends SubsystemBase {
         followFX.getConfigurator().apply(followerLimitSwitchConfigs);
         followFX.getConfigurator().apply(followSlot0Configs);
         followFX.getConfigurator().apply(followMotionMagicConfigs);
+        followFX.getConfigurator().apply(followCurrentLimitsConfigs);
 
     }
 
@@ -98,7 +109,7 @@ public class Climb extends SubsystemBase {
     }
 
     public void climbHome(){
-        climbFX.set(-1 * 0.2);
+        climbFX.set(Constants.Climb.HOME_SPEED_RPS);
     }
 
     public void runFollow(double position) {
@@ -107,7 +118,7 @@ public class Climb extends SubsystemBase {
     }
 
     public void followHome(){
-        followFX.set(0.2);
+        followFX.set(Constants.Climb.FOLLOW_HOME_SPEED_RPS);
     }
 
     public void stopClimbMotor() {

@@ -11,6 +11,7 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import raidone.robot.Constants;
 
 import static raidone.robot.Constants.Wrist.*;
 
@@ -25,13 +26,13 @@ public class Wrist extends SubsystemBase {
     private Wrist() {
         System.out.println("Wrist Subsystem Init");
 
-        wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
+        wrist = new CANSparkMax(Constants.Wrist.MOTOR_ID, MotorType.kBrushless);
         wrist.restoreFactoryDefaults();
         wrist.setInverted(true);
         wrist.setIdleMode(IdleMode.kBrake);
         wrist.setSmartCurrentLimit(CURRENT_LIMIT);
 
-        follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
+        follower = new CANSparkMax(Constants.Wrist.FOLLOW_ID, MotorType.kBrushless);
         follower.restoreFactoryDefaults();
         follower.setIdleMode(IdleMode.kBrake);
         follower.follow(wrist, true);

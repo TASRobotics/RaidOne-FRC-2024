@@ -3,28 +3,29 @@ package raidone.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import raidone.robot.subsystems.Climb;
 
-public class ClimbFollowHome extends Command {
+// Manual home command
+public class ClimberDown extends Command {
     private Climb climb;
 
-    public ClimbFollowHome() {
+    public ClimberDown() {
         this.climb = Climb.system();
-        // addRequirements(climb);
+        addRequirements(climb);
     }
 
     @Override
     public void execute() {
+        climb.climbHome();
         climb.followHome();
     }
 
     @Override
     public boolean isFinished() {
-        // System.out.println(climb.getFollowLimit());
-        // return climb.getFollowLimit();
-        return true;
+        return climb.getClimbLimit() && climb.getFollowLimit();
     }
 
     @Override
     public void end(boolean interrupted) {
         climb.stopClimbMotor();
+        climb.stopFollowMotor();
     }
 }
