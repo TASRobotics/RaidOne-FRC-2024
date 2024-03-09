@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -29,6 +30,7 @@ public class Climb extends SubsystemBase {
         climbFX = new TalonFX(Constants.Climb.CLIMB_MOTOR_ID);
         climbFX.getConfigurator().apply(new TalonFXConfiguration());
         climbFX.getConfigurator().apply(climbLimitSwitchConfigs);
+        climbFX.setNeutralMode(NeutralModeValue.Brake);
 
         followerLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         followerLimitSwitchConfigs.withForwardLimitAutosetPositionEnable(true);
@@ -38,6 +40,7 @@ public class Climb extends SubsystemBase {
         followFX.getConfigurator().apply(new TalonFXConfiguration());
         followFX.setInverted(true);
         followFX.getConfigurator().apply(followerLimitSwitchConfigs);
+        followFX.setNeutralMode(NeutralModeValue.Brake);
 
     }
 

@@ -148,9 +148,9 @@ public class RobotContainer {
         ordinalTurnLeft.onTrue(new OrdinalTurn(270));
         ordinalTurnRight.onTrue(new OrdinalTurn(90));
         turnToSource.onTrue(
-                new OrdinalTurn(135)); // blue = 135; red = 225
+                new OrdinalTurn(225)); // blue = 135; red = 225
         turnToAmp.onTrue(
-                new OrdinalTurn(270)); // blue = 270; red = 90
+                new OrdinalTurn(90)); // blue = 270; red = 90
 
         climbHome.toggleOnTrue(new ParallelCommandGroup(
                 new ClimbHome(0.5),
