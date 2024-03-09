@@ -1,5 +1,6 @@
 package raidone.robot.subsystems;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -14,8 +15,9 @@ public class Climb extends SubsystemBase {
     private HardwareLimitSwitchConfigs climbLimitSwitchConfigs;
 
     private TalonFX followFX;
-    // private Follower followerConfig;
     private HardwareLimitSwitchConfigs followerLimitSwitchConfigs;
+
+    private Orchestra orchestra;
 
     private static Climb climbSys = new Climb();
 
@@ -39,6 +41,9 @@ public class Climb extends SubsystemBase {
         followFX.setInverted(true);
         followFX.getConfigurator().apply(followerLimitSwitchConfigs);
 
+        orchestra = new Orchestra();
+        orchestra.addInstrument(climbFX);
+        orchestra.addInstrument(followFX);
     }
 
     public double getClimbEncoderPos() {
@@ -71,6 +76,11 @@ public class Climb extends SubsystemBase {
 
     public boolean getFollowLimit() {
         return followFX.getForwardLimit().getValue().value == 0;
+    }
+
+    public void familyMart(){
+        orchestra.loadMusic("family_mart.chrp");
+        orchestra.play();
     }
 
     public static Climb system() {
