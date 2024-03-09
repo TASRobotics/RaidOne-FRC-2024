@@ -17,7 +17,6 @@ public class OrdinalTurn extends PIDCommand {
 
         getController().enableContinuousInput(-180, 180);
         getController().setTolerance(3, 2);
-
     }
 
     @Override

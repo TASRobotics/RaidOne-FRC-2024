@@ -9,7 +9,8 @@ public class ClimberDown extends Command {
 
     public ClimberDown() {
         this.climb = Climb.system();
-        addRequirements(climb);
+        
+        addRequirements(this.climb);
     }
 
     @Override

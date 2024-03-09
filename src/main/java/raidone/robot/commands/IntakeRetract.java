@@ -8,6 +8,8 @@ public class IntakeRetract extends Command {
 
     public IntakeRetract() {
         intake = Intake.system();
+
+        addRequirements(this.intake);
     }
 
     @Override

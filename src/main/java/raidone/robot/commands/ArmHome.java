@@ -8,6 +8,7 @@ public class ArmHome extends Command {
 
     public ArmHome() {
         this.arm = Arm.system();
+        
         addRequirements(this.arm);
     }
 

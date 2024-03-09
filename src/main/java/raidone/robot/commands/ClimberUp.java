@@ -13,7 +13,7 @@ public class ClimberUp extends Command {
         this.climbSetpoint = climbSetpoint;
         this.followSetpoint = followSetpoint;
 
-        addRequirements(climb);
+        addRequirements(this.climb);
     }
 
     @Override
