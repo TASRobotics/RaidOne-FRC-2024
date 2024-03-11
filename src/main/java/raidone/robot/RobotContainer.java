@@ -46,33 +46,7 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
-
-        // Commands for auto
-        NamedCommands.registerCommand("ArmIntake", new SequentialCommandGroup(
-                new SequentialCommandGroup(armProfile(Arm.CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
-                new ArmHome()));
-
-        NamedCommands.registerCommand("IntakeNote", new ParallelCommandGroup(
-                new IntakeIn(Constants.Intake.PERCENT)));
-
-        NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
-                armProfile(Arm.SCORINGPOS),
-                wristProfile(Wrist.SCORINGPOS)));
-
-        NamedCommands.registerCommand("AmpScore", new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
-
-        NamedCommands.registerCommand("Home", new ParallelCommandGroup(
-                new ArmHome(), new WristHome()));
-
-        NamedCommands.registerCommand("TurnTo0", new OrdinalTurn(0));
-        NamedCommands.registerCommand("TurnTo90", new OrdinalTurn(90));
-
-        swerve.setDefaultCommand(
-                new TeleopSwerve(
-                        () -> -driver.getRawAxis(translationAxis),
-                        () -> -driver.getRawAxis(strafeAxis),
-                        () -> -driver.getRawAxis(rotationAxis) * 0.6,
-                        () -> false));
+        
 
         configureButtonBindings();
     }
