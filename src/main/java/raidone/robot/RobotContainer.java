@@ -68,7 +68,9 @@ public class RobotContainer {
 
     private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton climbHome = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
+    
+    private final JoystickButton driftveilCity = new JoystickButton(driver, XboxController.Button.kB.value);
+    
     // Subsystem references
     private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
 
@@ -82,7 +84,6 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
-
         // Commands for auto
         NamedCommands.registerCommand("ArmIntake", new SequentialCommandGroup(
                 new SequentialCommandGroup(armProfile(Arm.CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
@@ -149,6 +150,8 @@ public class RobotContainer {
         climbUp.toggleOnTrue(new ParallelCommandGroup(
                 new ClimbUp(1.0),
                 new ClimbFollowUp(1.0)));
+
+        driftveilCity.onTrue(new InstantCommand( () -> raidone.robot.subsystems.Climb.system().driftveilCity()));
     }
 
     public Command getAutonomousCommand() {

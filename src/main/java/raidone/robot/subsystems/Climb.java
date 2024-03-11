@@ -1,6 +1,7 @@
 package raidone.robot.subsystems;
 
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.configs.AudioConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -13,9 +14,11 @@ import raidone.robot.Constants;
 public class Climb extends SubsystemBase {
     private TalonFX climbFX;
     private HardwareLimitSwitchConfigs climbLimitSwitchConfigs;
+    private AudioConfigs climbAudioConfigs;
 
     private TalonFX followFX;
     private HardwareLimitSwitchConfigs followerLimitSwitchConfigs;
+    private AudioConfigs followAudioConfigs;
 
     private Orchestra orchestra;
 
@@ -28,22 +31,31 @@ public class Climb extends SubsystemBase {
         climbLimitSwitchConfigs.withReverseLimitAutosetPositionEnable(true);
         climbLimitSwitchConfigs.ReverseLimitAutosetPositionValue = 0.0;
 
+        climbAudioConfigs = new AudioConfigs();
+        climbAudioConfigs.AllowMusicDurDisable = true;
+
         climbFX = new TalonFX(Constants.Climb.CLIMB_MOTOR_ID);
         climbFX.getConfigurator().apply(new TalonFXConfiguration());
         climbFX.getConfigurator().apply(climbLimitSwitchConfigs);
+        climbFX.getConfigurator().apply(climbAudioConfigs);
 
         followerLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
         followerLimitSwitchConfigs.withForwardLimitAutosetPositionEnable(true);
         followerLimitSwitchConfigs.ForwardLimitAutosetPositionValue = 0.0;
 
+        followAudioConfigs = new AudioConfigs();
+        followAudioConfigs.AllowMusicDurDisable = true;
+
         followFX = new TalonFX(Constants.Climb.CLIMB_FOLLOW_ID);
         followFX.getConfigurator().apply(new TalonFXConfiguration());
         followFX.setInverted(true);
         followFX.getConfigurator().apply(followerLimitSwitchConfigs);
+        followFX.getConfigurator().apply(followAudioConfigs);
 
         orchestra = new Orchestra();
         orchestra.addInstrument(climbFX);
         orchestra.addInstrument(followFX);
+        
     }
 
     public double getClimbEncoderPos() {
@@ -80,6 +92,11 @@ public class Climb extends SubsystemBase {
 
     public void familyMart(){
         orchestra.loadMusic("family_mart.chrp");
+        orchestra.play();
+    }
+
+    public void driftveilCity() {
+        orchestra.loadMusic("driftveil_city.chrp");
         orchestra.play();
     }
 
