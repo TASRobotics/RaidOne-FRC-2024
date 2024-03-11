@@ -117,13 +117,13 @@ public final class Constants {
     }
 
     public static final class Arm {
-        public static final int ARM_MOTOR_ID = 10;
-        public static final int ARM_FOLLOW_ID = 9;
+        public static final int ARM_MOTOR_ID = 9;
+        public static final int ARM_FOLLOW_ID = 10;
 
-        public static final State SCORINGPOS = new State(-29, 0);
+        public static final State SCORINGPOS = new State(-24, 0);
         public static final State INTAKEPOS = new State(0.0, 0);
 
-        public static final State CONSTRAINTPOS = new State(-15, 0);
+        public static final State CONSTRAINTPOS = new State(-13, 0);
 
         public static final double kP = 0.17;
         public static final double kI = 0.0;
@@ -143,7 +143,7 @@ public final class Constants {
         public static final double MAX_VEL_RPS = 24.5 / 2;
         public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
         public static final double ALLOWED_ERROR = 0.0;
-        public static final int CURRENT_LIMIT = 20;
+        public static final int CURRENT_LIMIT = 12;
 
         public static final Constraints ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
                 Constants.Arm.MAX_ACCEL_RPSS);
@@ -186,6 +186,7 @@ public final class Constants {
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 13;
         public static final double PERCENT = 1.0;
+        public static final int CURRENT_LIMIT = 20;
     }
 
     public static final class Climb {
