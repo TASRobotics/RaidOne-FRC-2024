@@ -5,7 +5,6 @@ import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -153,11 +152,11 @@ public class RobotContainer {
                 new OrdinalTurn(90)); // blue = 270; red = 90
 
         climbHome.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbHome(0.5),
-                new ClimbFollowHome(0.5)));
+                new ClimbHome(Constants.Climb.DOWN_SPEED_PCT),
+                new ClimbFollowHome(Constants.Climb.DOWN_SPEED_PCT)));
         climbUp.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbUp(1.0),
-                new ClimbFollowUp(1.0)));
+                new ClimbUp(Constants.Climb.UP_SPEED_PCT),
+                new ClimbFollowUp(Constants.Climb.UP_SPEED_PCT)));
     }
 
     public Command getAutonomousCommand() {

@@ -188,10 +188,12 @@ public final class Constants {
     public static final class Climb {
         public static final int CLIMB_MOTOR_ID = 14;
         public static final int CLIMB_FOLLOW_ID = 15;
-        public static final double CLIMB_KP = 0.01;
-        public static final double CLIMB_KI = 0.0;
-        public static final double CLIMB_KD = 0.0;
+
+        public static final double UP_SPEED_PCT = 1.0;
+        public static final double DOWN_SPEED_PCT = 0.9;
+
         public static final double BOTTOM_POS_ROT = 0.0;
-        public static final double TOP_POS_ROT = 350.0;
+        public static final double HALFWAY_POS_ROT = 45.0;
+        public static final double TOP_POS_ROT = 90.0;
     }
 }
