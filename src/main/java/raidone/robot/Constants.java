@@ -190,7 +190,7 @@ public final class Constants {
         public static final int CLIMB_FOLLOW_ID = 15;
 
         public static final double UP_SPEED_PCT = 1.0;
-        public static final double DOWN_SPEED_PCT = 0.9;
+        public static final double DOWN_SPEED_PCT = 0.3;
 
         public static final double BOTTOM_POS_ROT = 0.0;
         public static final double HALFWAY_POS_ROT = 45.0;

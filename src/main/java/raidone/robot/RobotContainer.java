@@ -131,16 +131,20 @@ public class RobotContainer {
                 armProfile(Arm.CONSTRAINTPOS),
                 new WristHome(),
                 new ArmHome()));
- 
+
         amp.onTrue(new ParallelCommandGroup(
                 armProfile(Arm.SCORINGPOS),
                 wristProfile(Wrist.SCORINGPOS)));
 
         intakePos.onTrue(new SequentialCommandGroup(
-            armProfile(Arm.CONSTRAINTPOS),
-            wristProfile(Wrist.INTAKEPOS),
-            new ArmHome()
-        ));
+                armProfile(Arm.CONSTRAINTPOS),
+                wristProfile(Wrist.INTAKEPOS),
+                new ArmHome(),
+                new IntakeIn(Constants.Intake.PERCENT),
+                new IntakeRetract(),
+                armProfile(Constants.Arm.CONSTRAINTPOS),
+                new WristHome(),
+                new ArmHome()));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));

@@ -10,6 +10,8 @@ public class IntakeIn extends Command {
     public IntakeIn(double p) {
         intake = Intake.system();
         percent = p;
+        
+        addRequirements(this.intake);
     }
 
     @Override

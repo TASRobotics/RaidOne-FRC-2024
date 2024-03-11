@@ -11,6 +11,7 @@ public class WristGo extends Command {
     public WristGo(double setpoint) {
         this.wrist = Wrist.wristSys;
         this.setpoint = setpoint;
+        
         addRequirements(this.wrist);
     }
 

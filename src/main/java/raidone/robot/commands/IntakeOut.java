@@ -10,6 +10,8 @@ public class IntakeOut extends Command {
     public IntakeOut(double p) {
         intake = Intake.system();
         percent = p;
+
+        addRequirements(this.intake);
     }
 
     @Override

@@ -8,6 +8,7 @@ public class WristHome extends Command {
 
     public WristHome() {
         this.wrist = Wrist.wristSys;
+        
         addRequirements(this.wrist);
     }
 
