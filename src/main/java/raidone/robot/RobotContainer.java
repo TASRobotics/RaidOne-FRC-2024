@@ -112,6 +112,8 @@ public class RobotContainer {
                         () -> false));
 
         configureButtonBindings();
+
+        raidone.robot.subsystems.Climb.system().familyMart();
     }
 
     private void configureButtonBindings() {
