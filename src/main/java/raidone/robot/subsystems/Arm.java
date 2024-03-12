@@ -2,7 +2,11 @@ package raidone.robot.subsystems;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import raidone.robot.commands.ResetArmEncoder;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
@@ -10,6 +14,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import static raidone.robot.Constants.Arm.*;
 
@@ -29,8 +34,8 @@ public class Arm extends SubsystemBase {
         arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
         arm.restoreFactoryDefaults();
         arm.setIdleMode(IdleMode.kBrake);
-        // arm.setSoftLimit(SoftLimitDirection.kReverse, -28);
-        // arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        arm.setSoftLimit(SoftLimitDirection.kReverse, SOFTLIMIT);
+        arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
         arm.setSmartCurrentLimit(CURRENT_LIMIT);
 
         follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
@@ -46,7 +51,6 @@ public class Arm extends SubsystemBase {
         pid.setFF(kFF, 0);
         pid.setOutputRange(MIN_OUTPUT, MAX_OUTPUT);
 
-
         encoder = arm.getEncoder();
 
         limit1 = arm.getForwardLimitSwitch(Type.kNormallyOpen);
@@ -54,10 +58,14 @@ public class Arm extends SubsystemBase {
 
         limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
         limit2.enableLimitSwitch(true);
+
+        
     }
 
     public void trapezoidToPID(State output) {
-        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0, FEED_FORWARD.calculate(output.position, output.velocity));
+        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0,
+                                                                             // FEED_FORWARD.calculate(output.position,
+                                                                             // output.velocity));
         SmartDashboard.putNumber("Arm Trapazoid setpoint", output.position);
     }
 
@@ -82,7 +90,7 @@ public class Arm extends SubsystemBase {
         return encoder;
     }
 
-    public boolean getLimit(){
+    public boolean getLimit() {
         if (limit1.isPressed() || limit2.isPressed())
             encoder.setPosition(0);
         return limit1.isPressed() || limit2.isPressed();

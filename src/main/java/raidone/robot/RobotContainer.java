@@ -76,6 +76,7 @@ public class RobotContainer {
 
     // Subsystem references
     private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
+    private final raidone.robot.subsystems.Arm arm = raidone.robot.subsystems.Arm.system();
 
     // Get the triggers
     public boolean getTrigger(boolean isRight) {
@@ -117,6 +118,8 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> -driver.getRawAxis(rotationAxis) * 0.6,
                         () -> false));
+
+        arm.setDefaultCommand(new ResetArmEncoder());
 
         configureButtonBindings();
     }
