@@ -1,9 +1,5 @@
 package raidone.robot.commands;
 
-import java.lang.reflect.Constructor;
-
-import com.ctre.phoenix6.controls.CoastOut;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import raidone.robot.subsystems.Arm;
 
