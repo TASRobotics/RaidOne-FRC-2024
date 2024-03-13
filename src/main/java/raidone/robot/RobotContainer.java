@@ -144,10 +144,7 @@ public class RobotContainer {
                 wristProfile(Wrist.INTAKEPOS),
                 new ArmHome(),
                 new IntakeIn(Constants.Intake.PERCENT),
-                new IntakeRetract(),
-                armProfile(Constants.Arm.CONSTRAINTPOS),
-                new WristHome(),
-                new ArmHome()));
+                new IntakeRetract()));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));

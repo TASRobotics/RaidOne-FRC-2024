@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -76,7 +77,8 @@ public class SwerveModule {
         CANCoder.getConfigurator().apply(new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
                         .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
-                        .withMagnetOffset(moduleAngleOffset)));
+                        .withMagnetOffset(moduleAngleOffset)
+                        .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)));
 
         rotorPID = new PIDController(
                 Constants.Swerve.ROTOR_KP,

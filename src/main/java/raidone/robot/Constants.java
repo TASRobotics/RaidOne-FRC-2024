@@ -92,22 +92,22 @@ public final class Constants {
         public static final int THROTTLE_FL_ID = 1;
         public static final int ROTOR_FL_ID = 2;
         public static final int CAN_CODER_FL_ID = 1;
-        public static final double MODULE_FL_OFFSET = -0.772949; // -0.772949
+        public static final double MODULE_FL_OFFSET = 0.251221; 
 
         public static final int THROTTLE_BL_ID = 3;
         public static final int ROTOR_BL_ID = 4;
         public static final int CAN_CODER_BL_ID = 2;
-        public static final double MODULE_BL_OFFSET = -0.897949;
+        public static final double MODULE_BL_OFFSET = 0.101562;
 
         public static final int THROTTLE_BR_ID = 5;
         public static final int ROTOR_BR_ID = 6;
         public static final int CAN_CODER_BR_ID = 3;
-        public static final double MODULE_BR_OFFSET = -0.532959;
+        public static final double MODULE_BR_OFFSET = 0.474854;
 
         public static final int THROTTLE_FR_ID = 7;
         public static final int ROTOR_FR_ID = 8;
         public static final int CAN_CODER_FR_ID = 4;
-        public static final double MODULE_FR_OFFSET = -0.104004;
+        public static final double MODULE_FR_OFFSET = -0.111328;
 
         public static final double STICK_DEADBAND = 0.01;
     }
@@ -137,8 +137,8 @@ public final class Constants {
 
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_VEL_RPS = 24.5 / 2;
-        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
+        public static final double MAX_VEL_RPS = 24.5 / 2.0;
+        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS / 2.0;
         public static final double ALLOWED_ERROR = 0.0;
         public static final int CURRENT_LIMIT = 12;
 
@@ -170,8 +170,8 @@ public final class Constants {
 
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_VEL_RPS = 33.0 / 2;
-        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
+        public static final double MAX_VEL_RPS = 33.0 / 2.0;
+        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS / 2.0;
         public static final double ALLOWED_ERROR = 2.0;
         public static final int CURRENT_LIMIT = 10;
 
