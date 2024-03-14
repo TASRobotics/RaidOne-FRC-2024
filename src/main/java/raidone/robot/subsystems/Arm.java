@@ -55,8 +55,6 @@ public class Arm extends SubsystemBase {
 
         limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
         limit2.enableLimitSwitch(true);
-
-        
     }
 
     public void trapezoidToPID(State output) {
@@ -95,7 +93,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
+        SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
     }
 
     public static Arm system() {

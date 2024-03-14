@@ -18,7 +18,8 @@ public class Wrist extends SubsystemBase {
     private CANSparkMax wrist, follower;
     private SparkPIDController pid;
     private RelativeEncoder encoder;
-    private SparkLimitSwitch limit;
+    private SparkLimitSwitch limit1;
+    private SparkLimitSwitch limit2;
 
     public static Wrist wristSys = new Wrist();
 
@@ -45,12 +46,17 @@ public class Wrist extends SubsystemBase {
 
         encoder = wrist.getEncoder();
 
-        limit = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit.enableLimitSwitch(true);
+        limit1 = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
+        limit1.enableLimitSwitch(true);
+
+        limit2 = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
+        limit2.enableLimitSwitch(true);
     }
 
     public void trapezoidToPID(State output) {
-        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0, FEED_FORWARD.calculate(output.position, output.velocity));
+        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0,
+                                                                             // FEED_FORWARD.calculate(output.position,
+                                                                             // output.velocity));
         // SmartDashboard.putNumber("Wrist Trapazoid setpoint", output.position);
     }
 
@@ -75,10 +81,10 @@ public class Wrist extends SubsystemBase {
         return encoder;
     }
 
-    public boolean getLimit(){
-        if(limit.isPressed())
+    public boolean getLimit() {
+        if (limit1.isPressed() || limit2.isPressed())
             encoder.setPosition(0);
-        return limit.isPressed();
+        return limit1.isPressed() || limit2.isPressed();
     }
 
     public static Wrist system() {

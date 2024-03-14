@@ -132,15 +132,16 @@ public class RobotContainer {
 
         stow.onTrue(new SequentialCommandGroup(
                 armProfile(Arm.CONSTRAINTPOS),
-                new WristHome(),
-                new ArmHome()));
+                new ParallelCommandGroup(
+                    new WristHome(),
+                    new ArmHome())));
 
         amp.onTrue(new ParallelCommandGroup(
                 armProfile(Arm.SCORINGPOS),
                 wristProfile(Wrist.SCORINGPOS)));
 
         intakePos.onTrue(new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS),
+                armProfile(Arm.CONSTRAINTPOS).withTimeout(0.75),
                 wristProfile(Wrist.INTAKEPOS),
                 new ArmHome(),
                 new IntakeIn(Constants.Intake.PERCENT),
