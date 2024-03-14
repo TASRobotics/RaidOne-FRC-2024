@@ -62,8 +62,8 @@ public class Arm extends SubsystemBase {
     public void trapezoidToPID(State output) {
         pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0,
                                                                              // FEED_FORWARD.calculate(output.position,
-                                                                             // output.velocity));
-        SmartDashboard.putNumber("Arm Trapazoid setpoint", output.position);
+                                                                // output.velocity));
+        // SmartDashboard.putNumber("Arm Trapazoid setpoint", output.position);
     }
 
     public State currentState() {
@@ -76,7 +76,7 @@ public class Arm extends SubsystemBase {
 
     public void setPos(double setpoint) {
         pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        SmartDashboard.putNumber("processVariable", encoder.getPosition());
+        // SmartDashboard.putNumber("processVariable", encoder.getPosition());
     }
 
     public void home() {
@@ -95,7 +95,7 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
+        // SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
     }
 
     public static Arm system() {

@@ -94,8 +94,8 @@ public class RobotContainer {
                 new SequentialCommandGroup(armProfile(Arm.CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
                 new ArmHome()));
 
-        NamedCommands.registerCommand("IntakeNote", new ParallelCommandGroup(
-                new IntakeIn(Constants.Intake.PERCENT)));
+        NamedCommands.registerCommand("IntakeNote", 
+            new IntakeIn(Constants.Intake.PERCENT).withTimeout(4.0));
 
         NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
                 armProfile(Arm.SCORINGPOS),
@@ -116,7 +116,7 @@ public class RobotContainer {
                 new TeleopSwerve(
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
-                        () -> -driver.getRawAxis(rotationAxis) * 0.6,
+                        () -> -driver.getRawAxis(rotationAxis),
                         () -> false));
 
         arm.setDefaultCommand(new ResetArmEncoder());
@@ -144,7 +144,10 @@ public class RobotContainer {
                 wristProfile(Wrist.INTAKEPOS),
                 new ArmHome(),
                 new IntakeIn(Constants.Intake.PERCENT),
-                new IntakeRetract()));
+                new IntakeRetract(),
+                armProfile(Arm.CONSTRAINTPOS),
+                new WristHome(),
+                new ArmHome()));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));

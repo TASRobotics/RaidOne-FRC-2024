@@ -46,15 +46,35 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "IntakeNote"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ArmIntake"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Home"
+                      }
+                    },
+                    {
+                      "type": "parallel",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ArmIntake"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "IntakeNote"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             ]

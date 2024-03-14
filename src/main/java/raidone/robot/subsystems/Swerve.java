@@ -123,7 +123,7 @@ public class Swerve extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, MAX_SPEED);
 
-        SmartDashboard.putNumber("input vel mps", desiredStates[0].speedMetersPerSecond);
+        // SmartDashboard.putNumber("input vel mps", desiredStates[0].speedMetersPerSecond);
 
         moduleFL.setDesiredState(desiredStates[0], false);
         moduleFR.setDesiredState(desiredStates[1], false);
@@ -320,19 +320,19 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        swerveOdometry.update(getRotation(), getModulePositions());
+        // swerveOdometry.update(getRotation(), getModulePositions());
 
-        SmartDashboard.putNumber("Velocity (m/s)", getModuleStates()[0].speedMetersPerSecond);
+        // SmartDashboard.putNumber("Velocity (m/s)", getModuleStates()[0].speedMetersPerSecond);
 
-        SmartDashboard.putNumber("Rotation", imu.getAngle());
-        SmartDashboard.putNumber("Y", getPose().getY());
-        SmartDashboard.putNumber("X", getPose().getX());
+        // SmartDashboard.putNumber("Rotation", imu.getAngle());
+        // SmartDashboard.putNumber("Y", getPose().getY());
+        // SmartDashboard.putNumber("X", getPose().getX());
 
-        SmartDashboard.putNumber("actual vel mps", getModuleStates()[0].speedMetersPerSecond);
+        // SmartDashboard.putNumber("actual vel mps", getModuleStates()[0].speedMetersPerSecond);
 
-        field.setRobotPose(getPose());
-        SmartDashboard.putData("Field", field);
+        // field.setRobotPose(getPose());
+        // SmartDashboard.putData("Field", field);
 
-        SmartDashboard.putNumber("Robot heading", getHeading().getDegrees());
+        // SmartDashboard.putNumber("Robot heading", getHeading().getDegrees());
     }
 }

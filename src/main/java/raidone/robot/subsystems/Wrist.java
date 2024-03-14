@@ -51,7 +51,7 @@ public class Wrist extends SubsystemBase {
 
     public void trapezoidToPID(State output) {
         pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0, FEED_FORWARD.calculate(output.position, output.velocity));
-        SmartDashboard.putNumber("Wrist Trapazoid setpoint", output.position);
+        // SmartDashboard.putNumber("Wrist Trapazoid setpoint", output.position);
     }
 
     public State currentState() {
@@ -64,7 +64,7 @@ public class Wrist extends SubsystemBase {
 
     public void setPos(double setpoint) {
         pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        SmartDashboard.putNumber("processVariable", encoder.getPosition());
+        // SmartDashboard.putNumber("processVariable", encoder.getPosition());
     }
 
     public void home() {
@@ -80,9 +80,6 @@ public class Wrist extends SubsystemBase {
             encoder.setPosition(0);
         return limit.isPressed();
     }
-
-    @Override
-    public void periodic() {}
 
     public static Wrist system() {
         return wristSys;

@@ -59,9 +59,9 @@ public final class Constants {
         public static final double ROTOR_KD = 0.0;
 
         // Throttle PID constants
-        public static final double THROTTLE_KP = 0.35; // 0.12
+        public static final double THROTTLE_KP = 0.2; 
         public static final double THROTTLE_KI = 0.0;
-        public static final double THROTTLE_KD = 0.0;
+        public static final double THROTTLE_KD = 0.0;//0.035;
         public static final double THROTTLE_KF = 0.0;
 
         /* Drive Motor Characterization Values From SYSID */
@@ -92,7 +92,7 @@ public final class Constants {
         public static final int THROTTLE_FL_ID = 1;
         public static final int ROTOR_FL_ID = 2;
         public static final int CAN_CODER_FL_ID = 1;
-        public static final double MODULE_FL_OFFSET = 0.251221; 
+        public static final double MODULE_FL_OFFSET = 0.281738; 
 
         public static final int THROTTLE_BL_ID = 3;
         public static final int ROTOR_BL_ID = 4;

@@ -48,9 +48,6 @@ public class Intake extends SubsystemBase {
         return Math.abs(roller.getEncoder().getPosition()) > 2;
     }
 
-    @Override
-    public void periodic() {}
-
     public static Intake system() {
         return intakeSys;
     }
