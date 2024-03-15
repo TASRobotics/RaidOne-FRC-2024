@@ -59,9 +59,9 @@ public final class Constants {
         public static final double ROTOR_KD = 0.0;
 
         // Throttle PID constants
-        public static final double THROTTLE_KP = 0.2; 
+        public static final double THROTTLE_KP = 0.2;
         public static final double THROTTLE_KI = 0.0;
-        public static final double THROTTLE_KD = 0.0;//0.035;
+        public static final double THROTTLE_KD = 0.0;// 0.035;
         public static final double THROTTLE_KF = 0.0;
 
         /* Drive Motor Characterization Values From SYSID */
@@ -83,7 +83,7 @@ public final class Constants {
         /** Meters per Second */
         public static final double MAX_SPEED = 4.0;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 5.0;
+        public static final double MAX_ANGULAR_VELOCITY = 5.0 * 0.8;
 
         /* Neutral Modes */
         public static final NeutralModeValue ROTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -92,7 +92,7 @@ public final class Constants {
         public static final int THROTTLE_FL_ID = 1;
         public static final int ROTOR_FL_ID = 2;
         public static final int CAN_CODER_FL_ID = 1;
-        public static final double MODULE_FL_OFFSET = 0.281738; 
+        public static final double MODULE_FL_OFFSET = 0.281738;
 
         public static final int THROTTLE_BL_ID = 3;
         public static final int ROTOR_BL_ID = 4;
@@ -109,22 +109,22 @@ public final class Constants {
         public static final int CAN_CODER_FR_ID = 4;
         public static final double MODULE_FR_OFFSET = -0.111328;
 
-        public static final double STICK_DEADBAND = 0.01;
+        public static final double STICK_DEADBAND = 0.1;
     }
 
     public static final class Arm {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final State SCORINGPOS = new State(-31, 0);
-        public static final int SOFTLIMIT = -31;
+        public static final State SCORINGPOS = new State(-32, 0);
+        public static final double SOFTLIMIT = SCORINGPOS.position - 2;
         public static final State INTAKEPOS = new State(0.0, 0);
 
         public static final State CONSTRAINTPOS = new State(-13, 0);
 
         public static final double kP = 0.17;
         public static final double kI = 0.0;
-        public static final double kD = 0.007;
+        public static final double kD = 0.01;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
 
@@ -142,16 +142,23 @@ public final class Constants {
         public static final double ALLOWED_ERROR = 0.0;
         public static final int CURRENT_LIMIT = 12;
 
+        public static final double AUTO_MAX_ACCEL_RPSS = MAX_VEL_RPS / 1.0;
+
         public static final Constraints ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
                 Constants.Arm.MAX_ACCEL_RPSS);
-        public static TrapezoidProfile ARM_Profile = new TrapezoidProfile(ARM_CONSTRAINTS);
+
+        public static final Constraints AUTO_ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
+                Constants.Arm.AUTO_MAX_ACCEL_RPSS);
+
+        public static TrapezoidProfile ARM_PROFILE = new TrapezoidProfile(ARM_CONSTRAINTS);
+        public static TrapezoidProfile AUTO_ARM_PROFILE = new TrapezoidProfile(AUTO_ARM_CONSTRAINTS);
     }
 
     public static final class Wrist {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final State SCORINGPOS = new State(-21, 0);
+        public static final State SCORINGPOS = new State(-22, 0);
         public static final State INTAKEPOS = new State(-44.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
 
@@ -175,9 +182,16 @@ public final class Constants {
         public static final double ALLOWED_ERROR = 2.0;
         public static final int CURRENT_LIMIT = 10;
 
+        public static final double AUTO_MAX_ACCEL_RPSS = MAX_VEL_RPS / 1.0;
+
         public static final Constraints WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
                 Constants.Wrist.MAX_ACCEL_RPSS);
-        public static TrapezoidProfile WRIST_Profile = new TrapezoidProfile(WRIST_CONSTRAINTS);
+
+        public static final Constraints AUTO_WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
+                Constants.Wrist.AUTO_MAX_ACCEL_RPSS);
+
+        public static TrapezoidProfile WRIST_PROFILE = new TrapezoidProfile(WRIST_CONSTRAINTS);
+        public static TrapezoidProfile AUTO_WRIST_PROFILE = new TrapezoidProfile(AUTO_WRIST_CONSTRAINTS);
     }
 
     public static final class Intake {

@@ -15,5 +15,13 @@ public class ResetArmEncoder extends Command{
         if(arm.getLimit()) {
             arm.getEncoder().setPosition(0);
         }
+        if (arm.getEncoder().getPosition() > -5) {
+            arm.home();
+        }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        arm.stopMotors();
     }
 }

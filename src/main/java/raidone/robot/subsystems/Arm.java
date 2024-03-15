@@ -31,7 +31,7 @@ public class Arm extends SubsystemBase {
         arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
         arm.restoreFactoryDefaults();
         arm.setIdleMode(IdleMode.kBrake);
-        arm.setSoftLimit(SoftLimitDirection.kReverse, SOFTLIMIT);
+        arm.setSoftLimit(SoftLimitDirection.kReverse, (float) SOFTLIMIT);
         arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
         arm.setSmartCurrentLimit(CURRENT_LIMIT);
 
@@ -70,6 +70,7 @@ public class Arm extends SubsystemBase {
 
     public void stopMotors() {
         arm.stopMotor();
+        follow.stopMotor();
     }
 
     public void setPos(double setpoint) {
@@ -78,7 +79,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void home() {
-        arm.set(0.4);
+        arm.set(0.5);
     }
 
     public RelativeEncoder getEncoder() {
@@ -94,6 +95,8 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
+        SmartDashboard.putBoolean("arm limit", limit1.isPressed());
+        SmartDashboard.putBoolean("follow limit", limit2.isPressed());
     }
 
     public static Arm system() {

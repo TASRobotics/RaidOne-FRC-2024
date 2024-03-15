@@ -6,7 +6,7 @@ import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,8 +32,9 @@ import raidone.robot.commands.*;
  */
 public class RobotContainer {
     // Controllers
-    private final XboxController driver = new XboxController(0);
-    private final Joystick driver2 = new Joystick(1);
+    public static final XboxController driver = new XboxController(0);
+    // public static final Joystick driver2 = new Joystick(1);
+    public static final XboxController driver2 = new XboxController(1);
 
     // Driver joystick axes
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -40,10 +42,23 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     // Button board bindings
+    // private final int pinkButton = XboxController.Button.kY.value;
+    // private final int greenButtonL = XboxController.Button.kB.value;
+    // private final int greenButtonR = XboxController.Button.kA.value;
+    // private final int yellowButtonL = XboxController.Button.kX.value;
+    // private final int yellowButtonR = XboxController.Button.kStart.value;
+
+    // 2nd controller bindings
+    // start = home
+    // y = amp
+    // a = ground
+    // LB = score out
+    // RB = intake
+
     private final int pinkButton = XboxController.Button.kY.value;
-    private final int greenButtonL = XboxController.Button.kB.value;
-    private final int greenButtonR = XboxController.Button.kA.value;
-    private final int yellowButtonL = XboxController.Button.kX.value;
+    private final int greenButtonL = XboxController.Button.kRightBumper.value;
+    private final int greenButtonR = XboxController.Button.kLeftBumper.value;
+    private final int yellowButtonL = XboxController.Button.kA.value;
     private final int yellowButtonR = XboxController.Button.kStart.value;
 
     // Reset for field oriented
@@ -91,20 +106,23 @@ public class RobotContainer {
 
         // Commands for auto
         NamedCommands.registerCommand("ArmIntake", new SequentialCommandGroup(
-                new SequentialCommandGroup(armProfile(Arm.CONSTRAINTPOS), wristProfile(Wrist.INTAKEPOS)),
+                armProfile(Arm.CONSTRAINTPOS, false),
+                wristProfile(Wrist.INTAKEPOS, false),
                 new ArmHome()));
 
-        NamedCommands.registerCommand("IntakeNote", 
-            new IntakeIn(Constants.Intake.PERCENT).withTimeout(4.0));
+        NamedCommands.registerCommand("IntakeNote",
+                new IntakeIn(Constants.Intake.PERCENT).withTimeout(3.5));
 
         NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
-                armProfile(Arm.SCORINGPOS),
-                wristProfile(Wrist.SCORINGPOS)));
+                armProfile(Arm.SCORINGPOS, false),
+                wristProfile(Wrist.SCORINGPOS, false)));
 
         NamedCommands.registerCommand("AmpScore", new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
 
-        NamedCommands.registerCommand("Home", new ParallelCommandGroup(
-                new ArmHome(), new WristHome()));
+        NamedCommands.registerCommand("Home", new SequentialCommandGroup(
+                armProfile(Arm.CONSTRAINTPOS, false),
+                new WristHome(),
+                new ArmHome()));
 
         NamedCommands.registerCommand("TurnTo0", new OrdinalTurn(0));
         NamedCommands.registerCommand("TurnTo90", new OrdinalTurn(90));
@@ -127,28 +145,38 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
 
-        intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract()));
+        intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract())
+                .andThen(new ParallelCommandGroup(
+                        new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble, 1)),
+                        new WaitCommand(0.987)))
+                .andThen(new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble, 0))));
+
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
 
         stow.onTrue(new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS),
-                new ParallelCommandGroup(
-                    new WristHome(),
-                    new ArmHome())));
+                armProfile(Arm.CONSTRAINTPOS, false),
+                new WristHome(),
+                new ArmHome()));
 
         amp.onTrue(new ParallelCommandGroup(
-                armProfile(Arm.SCORINGPOS),
-                wristProfile(Wrist.SCORINGPOS)));
+                armProfile(Arm.SCORINGPOS, false),
+                wristProfile(Wrist.SCORINGPOS, false)));
 
         intakePos.onTrue(new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS).withTimeout(0.75),
-                wristProfile(Wrist.INTAKEPOS),
+                armProfile(Arm.CONSTRAINTPOS, false).withTimeout(0.75),
+                wristProfile(Wrist.INTAKEPOS, false),
                 new ArmHome(),
                 new IntakeIn(Constants.Intake.PERCENT),
                 new IntakeRetract(),
-                armProfile(Arm.CONSTRAINTPOS),
+                armProfile(Arm.CONSTRAINTPOS, false),
                 new WristHome(),
                 new ArmHome()));
+        // new ParallelCommandGroup(
+        // new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble,
+        // 1)),
+        // new WaitCommand(0.987))
+        // .andThen(new InstantCommand(() ->
+        // driver.setRumble(GenericHID.RumbleType.kRightRumble, 0)))));
 
         ordinalTurnUp.onTrue(new OrdinalTurn(0));
         ordinalTurnDown.onTrue(new OrdinalTurn(180));

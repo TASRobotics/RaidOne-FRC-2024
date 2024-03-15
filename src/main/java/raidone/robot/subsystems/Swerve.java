@@ -99,7 +99,7 @@ public class Swerve extends SubsystemBase {
                                         translation.getX(),
                                         translation.getY(),
                                         rotation,
-                             getHeading())
+                                        getHeading())
             : new ChassisSpeeds(
                     translation.getX(),
                     translation.getY(),
@@ -112,7 +112,6 @@ public class Swerve extends SubsystemBase {
         moduleFR.setDesiredState(swerveModuleStates[1], isOpenLoop);
         moduleBL.setDesiredState(swerveModuleStates[2], isOpenLoop);
         moduleBR.setDesiredState(swerveModuleStates[3], isOpenLoop);
-
     }
 
     /**
@@ -320,7 +319,7 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // swerveOdometry.update(getRotation(), getModulePositions());
+        swerveOdometry.update(getRotation(), getModulePositions());
 
         // SmartDashboard.putNumber("Velocity (m/s)", getModuleStates()[0].speedMetersPerSecond);
 

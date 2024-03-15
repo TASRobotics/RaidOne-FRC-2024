@@ -8,21 +8,21 @@ import raidone.robot.subsystems.Wrist;
 
 public final class TrapezoidGenerator {
 
-    public static TrapezoidProfileCommand armProfile(State goal) {
+    public static TrapezoidProfileCommand armProfile(State goal, boolean auto) {
         return new TrapezoidProfileCommand(
-            Constants.Arm.ARM_Profile, 
-            Arm.system()::trapezoidToPID, 
-            () -> goal, 
-            Arm.system()::currentState, 
-            Arm.system());
+                auto ? Constants.Arm.AUTO_ARM_PROFILE : Constants.Arm.ARM_PROFILE,
+                Arm.system()::trapezoidToPID,
+                () -> goal,
+                Arm.system()::currentState,
+                Arm.system());
     }
 
-    public static TrapezoidProfileCommand wristProfile(State goal) {
+    public static TrapezoidProfileCommand wristProfile(State goal, boolean auto) {
         return new TrapezoidProfileCommand(
-            Constants.Wrist.WRIST_Profile,
-            Wrist.system()::trapezoidToPID,
-            () -> goal,
-            Wrist.system()::currentState,
-            Wrist.system());
+                auto ? Constants.Wrist.AUTO_WRIST_PROFILE : Constants.Wrist.WRIST_PROFILE,
+                Wrist.system()::trapezoidToPID,
+                () -> goal,
+                Wrist.system()::currentState,
+                Wrist.system());
     }
 }
