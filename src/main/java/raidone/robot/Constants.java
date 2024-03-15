@@ -116,7 +116,7 @@ public final class Constants {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final State SCORINGPOS = new State(-32, 0);
+        public static final State SCORINGPOS = new State(-33, 0);
         public static final double SOFTLIMIT = SCORINGPOS.position - 2;
         public static final State INTAKEPOS = new State(0.0, 0);
 
@@ -158,7 +158,7 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final State SCORINGPOS = new State(-22, 0);
+        public static final State SCORINGPOS = new State(-23, 0);
         public static final State INTAKEPOS = new State(-44.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
 
