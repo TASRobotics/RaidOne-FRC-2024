@@ -94,9 +94,9 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
-        SmartDashboard.putBoolean("arm limit", limit1.isPressed());
-        SmartDashboard.putBoolean("follow limit", limit2.isPressed());
+        // SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
+        // SmartDashboard.putBoolean("arm limit", limit1.isPressed());
+        // SmartDashboard.putBoolean("follow limit", limit2.isPressed());
     }
 
     public static Arm system() {

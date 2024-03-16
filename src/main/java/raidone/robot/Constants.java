@@ -14,7 +14,7 @@ public final class Constants {
 
     public static final class Swerve {
 
-        public static final int PIGEON_ID = 1;
+        public static final int PIGEON_ID = 0;
 
         // Swerve dimensions & conversions
         public static final double TRACK_WIDTH = Units.inchesToMeters(23.0);
@@ -22,7 +22,7 @@ public final class Constants {
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4.0) * Math.PI;
         public static final double WHEEL_DIAMETER_M = Units.inchesToMeters(4.0);
 
-        public static final double THROTTLE_GEAR_RATIO = (6.12 / 1.0);
+        public static final double THROTTLE_GEAR_RATIO = (6.2 / 1.0);
         public static final double ROTOR_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
 
         public static final double THROTTLE_VEL_CONVERSION_FACTOR = (1 / THROTTLE_GEAR_RATIO / 60) * WHEEL_DIAMETER_M
@@ -158,8 +158,8 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final State SCORINGPOS = new State(-23, 0);
-        public static final State INTAKEPOS = new State(-44.0, 0);
+        public static final State SCORINGPOS = new State(-23.0, 0);
+        public static final State INTAKEPOS = new State(-47.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
 
         public static final double kP = 0.08;
