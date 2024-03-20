@@ -67,6 +67,7 @@ public class RobotContainer {
     // Intake buttons
     private final JoystickButton intakeIn = new JoystickButton(driver2, greenButtonL);
     private final JoystickButton intakeOut = new JoystickButton(driver2, greenButtonR);
+    private final JoystickButton intakeEject = new JoystickButton(driver2, XboxController.Button.kB.value);
 
     // Arm & wrist position buttons
     private final JoystickButton stow = new JoystickButton(driver2, yellowButtonR);
@@ -76,12 +77,12 @@ public class RobotContainer {
     private final JoystickButton intakePos = new JoystickButton(driver2, yellowButtonL);
 
     // Ordinal turn buttons
-    private final POVButton ordinalTurnUp = new POVButton(driver, 0);
-    private final POVButton ordinalTurnDown = new POVButton(driver, 180);
-    private final POVButton ordinalTurnLeft = new POVButton(driver, 270);
-    private final POVButton ordinalTurnRight = new POVButton(driver, 90);
-    private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
-    private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
+    // private final POVButton ordinalTurnUp = new POVButton(driver, 0);
+    // private final POVButton ordinalTurnDown = new POVButton(driver, 180);
+    // private final POVButton ordinalTurnLeft = new POVButton(driver, 270);
+    // private final POVButton ordinalTurnRight = new POVButton(driver, 90);
+    // private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
+    // private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
 
     private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton climbHome = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
@@ -124,6 +125,8 @@ public class RobotContainer {
                 new WristHome(),
                 new ArmHome()));
 
+        NamedCommands.registerCommand("IntakeEject", new IntakeEject().withTimeout(0.5));
+
         NamedCommands.registerCommand("TurnTo0", new OrdinalTurn(0));
         NamedCommands.registerCommand("TurnTo90", new OrdinalTurn(90));
 
@@ -152,6 +155,8 @@ public class RobotContainer {
                 .andThen(new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble, 0))));
 
         intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
+
+        intakeEject.toggleOnTrue(new IntakeEject().withTimeout(0.5));
 
         stow.onTrue(new SequentialCommandGroup(
                 armProfile(Arm.CONSTRAINTPOS, false),
@@ -183,9 +188,9 @@ public class RobotContainer {
         // ordinalTurnLeft.onTrue(new OrdinalTurn(270));
         // ordinalTurnRight.onTrue(new OrdinalTurn(90));
         // turnToSource.onTrue(
-        //         new OrdinalTurn(225)); // blue = 135; red = 225
+        // new OrdinalTurn(225)); // blue = 135; red = 225
         // turnToAmp.onTrue(
-        //         new OrdinalTurn(90)); // blue = 270; red = 90
+        // new OrdinalTurn(90)); // blue = 270; red = 90
 
         climbHome.toggleOnTrue(new ParallelCommandGroup(
                 new ClimbHome(Constants.Climb.DOWN_SPEED_PCT),
