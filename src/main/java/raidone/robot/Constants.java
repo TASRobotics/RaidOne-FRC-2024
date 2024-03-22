@@ -14,7 +14,7 @@ public final class Constants {
 
     public static final class Swerve {
 
-        public static final int PIGEON_ID = 1;
+        public static final int PIGEON_ID = 0;
 
         // Swerve dimensions & conversions
         public static final double TRACK_WIDTH = Units.inchesToMeters(23.0);
@@ -22,7 +22,7 @@ public final class Constants {
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4.0) * Math.PI;
         public static final double WHEEL_DIAMETER_M = Units.inchesToMeters(4.0);
 
-        public static final double THROTTLE_GEAR_RATIO = (6.12 / 1.0);
+        public static final double THROTTLE_GEAR_RATIO = (6.2 / 1.0);
         public static final double ROTOR_GEAR_RATIO = ((150.0 / 7.0) / 1.0);
 
         public static final double THROTTLE_VEL_CONVERSION_FACTOR = (1 / THROTTLE_GEAR_RATIO / 60) * WHEEL_DIAMETER_M
@@ -59,9 +59,9 @@ public final class Constants {
         public static final double ROTOR_KD = 0.0;
 
         // Throttle PID constants
-        public static final double THROTTLE_KP = 0.35; // 0.12
+        public static final double THROTTLE_KP = 0.2;
         public static final double THROTTLE_KI = 0.0;
-        public static final double THROTTLE_KD = 0.0;
+        public static final double THROTTLE_KD = 0.0;// 0.035;
         public static final double THROTTLE_KF = 0.0;
 
         /* Drive Motor Characterization Values From SYSID */
@@ -83,7 +83,7 @@ public final class Constants {
         /** Meters per Second */
         public static final double MAX_SPEED = 4.0;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 5.0;
+        public static final double MAX_ANGULAR_VELOCITY = 5.0 * 0.8;
 
         /* Neutral Modes */
         public static final NeutralModeValue ROTOR_NEUTRAL_MODE = NeutralModeValue.Coast;
@@ -92,38 +92,39 @@ public final class Constants {
         public static final int THROTTLE_FL_ID = 1;
         public static final int ROTOR_FL_ID = 2;
         public static final int CAN_CODER_FL_ID = 1;
-        public static final double MODULE_FL_OFFSET = -0.772949; // -0.772949
+        public static final double MODULE_FL_OFFSET = 0.281738;
 
         public static final int THROTTLE_BL_ID = 3;
         public static final int ROTOR_BL_ID = 4;
         public static final int CAN_CODER_BL_ID = 2;
-        public static final double MODULE_BL_OFFSET = -0.897949;
+        public static final double MODULE_BL_OFFSET = 0.101562;
 
         public static final int THROTTLE_BR_ID = 5;
         public static final int ROTOR_BR_ID = 6;
         public static final int CAN_CODER_BR_ID = 3;
-        public static final double MODULE_BR_OFFSET = -0.532959;
+        public static final double MODULE_BR_OFFSET = 0.474854;
 
         public static final int THROTTLE_FR_ID = 7;
         public static final int ROTOR_FR_ID = 8;
         public static final int CAN_CODER_FR_ID = 4;
-        public static final double MODULE_FR_OFFSET = -0.104004;
+        public static final double MODULE_FR_OFFSET = -0.111328;
 
-        public static final double STICK_DEADBAND = 0.01;
+        public static final double STICK_DEADBAND = 0.1;
     }
 
     public static final class Arm {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
 
-        public static final State SCORINGPOS = new State(-24, 0);
+        public static final State SCORINGPOS = new State(-33, 0);
+        public static final double SOFTLIMIT = SCORINGPOS.position - 2;
         public static final State INTAKEPOS = new State(0.0, 0);
 
         public static final State CONSTRAINTPOS = new State(-13, 0);
 
         public static final double kP = 0.17;
         public static final double kI = 0.0;
-        public static final double kD = 0.007;
+        public static final double kD = 0.01;
         public static final double kIz = 0.0;
         public static final double kFF = 0.0;
 
@@ -136,22 +137,29 @@ public final class Constants {
 
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_VEL_RPS = 24.5 / 2;
-        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
+        public static final double MAX_VEL_RPS = 24.5 / 2.0;
+        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS / 2.0;
         public static final double ALLOWED_ERROR = 0.0;
         public static final int CURRENT_LIMIT = 12;
 
+        public static final double AUTO_MAX_ACCEL_RPSS = MAX_VEL_RPS / 1.0;
+
         public static final Constraints ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
                 Constants.Arm.MAX_ACCEL_RPSS);
-        public static TrapezoidProfile ARM_Profile = new TrapezoidProfile(ARM_CONSTRAINTS);
+
+        public static final Constraints AUTO_ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
+                Constants.Arm.AUTO_MAX_ACCEL_RPSS);
+
+        public static TrapezoidProfile ARM_PROFILE = new TrapezoidProfile(ARM_CONSTRAINTS);
+        public static TrapezoidProfile AUTO_ARM_PROFILE = new TrapezoidProfile(AUTO_ARM_CONSTRAINTS);
     }
 
     public static final class Wrist {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final State SCORINGPOS = new State(-18, 0);
-        public static final State INTAKEPOS = new State(-48.0, 0);
+        public static final State SCORINGPOS = new State(-23.0, 0);
+        public static final State INTAKEPOS = new State(-47.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
 
         public static final double kP = 0.08;
@@ -169,14 +177,21 @@ public final class Constants {
 
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_VEL_RPS = 33.0 / 2;
-        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS;
+        public static final double MAX_VEL_RPS = 33.0 / 2.0;
+        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS / 2.0;
         public static final double ALLOWED_ERROR = 2.0;
         public static final int CURRENT_LIMIT = 10;
 
+        public static final double AUTO_MAX_ACCEL_RPSS = MAX_VEL_RPS / 1.0;
+
         public static final Constraints WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
                 Constants.Wrist.MAX_ACCEL_RPSS);
-        public static TrapezoidProfile WRIST_Profile = new TrapezoidProfile(WRIST_CONSTRAINTS);
+
+        public static final Constraints AUTO_WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
+                Constants.Wrist.AUTO_MAX_ACCEL_RPSS);
+
+        public static TrapezoidProfile WRIST_PROFILE = new TrapezoidProfile(WRIST_CONSTRAINTS);
+        public static TrapezoidProfile AUTO_WRIST_PROFILE = new TrapezoidProfile(AUTO_WRIST_CONSTRAINTS);
     }
 
     public static final class Intake {
@@ -186,12 +201,14 @@ public final class Constants {
     }
 
     public static final class Climb {
-        public static final int CLIMB_MOTOR_ID = 14;
-        public static final int CLIMB_FOLLOW_ID = 15;
-        public static final double CLIMB_KP = 0.01;
-        public static final double CLIMB_KI = 0.0;
-        public static final double CLIMB_KD = 0.0;
+        public static final int CLIMB_MOTOR_ID = 15;
+        public static final int CLIMB_FOLLOW_ID = 14;
+
+        public static final double UP_SPEED_PCT = 1.0;
+        public static final double DOWN_SPEED_PCT = 0.7;
+
         public static final double BOTTOM_POS_ROT = 0.0;
-        public static final double TOP_POS_ROT = 350.0;
+        public static final double HALFWAY_POS_ROT = 45.0;
+        public static final double TOP_POS_ROT = 90.0;
     }
 }

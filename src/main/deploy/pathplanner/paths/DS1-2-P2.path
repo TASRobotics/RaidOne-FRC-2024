@@ -3,50 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.334630997358113,
-        "y": 7.137686629685614
+        "x": 1.85,
+        "y": 8.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3346309973581147,
-        "y": 7.137686629685614
+        "x": 4.5671150218458845,
+        "y": 8.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.190073369056165,
-        "y": 7.137686629685614
+        "x": 8.11,
+        "y": 7.8494102011900715
       },
       "prevControl": {
-        "x": 5.190073369056165,
-        "y": 7.137686629685614
+        "x": 6.787793535216699,
+        "y": 7.920149695446838
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "End DS1-2-P2"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 2.25,
     "maxAngularVelocity": 145.0,
     "maxAngularAcceleration": 72.5
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0,
+    "rotation": 8.018775027978338,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
-  "useDefaultConstraints": true
+  "previewStartingState": null,
+  "useDefaultConstraints": false
 }

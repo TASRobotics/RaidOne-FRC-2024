@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -46,6 +47,7 @@ public class SwerveModule {
         throttle.setSmartCurrentLimit(Constants.Swerve.THROTTLE_CURRENT_LIMIT);
         throttle.setIdleMode(IdleMode.kBrake);
         throttle.setInverted(throttleInversion);
+        throttle.setOpenLoopRampRate(Swerve.OPEN_LOOP_RAMP);
 
         throttleEncoder = throttle.getEncoder();
         throttleEncoder.setVelocityConversionFactor(
@@ -76,7 +78,8 @@ public class SwerveModule {
         CANCoder.getConfigurator().apply(new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
                         .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Signed_PlusMinusHalf)
-                        .withMagnetOffset(moduleAngleOffset)));
+                        .withMagnetOffset(moduleAngleOffset)
+                        .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)));
 
         rotorPID = new PIDController(
                 Constants.Swerve.ROTOR_KP,
@@ -92,16 +95,15 @@ public class SwerveModule {
      * @param isOpenLoop   Open loop
      */
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-        desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
-
-        rotor.set(rotorPID.calculate(getState().angle.getDegrees(), desiredState.angle.getDegrees()));
+        SwerveModuleState currentState = getState();
+        desiredState = SwerveModuleState.optimize(desiredState, currentState.angle);
+        
+        rotor.set(rotorPID.calculate(currentState.angle.getDegrees(), desiredState.angle.getDegrees()));
 
         if (isOpenLoop) {
-            throttle.setOpenLoopRampRate(Swerve.OPEN_LOOP_RAMP);
 
             throttle.set(desiredState.speedMetersPerSecond / Constants.Swerve.MAX_SPEED);
         } else {
-            throttle.setOpenLoopRampRate(0);
             throttleVelController.setReference(
                     desiredState.speedMetersPerSecond,
                     ControlType.kVelocity,

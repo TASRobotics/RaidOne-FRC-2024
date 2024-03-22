@@ -1,0 +1,65 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.114630068122697,
+        "y": 7.8494102011900715
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.996596079372802,
+        "y": 7.8494102011900715
+      },
+      "isLocked": false,
+      "linkedName": "End DS1-2-P2"
+    },
+    {
+      "anchor": {
+        "x": 4.904834075070994,
+        "y": 7.6840570742752865
+      },
+      "prevControl": {
+        "x": 5.574944582706006,
+        "y": 7.530888958244427
+      },
+      "nextControl": {
+        "x": 4.2239682583630564,
+        "y": 7.839683546665672
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.95,
+        "y": 8.0
+      },
+      "prevControl": {
+        "x": 4.8033077848146215,
+        "y": 7.547883910933699
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 2.25,
+    "maxAngularVelocity": 145.0,
+    "maxAngularAcceleration": 72.5
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -89.06853462547411,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

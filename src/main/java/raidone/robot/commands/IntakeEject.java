@@ -1,32 +1,25 @@
 package raidone.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
-import raidone.robot.RobotContainer;
 import raidone.robot.subsystems.Intake;
 
-public class IntakeRetract extends Command {
+public class IntakeEject extends Command {
     private Intake intake;
 
-    public IntakeRetract() {
+    public IntakeEject() {
         intake = Intake.system();
 
         addRequirements(this.intake);
     }
 
     @Override
-    public void initialize() {
-        intake.resetEncoder();
-    }
-
-    @Override
     public void execute() {
-        intake.run(-0.2);
+        intake.run(-1 * 1.0);
     }
 
     @Override
     public boolean isFinished() {
-        return intake.isRetracted();
+        return false;
     }
 
     @Override

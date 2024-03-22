@@ -16,6 +16,10 @@ public class TeleopSwerve extends Command {
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
 
+    private double translationVal;
+    private double strafeVal;
+    private double rotationVal;
+
     public TeleopSwerve(DoubleSupplier translationSup, DoubleSupplier strafeSup,DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         this.swerve = raidone.robot.subsystems.Swerve.system();
         addRequirements(swerve);
@@ -29,15 +33,15 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         /* Get Values, Deadband */
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Swerve.STICK_DEADBAND);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Swerve.STICK_DEADBAND);
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Swerve.STICK_DEADBAND);
+        translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Swerve.STICK_DEADBAND);
+        strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Swerve.STICK_DEADBAND);
+        rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Swerve.STICK_DEADBAND);
 
         /* Drive */
         swerve.drive(
-                new Translation2d(translationVal, strafeVal).times(Swerve.MAX_SPEED),
-                rotationVal * Swerve.MAX_ANGULAR_VELOCITY,
-                !robotCentricSup.getAsBoolean(),
+                new Translation2d(translationVal*translationVal*translationVal, strafeVal*strafeVal*strafeVal).times(Swerve.MAX_SPEED),
+                rotationVal*rotationVal*rotationVal * Swerve.MAX_ANGULAR_VELOCITY,
+                true,
                 true);
     }
 }

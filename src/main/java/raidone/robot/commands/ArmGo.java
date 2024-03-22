@@ -11,6 +11,7 @@ public class ArmGo extends Command {
     public ArmGo(double setpoint) {
         this.arm = Arm.system();
         this.setpoint = setpoint;
+        
         addRequirements(this.arm);
     }
 
