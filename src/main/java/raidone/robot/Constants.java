@@ -211,4 +211,16 @@ public final class Constants {
         public static final double HALFWAY_POS_ROT = 45.0;
         public static final double TOP_POS_ROT = 90.0;
     }
+
+    public static final class Limelight {
+        public static final int CLIMB_MOTOR_ID = 15;
+        public static final int CLIMB_FOLLOW_ID = 14;
+
+        public static final double UP_SPEED_PCT = 1.0;
+        public static final double DOWN_SPEED_PCT = 0.7;
+
+        public static final double BOTTOM_POS_ROT = 0.0;
+        public static final double HALFWAY_POS_ROT = 45.0;
+        public static final double TOP_POS_ROT = 90.0;
+    }
 }

@@ -1,19 +1,30 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2017-2022 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team199.lib;
 
-import org.team199.robot2020.subsystems.Drivetrain;
+package raidone.robot.subsystems;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Limelight {
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkLimitSwitch.Type;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
+public class Limelight extends SubsystemBase {
   
   public enum Mode {
     DIST, STEER, TARGET
@@ -36,7 +47,7 @@ public class Limelight {
   private double backlashOffset = 0.0;
   private double prevHeading = 0;
 
-  private PIDController pidController;
+  private SparkPIDController pidController;
   private boolean newPIDLoop = false;
   // Parameters for vision using linear algebra. 
   private double[][] rotMat = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
@@ -54,9 +65,9 @@ public class Limelight {
     SmartDashboard.setPersistent("AutoAlign: Backlash Offset");
     
     double[] pidValues = SmartDashboard.getNumberArray("AutoAlign: PID Values", new double[]{0.02,0,0});
-    pidController = new PIDController(pidValues[0],pidValues[1],pidValues[2],1D/90D);
+    /*pidController = new SparkPIDController(pidValues[0], pidValues[1], pidValues[2]);
     pidController.setSetpoint(0);
-    pidController.setTolerance(SmartDashboard.getNumber("AutoAlign: Tolerance", 0.01));
+    pidController.setTolerance(SmartDashboard.getNumber("AutoAlign: Tolerance", 0.01));*/
   }
 
   // For the shooter. Given what the limelight sees and the shooter angle, compute the desired initial speed for the shooter.
@@ -81,7 +92,7 @@ public class Limelight {
 
   /* Given what is currently seen, determine the entries rotMat and translateVec parameters
     by solving a system of equations using Gaussian-elimination */
-  public void computeParams(double[] worldXs, double[] worldYs, double[] worldZs) {
+  public void computeParams(double[] worldXs, double[]worldYs, double[] worldZs) {
     double[] cornerXs = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornx").getDoubleArray(defaultValue);
     double[] cornerYs = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcorny").getDoubleArray(defaultValue);
     double[][] corners = {cornerXs, cornerYs, {1, 1, 1, 1}};
@@ -124,7 +135,7 @@ public class Limelight {
   }
 
   // Adjusts the angle facing a vision target. Uses basic PID with the tx value from the network table.
-  public double steeringAssist(Drivetrain dt) {
+  public double steeringAssist(Swerve dt) {
     tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0);
     tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
     ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0.0);
@@ -133,9 +144,10 @@ public class Limelight {
     SmartDashboard.putNumber("Prev_tx", prev_tx);
     tx = Double.isNaN(tx) ? 0 : tx;
     double[] pidValues = SmartDashboard.getNumberArray("AutoAlign: PID Values", new double[]{0.015, 0, 0});
-    pidController.setPID(pidValues[0], pidValues[1], pidValues[2]);
-    pidController.setTolerance(SmartDashboard.getNumber("AutoAlign: Tolerance", 0.01));
-  
+    pidController.setP(pidValues[0]);
+    pidController.setI(pidValues[1]);
+    pidController.setD(pidValues[2]);
+      
     if (tv == 1.0 && !stopSteer) {
       if (ta > SmartDashboard.getNumber("Area Threshold", 0.02)) {
         adjustment = pidController.calculate(tx);
@@ -143,8 +155,7 @@ public class Limelight {
         
         if (!newPIDLoop) {
           newPIDLoop = true;
-          pidController.setSetpoint(Math.signum(prev_tx) * SmartDashboard.getNumber("AutoAlign: Backlash Offset", backlashOffset));
-        }
+          pidController.setSetpoint(Math.signum(prev_tx) * SmartDashboard.getNumber("AutoAlign: Backlash Offset", backlashOffset));}
       }
     } else {
       newPIDLoop = false;
@@ -169,7 +180,7 @@ public class Limelight {
     return pidController.atSetpoint();
   }
   // Combination of distance assist and steering assist
-  public double[] autoTarget(Drivetrain dt) {
+  public double[] autoTarget(Swerve dt) {
     double dist_assist = distanceAssist();
     double steer_assist = steeringAssist(dt);
     double[] params = {dist_assist + steer_assist, dist_assist - steer_assist};
@@ -216,9 +227,9 @@ public class Limelight {
     int n = matrix.length;
     int m = matrix[0].length;
     double[][] matrixTranspose = new double[m][n];
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++){
       for (int j = 0; j < m; j++) {
-        matrixTranspose[m][n] = matrix[n][m];
+        matrixTranspose[j][i] = matrix[i][j];
       }
     }
     return matrixTranspose;
@@ -297,7 +308,7 @@ public class Limelight {
     return true;
   }
 
-  public PIDController getPIDController() {
+  public SparkPIDController getPIDController() {
     return pidController;
   }
 }
