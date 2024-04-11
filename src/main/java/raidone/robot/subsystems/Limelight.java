@@ -8,6 +8,7 @@
 
 package raidone.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,7 +46,7 @@ public class Limelight extends SubsystemBase {
   private double prev_tx = 1.0;
   private double tolerance = 0.01;
   private double backlashOffset = 0.0;
-  private double prevHeading = 0;
+  private Rotation2d prevHeading = new Rotation2d(0);
 
   private SparkPIDController pidController;
   private boolean newPIDLoop = false;
@@ -53,6 +54,7 @@ public class Limelight extends SubsystemBase {
   private double[][] rotMat = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
   private double[] translateVec = {0, 0, 0};
   private double[] defaultValue = {0, 0, 0, 0};
+
 
   public Limelight() {
     SmartDashboard.putNumber("Area Threshold", 0.02);
@@ -64,8 +66,8 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.setPersistent("AutoAlign: Tolerance");
     SmartDashboard.setPersistent("AutoAlign: Backlash Offset");
     
-    double[] pidValues = SmartDashboard.getNumberArray("AutoAlign: PID Values", new double[]{0.02,0,0});
-    /*pidController = new SparkPIDController(pidValues[0], pidValues[1], pidValues[2]);
+    /*double[] pidValues = SmartDashboard.getNumberArray("AutoAlign: PID Values", new double[]{0.02,0,0});
+    pidController = new SparkPIDController(pidValues[0], pidValues[1], pidValues[2]);
     pidController.setSetpoint(0);
     pidController.setTolerance(SmartDashboard.getNumber("AutoAlign: Tolerance", 0.01));*/
   }
@@ -177,7 +179,7 @@ public class Limelight extends SubsystemBase {
     return adjustment;
   }
   public boolean isAligned() {
-    return pidController.atSetpoint();
+    return pidController.setpoint();
   }
   // Combination of distance assist and steering assist
   public double[] autoTarget(Swerve dt) {
