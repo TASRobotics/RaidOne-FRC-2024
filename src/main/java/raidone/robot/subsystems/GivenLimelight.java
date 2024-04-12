@@ -2,6 +2,18 @@
 
 package raidone.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -15,52 +27,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-public class CustomLimelight extends SubsystemBase {
-
-    public static enum LedMode {
-		Current, Off, Blink, On
-	}
-
-	/**
-	 * Camera modes for Limelight
-	 */
-	public static enum CameraMode {
-		Vision, Driver
-	}
-
-    public static enum StreamMode {
-		Standard, // Side-by-side streams if a webcam is attached to Limelight
-		PIP_Main, // Secondary stream is placed in the lower-right corner
-		PIP_Secondary // Primary stream is placed in the lower-right corner
-	}
-
-
-    //apriltags
-    public static class LimelightTarget_Fiducial {
-
-        @JsonProperty("fID") //id of apriltag
-        public double fiducialID;
-
-        @JsonProperty("fam") //type of fiducial (assuption)
-        public String fiducialFamily;
+public class GivenLimelight extends SubsystemBase {
+    
+    //retroreflective tape
+    public static class LimelightTarget_Retro {
 
         /* 
-         * t6 = tranformation with 6 objects
-         * c = loc of cam
-         * r = loc of robot
-         * t = loc of target
+         *
          * "_ts": Target Space (pose relative to the target)
          * "_fs": Field Space (pose relative to the physical field)
          * "_rs": Robot Space (pose relative to the robot)
@@ -155,6 +128,105 @@ public class CustomLimelight extends SubsystemBase {
         @JsonProperty("ts")
         public double ts;
 
+
+        //initialize
+        public LimelightTarget_Retro() {
+            cameraPose_TargetSpace = new double[6];
+            robotPose_FieldSpace = new double[6];
+            robotPose_TargetSpace = new double[6];
+            targetPose_CameraSpace = new double[6];
+            targetPose_RobotSpace = new double[6];
+        }
+
+    }
+
+
+    //apriltags
+    public static class LimelightTarget_Fiducial {
+
+        @JsonProperty("fID") //id of apriltag
+        public double fiducialID;
+
+        @JsonProperty("fam") //??
+        public String fiducialFamily;
+
+
+        //below are same as before (check retro)
+        @JsonProperty("t6c_ts")
+        private double[] cameraPose_TargetSpace;
+
+        @JsonProperty("t6r_fs")
+        private double[] robotPose_FieldSpace;
+
+        @JsonProperty("t6r_ts")
+        private double[] robotPose_TargetSpace;
+
+        @JsonProperty("t6t_cs")
+        private double[] targetPose_CameraSpace;
+
+        @JsonProperty("t6t_rs")
+        private double[] targetPose_RobotSpace;
+
+        public Pose3d getCameraPose_TargetSpace()
+        {
+            return toPose3D(cameraPose_TargetSpace);
+        }
+        public Pose3d getRobotPose_FieldSpace()
+        {
+            return toPose3D(robotPose_FieldSpace);
+        }
+        public Pose3d getRobotPose_TargetSpace()
+        {
+            return toPose3D(robotPose_TargetSpace);
+        }
+        public Pose3d getTargetPose_CameraSpace()
+        {
+            return toPose3D(targetPose_CameraSpace);
+        }
+        public Pose3d getTargetPose_RobotSpace()
+        {
+            return toPose3D(targetPose_RobotSpace);
+        }
+
+        public Pose2d getCameraPose_TargetSpace2D()
+        {
+            return toPose2D(cameraPose_TargetSpace);
+        }
+        public Pose2d getRobotPose_FieldSpace2D()
+        {
+            return toPose2D(robotPose_FieldSpace);
+        }
+        public Pose2d getRobotPose_TargetSpace2D()
+        {
+            return toPose2D(robotPose_TargetSpace);
+        }
+        public Pose2d getTargetPose_CameraSpace2D()
+        {
+            return toPose2D(targetPose_CameraSpace);
+        }
+        public Pose2d getTargetPose_RobotSpace2D()
+        {
+            return toPose2D(targetPose_RobotSpace);
+        }
+        
+        @JsonProperty("ta")
+        public double ta;
+
+        @JsonProperty("tx")
+        public double tx;
+
+        @JsonProperty("txp")
+        public double tx_pixels;
+
+        @JsonProperty("ty")
+        public double ty;
+
+        @JsonProperty("typ")
+        public double ty_pixels;
+
+        @JsonProperty("ts")
+        public double ts;
+
         //initialize        
         public LimelightTarget_Fiducial() {
             cameraPose_TargetSpace = new double[6];
@@ -165,7 +237,11 @@ public class CustomLimelight extends SubsystemBase {
         }
     }
 
-    //classify targets as cones or cubes (depending on config)
+    //unused?? I think you need all of the possible target methods because it gives an error if i remove it
+    public static class LimelightTarget_Barcode {
+
+    }
+
     public static class LimelightTarget_Classifier {
 
         @JsonProperty("class")
@@ -196,7 +272,6 @@ public class CustomLimelight extends SubsystemBase {
         }
     }
 
-    //detect targets + provide information on position and size and distance to the target
     public static class LimelightTarget_Detector {
 
         @JsonProperty("class")
@@ -229,56 +304,42 @@ public class CustomLimelight extends SubsystemBase {
 
     public static class Results {
 
-        // ID of  pipeline being used
         @JsonProperty("pID")
         public double pipelineID;
 
-        //The latency of the pipeline processing (seconds)
         @JsonProperty("tl")
         public double latency_pipeline;
 
-        //The latency of the camera capture (seconds)
         @JsonProperty("cl")
         public double latency_capture;
-        //The latency of parsing(analyzing) the JSON object (seconds)
+
         public double latency_jsonParse;
 
-        //when the data was published (seconds)
         @JsonProperty("ts")
         public double timestamp_LIMELIGHT_publish;
 
-
-        //when the data was captured by the FPGA on the roboRIO (seconds)
         @JsonProperty("ts_rio")
         public double timestamp_RIOFPGA_capture;
 
-
-        //bool: true if data is valid
         @JsonProperty("v")
         @JsonFormat(shape = Shape.NUMBER)
         public boolean valid;
 
-        // array of three doubles representing the estimated pose of the robot in the field coordinate (meters)
         @JsonProperty("botpose")
         public double[] botpose;
 
-        // same as above but based on the red tags (meters)
         @JsonProperty("botpose_wpired")
         public double[] botpose_wpired;
 
-        // same as above but based on the blue tags (meters)
         @JsonProperty("botpose_wpiblue")
         public double[] botpose_wpiblue;
 
-        //number of tags used to estimate botpose
         @JsonProperty("botpose_tagcount")
         public double botpose_tagcount;
        
-        //distance between the furthest and closest tags being used to estimate the robot's pos (meters)
         @JsonProperty("botpose_span")
         public double botpose_span;
        
-        //average distance of the tags used to estimate robot pos (metere)
         @JsonProperty("botpose_avgdist")
         public double botpose_avgdist;
        
@@ -312,6 +373,9 @@ public class CustomLimelight extends SubsystemBase {
             return toPose2D(botpose_wpiblue);
         }
 
+        @JsonProperty("Retro")
+        public LimelightTarget_Retro[] targets_Retro;
+
         @JsonProperty("Fiducial")
         public LimelightTarget_Fiducial[] targets_Fiducials;
 
@@ -321,15 +385,19 @@ public class CustomLimelight extends SubsystemBase {
         @JsonProperty("Detector")
         public LimelightTarget_Detector[] targets_Detector;
 
+        @JsonProperty("Barcode")
+        public LimelightTarget_Barcode[] targets_Barcode;
 
         public Results() {
             botpose = new double[6];
             botpose_wpired = new double[6];
             botpose_wpiblue = new double[6];
             camerapose_robotspace = new double[6];
+            targets_Retro = new LimelightTarget_Retro[0];
             targets_Fiducials = new LimelightTarget_Fiducial[0];
             targets_Classifier = new LimelightTarget_Classifier[0];
             targets_Detector = new LimelightTarget_Detector[0];
+            targets_Barcode = new LimelightTarget_Barcode[0];
 
         }
     }
@@ -440,7 +508,7 @@ public class CustomLimelight extends SubsystemBase {
     }
 
     private static PoseEstimate getBotPoseEstimate(String limelightName, String entryName) {
-        var poseEntry = CustomLimelight.getLimelightNTTableEntry(limelightName, entryName);
+        var poseEntry = GivenLimelight.getLimelightNTTableEntry(limelightName, entryName);
         var poseArray = poseEntry.getDoubleArray(new double[0]);
         var pose = toPose2D(poseArray);
         double latency = extractBotPoseEntry(poseArray,6);
@@ -932,7 +1000,7 @@ public class CustomLimelight extends SubsystemBase {
     public static LimelightResults getLatestResults(String limelightName) {
 
         long start = System.nanoTime();
-        CustomLimelight.LimelightResults results = new CustomLimelight.LimelightResults();
+        GivenLimelight.LimelightResults results = new GivenLimelight.LimelightResults();
         if (mapper == null) {
             mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
