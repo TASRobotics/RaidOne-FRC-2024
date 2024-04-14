@@ -168,21 +168,27 @@ public class CustomLimelight extends SubsystemBase {
     //classify targets as cones or cubes (depending on config)
     public static class LimelightTarget_Classifier {
 
+        //what class is it
         @JsonProperty("class")
         public String className;
 
+        //ID of said class
         @JsonProperty("classID")
         public double classID;
 
+        //how sure are you that the target is in that class
         @JsonProperty("conf")
         public double confidence;
 
+        //what zone is the target in
         @JsonProperty("zone")
         public double zone;
 
+        //target x offest
         @JsonProperty("tx")
         public double tx;
 
+        //target x pixels
         @JsonProperty("txp")
         public double tx_pixels;
 
@@ -192,6 +198,8 @@ public class CustomLimelight extends SubsystemBase {
         @JsonProperty("typ")
         public double ty_pixels;
 
+
+        //constructor class, nothing is set up yet, should add later
         public  LimelightTarget_Classifier() {
         }
     }
@@ -199,6 +207,7 @@ public class CustomLimelight extends SubsystemBase {
     //detect targets + provide information on position and size and distance to the target
     public static class LimelightTarget_Detector {
 
+        //class of target
         @JsonProperty("class")
         public String className;
 
@@ -223,10 +232,13 @@ public class CustomLimelight extends SubsystemBase {
         @JsonProperty("typ")
         public double ty_pixels;
 
+
+        //constructor class, nothing is set up yet, should add later
         public LimelightTarget_Detector() {
         }
     }
 
+    //find results
     public static class Results {
 
         // ID of  pipeline being used
@@ -278,36 +290,44 @@ public class CustomLimelight extends SubsystemBase {
         @JsonProperty("botpose_span")
         public double botpose_span;
        
-        //average distance of the tags used to estimate robot pos (metere)
+        //average distance of the tags used to estimate robot pos (meters)
         @JsonProperty("botpose_avgdist")
         public double botpose_avgdist;
-       
+
+        //average area of the tags used to estimate the robot's pose (square meters)  
         @JsonProperty("botpose_avgarea")
         public double botpose_avgarea;
 
+        //array of three doubles representing the estimated pose of the camera in the robot coordinate system (meters)
         @JsonProperty("t6c_rs")
         public double[] camerapose_robotspace;
 
+        //convert array to pose3d object
         public Pose3d getBotPose3d() {
             return toPose3D(botpose);
         }
     
+        //convert array to pose3d object (based on red tags)
         public Pose3d getBotPose3d_wpiRed() {
             return toPose3D(botpose_wpired);
         }
     
+        //convert array to pose3d object (based on blue tags)
         public Pose3d getBotPose3d_wpiBlue() {
             return toPose3D(botpose_wpiblue);
         }
 
+        //convert array to pose2d object
         public Pose2d getBotPose2d() {
             return toPose2D(botpose);
         }
     
+        //convert array to pose2d object (based on red tags)
         public Pose2d getBotPose2d_wpiRed() {
             return toPose2D(botpose_wpired);
         }
     
+        //convert array to pose2d object (based on blue tags)
         public Pose2d getBotPose2d_wpiBlue() {
             return toPose2D(botpose_wpiblue);
         }
@@ -550,8 +570,6 @@ public class CustomLimelight extends SubsystemBase {
         }
         return null;
     }
-    /////
-    /////
 
     public static double getTX(String limelightName) {
         return getLimelightNTDouble(limelightName, "tx");
