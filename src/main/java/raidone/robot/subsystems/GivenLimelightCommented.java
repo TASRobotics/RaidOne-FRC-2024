@@ -27,7 +27,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class CustomLimelight extends SubsystemBase {
+public class GivenLimelightCommented extends SubsystemBase {
 
     public static enum LedMode {
 		Current, Off, Blink, On
@@ -61,10 +61,10 @@ public class CustomLimelight extends SubsystemBase {
          * c = loc of cam
          * r = loc of robot
          * t = loc of target
-         * "_ts": Target Space (pose relative to the target)
-         * "_fs": Field Space (pose relative to the physical field)
-         * "_rs": Robot Space (pose relative to the robot)
-         * "_cs": Camera Space (pose relative to the camera)
+         * "_ts": Target Space (position relative to the target)
+         * "_fs": Field Space (position relative to the physical field)
+         * "_rs": Robot Space (position relative to the robot)
+         * "_cs": Camera Space (position relative to the camera)
          *
          */ 
 
@@ -332,16 +332,19 @@ public class CustomLimelight extends SubsystemBase {
             return toPose2D(botpose_wpiblue);
         }
 
+        //fiducial targets detected
         @JsonProperty("Fiducial")
         public LimelightTarget_Fiducial[] targets_Fiducials;
-
+        
+        //classifier targets detected
         @JsonProperty("Classifier")
         public LimelightTarget_Classifier[] targets_Classifier;
 
+        //classifier targets detected
         @JsonProperty("Detector")
         public LimelightTarget_Detector[] targets_Detector;
 
-
+        //initialize
         public Results() {
             botpose = new double[6];
             botpose_wpired = new double[6];
@@ -355,11 +358,15 @@ public class CustomLimelight extends SubsystemBase {
     }
 
     public static class LimelightResults {
+
+        //results after targeting
         @JsonProperty("Results")
         public Results targetingResults;
         
+        //error message
         public String error;
 
+        //initialize
         public LimelightResults() {
             targetingResults = new Results();
             error = "";
@@ -369,15 +376,17 @@ public class CustomLimelight extends SubsystemBase {
     }
 
     public static class RawFiducial {
-        public int id;
-        public double txnc;
+        //raw fiducial data
+        public int id; //id of fidulical
+        public double txnc; //nc?? should be explained
         public double tync;
-        public double ta;
+        public double ta; //target area
         public double distToCamera;
         public double distToRobot;
         public double ambiguity;
 
 
+        //get fidulical values to variables from given values
         public RawFiducial(int id, double txnc, double tync, double ta, double distToCamera, double distToRobot, double ambiguity) {
             this.id = id;
             this.txnc = txnc;
@@ -389,16 +398,18 @@ public class CustomLimelight extends SubsystemBase {
         }
     }
 
+    
     public static class PoseEstimate {
-        public Pose2d pose;
-        public double timestampSeconds;
+        public Pose2d pose; //robot pos
+        public double timestampSeconds; //
         public double latency;
         public int tagCount;
         public double tagSpan;
         public double avgTagDist;
         public double avgTagArea;
-        public RawFiducial[] rawFiducials; 
-
+        public RawFiducial[] rawFiducials;
+        
+        //get position values to variables from given values
         public PoseEstimate(Pose2d pose, double timestampSeconds, double latency, 
             int tagCount, double tagSpan, double avgTagDist, 
             double avgTagArea, RawFiducial[] rawFiducials) {
@@ -414,13 +425,14 @@ public class CustomLimelight extends SubsystemBase {
         }
     }
 
-    private static ObjectMapper mapper;
+    private static ObjectMapper mapper; //converts objects to JSON file and vice vers
 
     /**
      * Print JSON Parse time to the console in milliseconds
      */
-    static boolean profileJSON = false;
+    static boolean profileJSON = false; //is it a JSON?
 
+    //Remove name
     static final String sanitizeName(String name) {
         if (name == "" || name == null) {
             return "limelight";
@@ -428,22 +440,26 @@ public class CustomLimelight extends SubsystemBase {
         return name;
     }
 
+    //convert data to pose3D
     private static Pose3d toPose3D(double[] inData){
         if(inData.length < 6)
         {
-            //System.err.println("Bad LL 3D Pose Data!");
+            //make a new pose3D object
             return new Pose3d();
+        } else {
+            System.out.println("Bad Pose Data !");
         }
+        //create the vals in the pose3D object
         return new Pose3d(
             new Translation3d(inData[0], inData[1], inData[2]),
             new Rotation3d(Units.degreesToRadians(inData[3]), Units.degreesToRadians(inData[4]),
                     Units.degreesToRadians(inData[5])));
     }
 
+    //convert data to pose2D
     private static Pose2d toPose2D(double[] inData){
         if(inData.length < 6)
         {
-            //System.err.println("Bad LL 2D Pose Data!");
             return new Pose2d();
         }
         Translation2d tran2d = new Translation2d(inData[0], inData[1]);
@@ -451,6 +467,7 @@ public class CustomLimelight extends SubsystemBase {
         return new Pose2d(tran2d, r2d);
     }
 
+    //find the pose of the bot (one of the values)
     private static double extractBotPoseEntry(double[] inData, int position){
         if(inData.length < position+1)
         {
@@ -459,8 +476,9 @@ public class CustomLimelight extends SubsystemBase {
         return inData[position];
     }
 
+    //get the pose estimate from the limelight
     private static PoseEstimate getBotPoseEstimate(String limelightName, String entryName) {
-        var poseEntry = CustomLimelight.getLimelightNTTableEntry(limelightName, entryName);
+        var poseEntry = GivenLimelightCommented.getLimelightNTTableEntry(limelightName, entryName);
         var poseArray = poseEntry.getDoubleArray(new double[0]);
         var pose = toPose2D(poseArray);
         double latency = extractBotPoseEntry(poseArray,6);
@@ -950,7 +968,7 @@ public class CustomLimelight extends SubsystemBase {
     public static LimelightResults getLatestResults(String limelightName) {
 
         long start = System.nanoTime();
-        CustomLimelight.LimelightResults results = new CustomLimelight.LimelightResults();
+        GivenLimelightCommented.LimelightResults results = new GivenLimelightCommented.LimelightResults();
         if (mapper == null) {
             mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
