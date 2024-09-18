@@ -1,5 +1,7 @@
 package raidone.robot;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -11,6 +13,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+
+        public static final String CANIVORE_NAME = "seCANdary";
 
     public static final class Swerve {
 
@@ -115,7 +119,9 @@ public final class Constants {
     public static final class Arm {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
-
+        public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+        public static final InvertedValue inversion = InvertedValue.Clockwise_Positive;
+        
         public static final State SCORINGPOS = new State(-33, 0);
         public static final double SOFTLIMIT = SCORINGPOS.position - 2;
         public static final State INTAKEPOS = new State(0.0, 0);
@@ -158,10 +164,13 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
+        public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+        public static final InvertedValue inversion = InvertedValue.Clockwise_Positive;
         public static final State SCORINGPOS = new State(-23.0, 0);
         public static final State INTAKEPOS = new State(-47.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);
 
+        public static final double homeSpeed = -0.4;
         public static final double kP = 0.08;
         public static final double kI = 0.0;
         public static final double kD = 0.002;

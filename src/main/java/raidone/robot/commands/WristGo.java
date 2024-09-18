@@ -6,27 +6,30 @@ import raidone.robot.subsystems.Wrist;
 
 public class WristGo extends Command {
     private Wrist wrist;
-    private double setpoint;
+    private double speed;
 
-    public WristGo(double setpoint) {
-        this.wrist = Wrist.wristSys;
-        this.setpoint = setpoint;
+    public WristGo(double speed) {
+        this.wrist = Wrist.system();
+        this.speed = speed;
         
         addRequirements(this.wrist);
     }
 
     @Override
     public void execute() {
-        wrist.setPos(setpoint);
+        //wrist.setPos(setpoint);
+        wrist.percentOut(speed);
     }
 
-    @Override
-    public boolean isFinished() {
-        return Math.abs(wrist.getEncoder().getPosition() - setpoint) <= 0.2;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     //return Math.abs(wrist.getEncoder().getPosition() - setpoint) <= 0.2;
+    //     return true;
+    // }
 
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);
+        //super.end(interrupted);
+        wrist.stopMotors();
     }
 }

@@ -14,7 +14,7 @@ public class IntakeIn extends Command {
 
     public IntakeIn(double p) {
         intake = Intake.system();
-        percent = p;
+        percent = p ;
         
         addRequirements(this.intake);
     }

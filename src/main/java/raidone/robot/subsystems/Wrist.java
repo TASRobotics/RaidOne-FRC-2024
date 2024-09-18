@@ -1,93 +1,163 @@
 package raidone.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkLimitSwitch.Type;
+import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import raidone.robot.Constants;
+import raidone.robot.RobotContainer;
 
 import static raidone.robot.Constants.Wrist.*;
 
-public class Wrist extends SubsystemBase {
-    private CANSparkMax wrist, follower;
-    private SparkPIDController pid;
-    private RelativeEncoder encoder;
-    private SparkLimitSwitch limit1;
-    private SparkLimitSwitch limit2;
 
-    public static Wrist wristSys = new Wrist();
+public class Wrist extends SubsystemBase{
+    private static Wrist wrist = new Wrist();
+    private TalonFX m_wrist;
+    private TalonFX m_follower;
+    private boolean isHomed;
+    private static CANifier limitCanifier;
+    private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
 
-    private Wrist() {
-        System.out.println("Wrist Subsystem Init");
+    private boolean reverseLimit = false;
 
-        wrist = new CANSparkMax(WRIST_MOTOR_ID, MotorType.kBrushless);
-        wrist.restoreFactoryDefaults();
-        wrist.setInverted(true);
-        wrist.setIdleMode(IdleMode.kBrake);
-        wrist.setSmartCurrentLimit(CURRENT_LIMIT);
+    public Wrist() {
+        limitCanifier = RobotContainer.getCANifier();
+        System.out.println("Wrist init");
+        isHomed = false;
 
-        follower = new CANSparkMax(WRIST_FOLLOW_ID, MotorType.kBrushless);
-        follower.restoreFactoryDefaults();
-        follower.setIdleMode(IdleMode.kBrake);
-        follower.follow(wrist, true);
+        m_wrist = new TalonFX(Constants.Wrist.WRIST_MOTOR_ID, "rio");
+        m_follower = new TalonFX(Constants.Wrist.WRIST_FOLLOW_ID, "rio");
 
-        pid = wrist.getPIDController();
-        pid.setP(kP, 0);
-        pid.setI(kI, 0);
-        pid.setD(kD, 0);
-        pid.setIZone(kIz, 0);
-        pid.setFF(kFF, 0);
+        var currentConfigs = new MotorOutputConfigs();
 
-        encoder = wrist.getEncoder();
+         // The left motor is CW+
+         //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
+         currentConfigs.withInverted(Constants.Wrist.inversion);
+         currentConfigs.withNeutralMode(Constants.Wrist.neutralMode);
+         m_wrist.getConfigurator().apply(currentConfigs);
 
-        limit1 = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit1.enableLimitSwitch(true);
+        
+         // Ensure our followers are following their respective leader
+         m_follower.setControl(new Follower(m_wrist.getDeviceID(), true));
+       
+        //m_wrist.setNeutralMode(NeutralModeValue.Coast);
+        //m_follower.setNeutralMode(NeutralModeValue.Coast);
 
-        limit2 = wrist.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit2.enableLimitSwitch(true);
+        //m_pid = m_wrist.getPIDController();
+        //m_encoder = m_wrist.getEncoder();
+        //s_limit = m_wrist.getForwardLimitSwitch(Type.kNormallyOpen);
+
+        //m_follower.follow(m_wrist, true);
+
+        // m_pid.setP(kP);
+        // m_pid.setI(kI);
+        // m_pid.setD(kD);
+        // m_pid.setIZone(kIz);
+        // m_pid.setFF(kFF);
+        // m_pid.setOutputRange(kMinOutput, kMaxOutput);
+
+        // m_pid.setSmartMotionMaxVelocity(maxVel, 0);
+        // m_pid.setSmartMotionMinOutputVelocity(minVel, 0);
+        // m_pid.setSmartMotionMaxAccel(maxAcc, 0);
+        // m_pid.setSmartMotionAllowedClosedLoopError(allowedErr, 0);
+
+        // SmartDashboard.putNumber("P Gain", kP);
+        // SmartDashboard.putNumber("I Gain", kI);
+        // SmartDashboard.putNumber("D Gain", kD);
+        // SmartDashboard.putNumber("I Zone", kIz);
+        // SmartDashboard.putNumber("Feed Forward", kFF);
+        // SmartDashboard.putNumber("Max Output", kMaxOutput);
+        // SmartDashboard.putNumber("Min Output", kMinOutput);
+
+        // // display Smart Motion coefficients
+        // SmartDashboard.putNumber("Max Velocity", maxVel);
+        // SmartDashboard.putNumber("Min Velocity", minVel);
+        // SmartDashboard.putNumber("Max Acceleration", maxAcc);
+        // SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
+        // SmartDashboard.putNumber("Set Position", setpoint);
     }
 
-    public void trapezoidToPID(State output) {
-        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0,
-                                                                             // FEED_FORWARD.calculate(output.position,
-                                                                             // output.velocity));
-        // SmartDashboard.putNumber("Wrist Trapazoid setpoint", output.position);
-    }
+    public void percentOut(double speed){
+        dutyCycle.Output = speed;
+        m_wrist.setControl(dutyCycle.withLimitReverseMotion(reverseLimit));
 
-    public State currentState() {
-        return new State(wrist.getEncoder().getPosition(), wrist.getEncoder().getVelocity());
     }
 
     public void stopMotors() {
-        wrist.stopMotor();
+        m_wrist.stopMotor();
     }
 
-    public void setPos(double setpoint) {
-        pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        // SmartDashboard.putNumber("processVariable", encoder.getPosition());
+    public void setPos() {
+        
+        // if(driver.getRawButton(XboxController.Button.kA.value)){
+        //     //setpoint = SCORINGPOS;
+        // }else if(driver.getRawButton(XboxController.Button.kB.value)){
+        //     //setpoint = INTAKEPOS;
+        // }
+        // m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
+        // SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
 
-    public void home() {
-        wrist.set(0.5);
+    public void home(){
+        //m_wrist.set(-0.1);
+        dutyCycle.Output = Constants.Wrist.homeSpeed;
+        m_wrist.setControl(dutyCycle.withLimitReverseMotion(reverseLimit));
     }
 
-    public RelativeEncoder getEncoder() {
-        return encoder;
+    public boolean isHomed(){
+         if(reverseLimit){
+            isHomed = true;
+            m_wrist.setPosition(0);
+        }else{
+            isHomed = false;
+        }
+         return isHomed;
     }
 
-    public boolean getLimit() {
-        if (limit1.isPressed() || limit2.isPressed())
-            encoder.setPosition(0);
-        return limit1.isPressed() || limit2.isPressed();
+    @Override
+    public void periodic(){
+        getCANifierValues();
+        SmartDashboard.putNumber("wrist encoder", m_wrist.getPosition().getValueAsDouble());
+        if(reverseLimit){
+            m_wrist.setPosition(0);
+        }
+        // m_pid.setP(SmartDashboard.getNumber("P Gain", 0));
+        // m_pid.setI(SmartDashboard.getNumber("I Gain", 0));
+        // m_pid.setD(SmartDashboard.getNumber("D Gain", 0));
+        // m_pid.setIZone(SmartDashboard.getNumber("I Zone", 0));
+        // m_pid.setFF(SmartDashboard.getNumber("Feed Forward", 0));
+
+        // m_pid.setOutputRange(
+        //     SmartDashboard.getNumber("Max Output", 0),
+        //     SmartDashboard.getNumber("Min Output", 0));
+
+        // m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Max Velocity", 0), 0);
+        // m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Min Velocity", 0), 0);
+        // m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Max Acceleration", 0), 0);
+        // m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Allowed Closed Loop Error", 0),0); 
+    }
+
+    public void getCANifierValues(){
+        CANifier.PinValues values = new CANifier.PinValues();
+        limitCanifier.getGeneralInputs(values);
+        boolean reverseLeftLimit = values.QUAD_B;
+        boolean reverseRightLimit = values.LIMR;
+        reverseLimit = !reverseLeftLimit || !reverseRightLimit;
+        SmartDashboard.putBoolean("Wrist_Right",reverseRightLimit);
+        SmartDashboard.putBoolean("Wrist_Left",reverseLeftLimit);
     }
 
     public static Wrist system() {
-        return wristSys;
+        return wrist;
     }
 }

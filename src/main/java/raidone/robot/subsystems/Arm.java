@@ -1,105 +1,122 @@
 package raidone.robot.subsystems;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import raidone.robot.Constants;
+import raidone.robot.RobotContainer;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkLimitSwitch.Type;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkBase.SoftLimitDirection;
+import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import static raidone.robot.Constants.Arm.*;
 
-public class Arm extends SubsystemBase {
-    private CANSparkMax arm;
-    private CANSparkMax follow;
-
-    private RelativeEncoder encoder;
-    private SparkPIDController pid;
-    private SparkLimitSwitch limit1, limit2;
+public class Arm extends SubsystemBase{
 
     private static Arm armSys = new Arm();
 
-    private Arm() {
-        System.out.println("Arm Subsystem init");
+    private TalonFX m_arm;
+    private TalonFX m_follower;
+    private boolean isHomed;
+    private static CANifier limitCanifier;
+    private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
 
-        arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
-        arm.restoreFactoryDefaults();
-        arm.setIdleMode(IdleMode.kBrake);
-        arm.setSoftLimit(SoftLimitDirection.kReverse, (float) SOFTLIMIT);
-        arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        arm.setSmartCurrentLimit(CURRENT_LIMIT);
+    private boolean reverseLimit = false;
+  
+    public Arm(){
+        limitCanifier = RobotContainer.getCANifier();
+        System.out.println("Arm init");
+        isHomed = false;
 
-        follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
-        follow.restoreFactoryDefaults();
-        follow.setIdleMode(IdleMode.kBrake);
-        follow.follow(arm, true);
+        
+        m_arm = new TalonFX(Constants.Arm.ARM_MOTOR_ID, "rio");
+        m_follower = new TalonFX(Constants.Arm.ARM_FOLLOW_ID, "rio");
 
-        pid = arm.getPIDController();
-        pid.setP(kP, 0);
-        pid.setI(kI, 0);
-        pid.setD(kD, 0);
-        pid.setIZone(kIz, 0);
-        pid.setFF(kFF, 0);
-        pid.setOutputRange(MIN_OUTPUT, MAX_OUTPUT);
+        var currentConfigs = new MotorOutputConfigs();
 
-        encoder = arm.getEncoder();
+         // The left motor is CCW+
+         currentConfigs.withInverted(Constants.Arm.inversion);
+         currentConfigs.withNeutralMode(Constants.Arm.neutralMode);
+         m_arm.getConfigurator().apply(currentConfigs);
 
-        limit1 = arm.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit1.enableLimitSwitch(true);
-
-        limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit2.enableLimitSwitch(true);
+        
+         // Ensure our followers are following their respective leader
+         m_follower.setControl(new Follower(m_arm.getDeviceID(),false));
+       
+        
     }
 
-    public void trapezoidToPID(State output) {
-        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0,
-                                                                             // FEED_FORWARD.calculate(output.position,
-                                                                // output.velocity));
-        // SmartDashboard.putNumber("Arm Trapazoid setpoint", output.position);
+    public void stopMotors(){
+        //m_arm.stopMotor();
     }
 
-    public State currentState() {
-        return new State(arm.getEncoder().getPosition(), arm.getEncoder().getVelocity());
+    public boolean getLimit(){
+        //boolean limitStatus = s_limit1.isPressed() || s_limit2.isPressed();
+      //  return limitStatus;
+      return true;
     }
 
-    public void stopMotors() {
-        arm.stopMotor();
-        follow.stopMotor();
+    public void run(double speed){
+     //   m_arm.set(speed);
     }
 
-    public void setPos(double setpoint) {
-        pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        // SmartDashboard.putNumber("processVariable", encoder.getPosition());
+    public void setPos(){
+        
+        // if(driver.getRawButton(XboxController.Button.kA.value)){
+        //     //setpoint = SCORINGPOS;
+        // }else if(driver.getRawButton(XboxController.Button.kB.value)){
+        //     //setpoint = INTAKEPOS;
+        // }
+        // m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
+        // SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
 
-    public void home() {
-        arm.set(0.5);
+    public void home(){
+      //  m_arm.set(0.1);
     }
 
-    public RelativeEncoder getEncoder() {
-        return encoder;
+    public boolean isHomed(){
+        // if(s_limit1.isPressed() || s_limit2.isPressed()){
+        //     isHomed = true;
+        //     m_encoder.setPosition(0);
+        // }else{
+        //     isHomed = false;
+        // }
+        //return isHomed;
+        return true;
     }
 
-    public boolean getLimit() {
-        if (limit1.isPressed() || limit2.isPressed())
-            encoder.setPosition(0);
-        return limit1.isPressed() || limit2.isPressed();
+    public static Arm system(){
+        return armSys;
     }
 
     @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
-        // SmartDashboard.putBoolean("arm limit", limit1.isPressed());
-        // SmartDashboard.putBoolean("follow limit", limit2.isPressed());
-    }
+    public void periodic(){
+        //SmartDashboard.putNumber("arm position", m_encoder.getPosition());
+        CANifier.PinValues values = new CANifier.PinValues();
+        limitCanifier.getGeneralInputs(values);
+        SmartDashboard.putBoolean("Arm_Left",values.LIMF);
+        SmartDashboard.putBoolean("Arm_Right",values.QUAD_A);
+        // m_pid.setP(SmartDashboard.getNumber("Arm P Gain", 0));
+        // m_pid.setI(SmartDashboard.getNumber("Arm I Gain", 0));
+        // m_pid.setD(SmartDashboard.getNumber("Arm D Gain", 0));
+        // m_pid.setIZone(SmartDashboard.getNumber("Arm I Zone", 0));
+        // m_pid.setFF(SmartDashboard.getNumber("Arm Feed Forward", 0));
 
-    public static Arm system() {
-        return armSys;
+        //if((getLimit() || m_encoder.getPosition()<0.1)){
+        //    stopMotors();
+        //}
+
+        // m_pid.setOutputRange(
+        //     SmartDashboard.getNumber("Arm Max Output", 0),
+        //     SmartDashboard.getNumber("Arm Min Output", 0));
+
+        // m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Arm Max Velocity", 0), 0);
+        // m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Arm Min Velocity", 0), 0);
+        // m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Arm Max Acceleration", 0), 0);
+        // m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Arm Allowed Closed Loop Error", 0),0);        
     }
 }

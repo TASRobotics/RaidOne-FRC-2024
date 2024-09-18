@@ -12,12 +12,12 @@ public class ResetArmEncoder extends Command{
     }
 
     public void execute(){
-        if(arm.getLimit()) {
-            arm.getEncoder().setPosition(0);
-        }
-        if (arm.getEncoder().getPosition() > -5) {
-            arm.home();
-        }
+        // if(arm.getLimit()) {
+        //    arm.getEncoder().setPosition(0);
+        // }
+        // if (arm.getEncoder().getPosition() > -5) {
+        //     arm.home();
+        // }
     }
 
     @Override

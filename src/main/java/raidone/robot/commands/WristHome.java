@@ -7,7 +7,7 @@ public class WristHome extends Command {
     private Wrist wrist;
 
     public WristHome() {
-        this.wrist = Wrist.wristSys;
+        this.wrist = Wrist.system();
         
         addRequirements(this.wrist);
     }
@@ -19,7 +19,8 @@ public class WristHome extends Command {
 
     @Override
     public boolean isFinished() {
-        return wrist.getLimit();
+        return wrist.isHomed();
+        //return true;
     }
 
     @Override
