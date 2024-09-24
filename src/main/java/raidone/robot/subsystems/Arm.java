@@ -6,11 +6,15 @@ import raidone.robot.Constants;
 import raidone.robot.RobotContainer;
 
 import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
 import static raidone.robot.Constants.Arm.*;
 
@@ -25,6 +29,10 @@ public class Arm extends SubsystemBase{
     private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
 
     private boolean reverseLimit = false;
+
+    private boolean keepReseting = false;
+    private int count = 0;
+    private int countsToReset = 20;
   
     public Arm(){
         limitCanifier = RobotContainer.getCANifier();
@@ -32,35 +40,57 @@ public class Arm extends SubsystemBase{
         isHomed = false;
 
         
-        m_arm = new TalonFX(Constants.Arm.ARM_MOTOR_ID, "rio");
-        m_follower = new TalonFX(Constants.Arm.ARM_FOLLOW_ID, "rio");
+        m_arm = new TalonFX(Constants.Arm.ARM_MOTOR_ID, Constants.Arm.armCANbus);
+        m_follower = new TalonFX(Constants.Arm.ARM_FOLLOW_ID, Constants.Arm.armCANbus);
 
         var currentConfigs = new MotorOutputConfigs();
+        m_arm.getConfigurator().apply(currentConfigs); //apply default config to factory reset
+        m_follower.getConfigurator().apply(currentConfigs);
 
-         // The left motor is CCW+
-         currentConfigs.withInverted(Constants.Arm.inversion);
-         currentConfigs.withNeutralMode(Constants.Arm.neutralMode);
-         m_arm.getConfigurator().apply(currentConfigs);
+        // The left motor is CCW+
+        currentConfigs.withInverted(Constants.Arm.inversion);
+        currentConfigs.withNeutralMode(Constants.Arm.neutralMode);
+
+        m_arm.getConfigurator().apply(currentConfigs);
+        m_follower.getConfigurator().apply(currentConfigs);
+         
+        HardwareLimitSwitchConfigs hardwareLimitConfigs = new HardwareLimitSwitchConfigs();
+        hardwareLimitConfigs.withReverseLimitSource(ReverseLimitSourceValue.LimitSwitchPin);
+        hardwareLimitConfigs.withReverseLimitType(ReverseLimitTypeValue.NormallyOpen);
+        hardwareLimitConfigs.withReverseLimitEnable(false);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(false);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionValue(0);
 
         
+        m_arm.getConfigurator().apply(hardwareLimitConfigs);
+        m_follower.getConfigurator().apply(hardwareLimitConfigs);
+        //
+
+        SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs();
+        softwareLimitSwitchConfigs.withReverseSoftLimitEnable(false);
+        softwareLimitSwitchConfigs.withReverseSoftLimitThreshold(-1);
+        softwareLimitSwitchConfigs.withForwardSoftLimitEnable(true);
+        softwareLimitSwitchConfigs.withForwardSoftLimitThreshold(36);
+
+        m_arm.getConfigurator().apply(softwareLimitSwitchConfigs);
+        m_follower.getConfigurator().apply(softwareLimitSwitchConfigs);
+        
          // Ensure our followers are following their respective leader
-         m_follower.setControl(new Follower(m_arm.getDeviceID(),false));
+         m_follower.setControl(new Follower(m_arm.getDeviceID(),true));
        
         
     }
 
     public void stopMotors(){
-        //m_arm.stopMotor();
+        m_arm.stopMotor();
     }
 
-    public boolean getLimit(){
-        //boolean limitStatus = s_limit1.isPressed() || s_limit2.isPressed();
-      //  return limitStatus;
-      return true;
-    }
 
-    public void run(double speed){
-     //   m_arm.set(speed);
+    public void percentOut(double speed){
+        //dutyCycle.Output = speed;
+        m_arm.setControl(dutyCycle.withOutput(speed));
+        //m_arm.setControl(dutyCycle.withOutput(speed).withLimitReverseMotion(reverseLimit));
+
     }
 
     public void setPos(){
@@ -70,23 +100,23 @@ public class Arm extends SubsystemBase{
         // }else if(driver.getRawButton(XboxController.Button.kB.value)){
         //     //setpoint = INTAKEPOS;
         // }
-        // m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
-        // SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
     }
 
     public void home(){
       //  m_arm.set(0.1);
+      percentOut(-0.3);
     }
 
     public boolean isHomed(){
-        // if(s_limit1.isPressed() || s_limit2.isPressed()){
-        //     isHomed = true;
-        //     m_encoder.setPosition(0);
-        // }else{
-        //     isHomed = false;
-        // }
-        //return isHomed;
-        return true;
+        if(reverseLimit){
+            isHomed = true;
+            m_arm.setPosition(0);
+            count = 0;
+            keepReseting = true;
+        }else{
+            isHomed = false;
+        }
+         return isHomed;
     }
 
     public static Arm system(){
@@ -96,27 +126,33 @@ public class Arm extends SubsystemBase{
     @Override
     public void periodic(){
         //SmartDashboard.putNumber("arm position", m_encoder.getPosition());
+        //CANifier.PinValues values = new CANifier.PinValues();
+        getCANifierValues();
+        SmartDashboard.putNumber("arm encoder", m_arm.getPosition().getValueAsDouble());
+        SmartDashboard.putBoolean("reseting",keepReseting);
+        if(keepReseting){
+            if(reverseLimit){
+                m_arm.setPosition(0);
+            }
+            count++;
+            if(count >= countsToReset){
+                count = 0;
+                keepReseting = false;
+            }
+        }
+     
+    }
+
+    public void getCANifierValues(){
         CANifier.PinValues values = new CANifier.PinValues();
         limitCanifier.getGeneralInputs(values);
-        SmartDashboard.putBoolean("Arm_Left",values.LIMF);
-        SmartDashboard.putBoolean("Arm_Right",values.QUAD_A);
-        // m_pid.setP(SmartDashboard.getNumber("Arm P Gain", 0));
-        // m_pid.setI(SmartDashboard.getNumber("Arm I Gain", 0));
-        // m_pid.setD(SmartDashboard.getNumber("Arm D Gain", 0));
-        // m_pid.setIZone(SmartDashboard.getNumber("Arm I Zone", 0));
-        // m_pid.setFF(SmartDashboard.getNumber("Arm Feed Forward", 0));
-
-        //if((getLimit() || m_encoder.getPosition()<0.1)){
-        //    stopMotors();
-        //}
-
-        // m_pid.setOutputRange(
-        //     SmartDashboard.getNumber("Arm Max Output", 0),
-        //     SmartDashboard.getNumber("Arm Min Output", 0));
-
-        // m_pid.setSmartMotionMaxVelocity(SmartDashboard.getNumber("Arm Max Velocity", 0), 0);
-        // m_pid.setSmartMotionMinOutputVelocity(SmartDashboard.getNumber("Arm Min Velocity", 0), 0);
-        // m_pid.setSmartMotionMaxAccel(SmartDashboard.getNumber("Arm Max Acceleration", 0), 0);
-        // m_pid.setSmartMotionAllowedClosedLoopError(SmartDashboard.getNumber("Arm Allowed Closed Loop Error", 0),0);        
+        boolean reverseLeftLimit = values.LIMF;
+        boolean reverseRightLimit = values.QUAD_A;
+        reverseLimit = !reverseLeftLimit || !reverseRightLimit;
+        SmartDashboard.putBoolean("Arm_Left",reverseLeftLimit);
+        SmartDashboard.putBoolean("Arm_Right",reverseRightLimit);
+        SmartDashboard.putBoolean("Arm_Limits",reverseLimit);
     }
+
+
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
+import raidone.robot.subsystems.Arm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -46,17 +48,22 @@ public class RobotContainer {
     //private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton wristhome = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton wristgo = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton wristgoreverse = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton armhome = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton armgo = new JoystickButton(driver, XboxController.Button.kY.value);
-    
+    private final JoystickButton armgoreverse = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton bothHome = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private SendableChooser<Command> autoChooser;
 
     /* Subsystems */
     private final Wrist wrist = Wrist.system();
+    private final Arm arm = Arm.system();
+
+    CommandSequences sequences = new CommandSequences(this.arm, this.wrist);
     //private final Swerve swerve = Swerve.system();  //new Swerve();
     //private final Wrist wrist = new Wrist();
     //private final Arm arm = new Arm(limitCanifier);
-    private final raidone.robot.subsystems.Arm arm = raidone.robot.subsystems.Arm.system();
+    //private final raidone.robot.subsystems.Arm arm = raidone.robot.subsystems.Arm.system();
     
 
 
@@ -73,7 +80,7 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
-        arm.setDefaultCommand(new ResetArmEncoder());
+        arm.setDefaultCommand(new ArmGo(0));
         wrist.setDefaultCommand(new WristGo(0));
     }
 
@@ -89,10 +96,20 @@ public class RobotContainer {
         /* Driver Buttons */
         //zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
        // zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new Translation2d(0,0), new Rotation2d(0)))));
+        Command wristHomeSequence = sequences.wristHomeSequence();
+        Command armHomeSequence = sequences.armHomeSequence();
+        Command bothHomeSequence = sequences.bothHomeSequence();
+        
+
         wristgo.whileTrue(new WristGo(0.1));
-        wristhome.onTrue(new WristHome());
+        wristgoreverse.whileTrue(new WristGo(-0.1));
+        //wristhome.onTrue(new WristHome().andThen(Commands.waitSeconds(0.5)).andThen(new WristHome()));
+        wristhome.onTrue(wristHomeSequence);
         armgo.whileTrue(new ArmGo(0.1));
-        armhome.onTrue(new ArmHome());
+        armhome.onTrue(armHomeSequence);    
+        //armhome.onTrue(new ArmHome().andThen(Commands.waitSeconds(0.1)).andThen(new ArmHome()));
+        armgoreverse.whileTrue(new ArmGo(-0.1));
+        bothHome.onTrue(bothHomeSequence);
         //setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new AutoWrist(wrist)));
         //home.onTrue(new ArmHome(arm, wrist));
 

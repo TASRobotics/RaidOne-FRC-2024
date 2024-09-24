@@ -119,9 +119,11 @@ public final class Constants {
     public static final class Arm {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
+
         public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
-        public static final InvertedValue inversion = InvertedValue.Clockwise_Positive;
-        
+        public static final InvertedValue inversion = InvertedValue.CounterClockwise_Positive;
+        public static final String armCANbus = "rio";
+
         public static final State SCORINGPOS = new State(-33, 0);
         public static final double SOFTLIMIT = SCORINGPOS.position - 2;
         public static final State INTAKEPOS = new State(0.0, 0);
@@ -166,6 +168,8 @@ public final class Constants {
 
         public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
         public static final InvertedValue inversion = InvertedValue.Clockwise_Positive;
+        public static final String wristCANbus = "rio";
+
         public static final State SCORINGPOS = new State(-23.0, 0);
         public static final State INTAKEPOS = new State(-47.0, 0);
         public static final State HOMEPOS = new State(0.0, 0);

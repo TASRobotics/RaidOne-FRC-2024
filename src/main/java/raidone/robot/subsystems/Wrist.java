@@ -2,6 +2,7 @@ package raidone.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -30,61 +31,31 @@ public class Wrist extends SubsystemBase{
 
     private boolean reverseLimit = false;
 
+    private boolean keepReseting = false;
+    private int count = 0;
+    private int countsToReset = 20;
+
     public Wrist() {
         limitCanifier = RobotContainer.getCANifier();
         System.out.println("Wrist init");
         isHomed = false;
 
-        m_wrist = new TalonFX(Constants.Wrist.WRIST_MOTOR_ID, "rio");
-        m_follower = new TalonFX(Constants.Wrist.WRIST_FOLLOW_ID, "rio");
+        m_wrist = new TalonFX(Constants.Wrist.WRIST_MOTOR_ID, Constants.Wrist.wristCANbus);
+        m_follower = new TalonFX(Constants.Wrist.WRIST_FOLLOW_ID, Constants.Wrist.wristCANbus);
 
         var currentConfigs = new MotorOutputConfigs();
+        m_wrist.getConfigurator().apply(currentConfigs);
 
          // The left motor is CW+
          //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
          currentConfigs.withInverted(Constants.Wrist.inversion);
          currentConfigs.withNeutralMode(Constants.Wrist.neutralMode);
          m_wrist.getConfigurator().apply(currentConfigs);
-
+         m_follower.getConfigurator().apply(currentConfigs);
         
          // Ensure our followers are following their respective leader
          m_follower.setControl(new Follower(m_wrist.getDeviceID(), true));
-       
-        //m_wrist.setNeutralMode(NeutralModeValue.Coast);
-        //m_follower.setNeutralMode(NeutralModeValue.Coast);
 
-        //m_pid = m_wrist.getPIDController();
-        //m_encoder = m_wrist.getEncoder();
-        //s_limit = m_wrist.getForwardLimitSwitch(Type.kNormallyOpen);
-
-        //m_follower.follow(m_wrist, true);
-
-        // m_pid.setP(kP);
-        // m_pid.setI(kI);
-        // m_pid.setD(kD);
-        // m_pid.setIZone(kIz);
-        // m_pid.setFF(kFF);
-        // m_pid.setOutputRange(kMinOutput, kMaxOutput);
-
-        // m_pid.setSmartMotionMaxVelocity(maxVel, 0);
-        // m_pid.setSmartMotionMinOutputVelocity(minVel, 0);
-        // m_pid.setSmartMotionMaxAccel(maxAcc, 0);
-        // m_pid.setSmartMotionAllowedClosedLoopError(allowedErr, 0);
-
-        // SmartDashboard.putNumber("P Gain", kP);
-        // SmartDashboard.putNumber("I Gain", kI);
-        // SmartDashboard.putNumber("D Gain", kD);
-        // SmartDashboard.putNumber("I Zone", kIz);
-        // SmartDashboard.putNumber("Feed Forward", kFF);
-        // SmartDashboard.putNumber("Max Output", kMaxOutput);
-        // SmartDashboard.putNumber("Min Output", kMinOutput);
-
-        // // display Smart Motion coefficients
-        // SmartDashboard.putNumber("Max Velocity", maxVel);
-        // SmartDashboard.putNumber("Min Velocity", minVel);
-        // SmartDashboard.putNumber("Max Acceleration", maxAcc);
-        // SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-        // SmartDashboard.putNumber("Set Position", setpoint);
     }
 
     public void percentOut(double speed){
@@ -98,18 +69,10 @@ public class Wrist extends SubsystemBase{
     }
 
     public void setPos() {
-        
-        // if(driver.getRawButton(XboxController.Button.kA.value)){
-        //     //setpoint = SCORINGPOS;
-        // }else if(driver.getRawButton(XboxController.Button.kB.value)){
-        //     //setpoint = INTAKEPOS;
-        // }
-        // m_pid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
-        // SmartDashboard.putNumber("processVariable", m_encoder.getPosition());
+   
     }
 
     public void home(){
-        //m_wrist.set(-0.1);
         dutyCycle.Output = Constants.Wrist.homeSpeed;
         m_wrist.setControl(dutyCycle.withLimitReverseMotion(reverseLimit));
     }
@@ -118,6 +81,8 @@ public class Wrist extends SubsystemBase{
          if(reverseLimit){
             isHomed = true;
             m_wrist.setPosition(0);
+            count = 0;
+            keepReseting = true;
         }else{
             isHomed = false;
         }
@@ -128,9 +93,20 @@ public class Wrist extends SubsystemBase{
     public void periodic(){
         getCANifierValues();
         SmartDashboard.putNumber("wrist encoder", m_wrist.getPosition().getValueAsDouble());
-        if(reverseLimit){
-            m_wrist.setPosition(0);
+        if(keepReseting){
+            if(reverseLimit){
+                m_wrist.setPosition(0);
+            }
+            count++;
+            if(count >= countsToReset){
+                count = 0;
+                keepReseting = false;
+            }
         }
+        //SmartDashboard.putBoolean("wrist coast", m_wrist
+        //if(reverseLimit && !isHomed()){
+        //    m_wrist.setPosition(0);
+        //}
         // m_pid.setP(SmartDashboard.getNumber("P Gain", 0));
         // m_pid.setI(SmartDashboard.getNumber("I Gain", 0));
         // m_pid.setD(SmartDashboard.getNumber("D Gain", 0));
@@ -159,5 +135,26 @@ public class Wrist extends SubsystemBase{
 
     public static Wrist system() {
         return wrist;
+    }
+
+    public void enableBrake(){
+        var currentConfigs = new MotorOutputConfigs();
+        currentConfigs.withInverted(Constants.Wrist.inversion);
+         currentConfigs.withNeutralMode(NeutralModeValue.Brake);
+         m_wrist.getConfigurator().apply(currentConfigs);
+         m_follower.getConfigurator().apply(currentConfigs);
+        
+         // Ensure our followers are following their respective leader
+         m_follower.setControl(new Follower(m_wrist.getDeviceID(), true));
+    }
+    public void enableCoast(){
+        var currentConfigs = new MotorOutputConfigs();
+        currentConfigs.withInverted(Constants.Wrist.inversion);
+         currentConfigs.withNeutralMode(NeutralModeValue.Coast);
+         m_wrist.getConfigurator().apply(currentConfigs);
+         m_follower.getConfigurator().apply(currentConfigs);
+        
+         // Ensure our followers are following their respective leader
+         m_follower.setControl(new Follower(m_wrist.getDeviceID(), true));
     }
 }
