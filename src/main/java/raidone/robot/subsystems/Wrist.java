@@ -3,7 +3,12 @@ package raidone.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -43,15 +48,16 @@ public class Wrist extends SubsystemBase{
         m_wrist = new TalonFX(Constants.Wrist.WRIST_MOTOR_ID, Constants.Wrist.wristCANbus);
         m_follower = new TalonFX(Constants.Wrist.WRIST_FOLLOW_ID, Constants.Wrist.wristCANbus);
 
-        var currentConfigs = new MotorOutputConfigs();
-        m_wrist.getConfigurator().apply(currentConfigs);
+        //var currentConfigs = new MotorOutputConfigs();
+        //m_wrist.getConfigurator().apply(currentConfigs);
 
          // The left motor is CW+
          //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
-         currentConfigs.withInverted(Constants.Wrist.inversion);
-         currentConfigs.withNeutralMode(Constants.Wrist.neutralMode);
-         m_wrist.getConfigurator().apply(currentConfigs);
-         m_follower.getConfigurator().apply(currentConfigs);
+         //currentConfigs.withInverted(Constants.Wrist.inversion);
+         //currentConfigs.withNeutralMode(Constants.Wrist.neutralMode);
+         TalonFXConfiguration config = getDefaultConfig();
+         m_wrist.getConfigurator().apply(config);
+         m_follower.getConfigurator().apply(config);
         
          // Ensure our followers are following their respective leader
          m_follower.setControl(new Follower(m_wrist.getDeviceID(), true));
@@ -156,5 +162,61 @@ public class Wrist extends SubsystemBase{
         
          // Ensure our followers are following their respective leader
          m_follower.setControl(new Follower(m_wrist.getDeviceID(), true));
+    }
+
+    private TalonFXConfiguration getDefaultConfig() {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        var motorOutputConfig = new MotorOutputConfigs();
+        m_wrist.getConfigurator().apply(motorOutputConfig);
+
+        // The left motor is CW+
+        //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
+        motorOutputConfig.withInverted(Constants.Wrist.inversion);
+        motorOutputConfig.withNeutralMode(Constants.Wrist.neutralMode);
+        config.withMotorOutput(motorOutputConfig);
+        
+        CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
+        currentLimitsConfigs.withSupplyCurrentLimit(Constants.Wrist.supplyCurrentLimit);
+        currentLimitsConfigs.withSupplyCurrentLimitEnable(Constants.Wrist.supplyCurrentEnable);
+        currentLimitsConfigs.withSupplyCurrentThreshold(Constants.Wrist.supplyCurrentThreshold);
+        currentLimitsConfigs.withSupplyTimeThreshold(Constants.Wrist.supplyTimeThreshold);
+        config.withCurrentLimits(currentLimitsConfigs);
+
+         // Velocity PID Configuration
+        Slot0Configs slot0Configs = new Slot0Configs();
+        // slot0Configs.withKV(Constants.Wrist.kV);
+        slot0Configs.withKP(Constants.Wrist.kP);
+        slot0Configs.withKI(Constants.Wrist.kI);
+        slot0Configs.withKD(Constants.Wrist.kD);
+        config.withSlot0(slot0Configs);
+
+        // Motion Magic Configuration
+        MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+        motionMagicConfigs.withMotionMagicCruiseVelocity(Constants.Wrist.motionMagicVelocity);
+        motionMagicConfigs.withMotionMagicAcceleration(Constants.Wrist.motionMagicAccel);
+        motionMagicConfigs.withMotionMagicJerk(Constants.Wrist.motionMagicJerk);
+        config.withMotionMagic(motionMagicConfigs);
+
+        // Software Limit Switch Configuration 
+        config.withSoftwareLimitSwitch(Constants.Wrist.normalSoftLimits);
+
+        // Hardware Limit Switch Configuration
+        HardwareLimitSwitchConfigs hardwareLimitConfigs = new HardwareLimitSwitchConfigs();
+        hardwareLimitConfigs.withReverseLimitSource(Constants.Wrist.reverseLimitSource);
+        hardwareLimitConfigs.withReverseLimitType(Constants.Wrist.reverseLimitType);
+        hardwareLimitConfigs.withReverseLimitEnable(Constants.Wrist.reverseLimitEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(Constants.Wrist.reverseLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionValue(Constants.Wrist.reverseLimitAutosetPositionValue);
+
+        hardwareLimitConfigs.withForwardLimitSource(Constants.Wrist.forwardLimitSource);
+        hardwareLimitConfigs.withForwardLimitType(Constants.Wrist.forwardLimitType);
+        hardwareLimitConfigs.withForwardLimitEnable(Constants.Wrist.forwardLimitEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionEnable(Constants.Wrist.forwardLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionValue(Constants.Wrist.forwardLimitAutosetPositionValue);
+        config.withHardwareLimitSwitch(hardwareLimitConfigs);
+
+        return config;
+     
     }
 }

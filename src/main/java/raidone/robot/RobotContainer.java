@@ -1,6 +1,7 @@
 package raidone.robot;
 
 import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
-import raidone.robot.subsystems.Arm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -48,9 +48,9 @@ public class RobotContainer {
     //private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton wristhome = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton wristgo = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton wristgoreverse = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton wristgoreverse = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton armhome = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton armgo = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton armgo = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton armgoreverse = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton bothHome = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private SendableChooser<Command> autoChooser;
@@ -131,5 +131,7 @@ public class RobotContainer {
     public static CANifier getCANifier() {
         return limitCanifier;
     }
+
+    
 
 }
