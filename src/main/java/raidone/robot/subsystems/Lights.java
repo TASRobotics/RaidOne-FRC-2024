@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import raidone.lib.util.ColorConverter;
 import raidone.robot.Constants;
+import raidone.robot.RobotContainer;
+import raidone.robot.RobotContainer.RobotState;
 import raidone.robot.subsystems.Intake.IntakeStateEnum;
 
 import com.ctre.phoenix.led.*;
@@ -29,8 +31,8 @@ public class Lights extends SubsystemBase {
     //private boolean m_last5V = false;
     //private AnimationTypes m_currentAnimation;
     private boolean m_setAnim = false; //used to prevent unneccesary refreshes in periodic()
-
     private Intake intake = Intake.system(); 
+    RobotContainer.RobotState robotState;
 
     public enum AnimationTypes { //list of all possible animations by name
         ColorFlow,
@@ -58,6 +60,8 @@ public class Lights extends SubsystemBase {
         configAll.vBatOutputMode = VBatOutputMode.Modulated;
         //m_candle.configV5Enabled(m_last5V);
         m_candle.configAllSettings(configAll, 100);
+        robotState = RobotState.IDLE;
+        System.out.println("Arm init");
 
         
     }
@@ -141,11 +145,15 @@ public class Lights extends SubsystemBase {
     @Override
     public void periodic() {
         IntakeStateEnum intakeState = intake.getState();
+        
+        
 
-        if(intakeState == IntakeStateEnum.IDLE_NO_NOTE){
+        if(intakeState == IntakeStateEnum.IDLE_NO_NOTE || intakeState == IntakeStateEnum.RUNNING_NO_NOTE){
             changeAnimation(AnimationTypes.ColorFlow);
-        } else if (intakeState == IntakeStateEnum.IDLE_HAS_NOTE){
+            robotState = RobotContainer.RobotState.HOMED_NO_NOTE;
+        } else if (intakeState == IntakeStateEnum.IDLE_HAS_NOTE || intakeState == IntakeStateEnum.RUNNING_HAS_NOTE){
             changeAnimation(AnimationTypes.Fire);
+            robotState = RobotContainer.RobotState.HOMED_HAS_NOTE;
         }
         
 
@@ -158,7 +166,6 @@ public class Lights extends SubsystemBase {
             }
         } else {
             m_candle.animate(m_toAnimate);
-            //m_candle.animate(m_toAnimate, m_candleChannel);
             m_setAnim = false;
         }
         

@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 //import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import raidone.robot.MotorConfigConstants;
 import raidone.robot.Constants;
 import raidone.robot.RobotContainer;
 
@@ -45,13 +46,6 @@ public class Wrist extends SubsystemBase{
         m_wrist = new TalonFX(Constants.Wrist.WRIST_MOTOR_ID, Constants.Wrist.wristCANbus);
         m_follower = new TalonFX(Constants.Wrist.WRIST_FOLLOW_ID, Constants.Wrist.wristCANbus);
 
-        //var currentConfigs = new MotorOutputConfigs();
-        //m_wrist.getConfigurator().apply(currentConfigs);
-
-         // The left motor is CW+
-         //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
-         //currentConfigs.withInverted(Constants.Wrist.inversion);
-         //currentConfigs.withNeutralMode(Constants.Wrist.neutralMode);
          TalonFXConfiguration config = getDefaultConfig();
          m_wrist.getConfigurator().apply(config);
          m_follower.getConfigurator().apply(config);
@@ -107,10 +101,6 @@ public class Wrist extends SubsystemBase{
                 keepReseting = false;
             }
         }
-        //SmartDashboard.putBoolean("wrist coast", m_wrist
-        //if(reverseLimit && !isHomed()){
-        //    m_wrist.setPosition(0);
-        //}
         // m_pid.setP(SmartDashboard.getNumber("P Gain", 0));
         // m_pid.setI(SmartDashboard.getNumber("I Gain", 0));
         // m_pid.setD(SmartDashboard.getNumber("D Gain", 0));
@@ -143,7 +133,7 @@ public class Wrist extends SubsystemBase{
 
     public void enableBrake(){
         var currentConfigs = new MotorOutputConfigs();
-        currentConfigs.withInverted(Constants.Wrist.inversion);
+        currentConfigs.withInverted(MotorConfigConstants.Wrist.inversion);
          currentConfigs.withNeutralMode(NeutralModeValue.Brake);
          m_wrist.getConfigurator().apply(currentConfigs);
          m_follower.getConfigurator().apply(currentConfigs);
@@ -153,7 +143,7 @@ public class Wrist extends SubsystemBase{
     }
     public void enableCoast(){
         var currentConfigs = new MotorOutputConfigs();
-        currentConfigs.withInverted(Constants.Wrist.inversion);
+        currentConfigs.withInverted(MotorConfigConstants.Wrist.inversion);
          currentConfigs.withNeutralMode(NeutralModeValue.Coast);
          m_wrist.getConfigurator().apply(currentConfigs);
          m_follower.getConfigurator().apply(currentConfigs);
@@ -170,48 +160,48 @@ public class Wrist extends SubsystemBase{
 
         // The left motor is CW+
         //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
-        motorOutputConfig.withInverted(Constants.Wrist.inversion);
-        motorOutputConfig.withNeutralMode(Constants.Wrist.neutralMode);
+        motorOutputConfig.withInverted(MotorConfigConstants.Wrist.inversion);
+        motorOutputConfig.withNeutralMode(MotorConfigConstants.Wrist.neutralMode);
         config.withMotorOutput(motorOutputConfig);
         
         CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
-        currentLimitsConfigs.withSupplyCurrentLimit(Constants.Wrist.supplyCurrentLimit);
-        currentLimitsConfigs.withSupplyCurrentLimitEnable(Constants.Wrist.supplyCurrentEnable);
-        currentLimitsConfigs.withSupplyCurrentThreshold(Constants.Wrist.supplyCurrentThreshold);
-        currentLimitsConfigs.withSupplyTimeThreshold(Constants.Wrist.supplyTimeThreshold);
+        currentLimitsConfigs.withSupplyCurrentLimit(MotorConfigConstants.Wrist.supplyCurrentLimit);
+        currentLimitsConfigs.withSupplyCurrentLimitEnable(MotorConfigConstants.Wrist.supplyCurrentEnable);
+        currentLimitsConfigs.withSupplyCurrentThreshold(MotorConfigConstants.Wrist.supplyCurrentThreshold);
+        currentLimitsConfigs.withSupplyTimeThreshold(MotorConfigConstants.Wrist.supplyTimeThreshold);
         config.withCurrentLimits(currentLimitsConfigs);
 
          // Velocity PID Configuration
         Slot0Configs slot0Configs = new Slot0Configs();
         // slot0Configs.withKV(Constants.Wrist.kV);
-        slot0Configs.withKP(Constants.Wrist.kP);
-        slot0Configs.withKI(Constants.Wrist.kI);
-        slot0Configs.withKD(Constants.Wrist.kD);
+        slot0Configs.withKP(MotorConfigConstants.Wrist.kP);
+        slot0Configs.withKI(MotorConfigConstants.Wrist.kI);
+        slot0Configs.withKD(MotorConfigConstants.Wrist.kD);
         config.withSlot0(slot0Configs);
 
         // Motion Magic Configuration
         MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(Constants.Wrist.motionMagicVelocity);
-        motionMagicConfigs.withMotionMagicAcceleration(Constants.Wrist.motionMagicAccel);
-        motionMagicConfigs.withMotionMagicJerk(Constants.Wrist.motionMagicJerk);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(MotorConfigConstants.Wrist.motionMagicVelocity);
+        motionMagicConfigs.withMotionMagicAcceleration(MotorConfigConstants.Wrist.motionMagicAccel);
+        motionMagicConfigs.withMotionMagicJerk(MotorConfigConstants.Wrist.motionMagicJerk);
         config.withMotionMagic(motionMagicConfigs);
 
         // Software Limit Switch Configuration 
-        config.withSoftwareLimitSwitch(Constants.Wrist.normalSoftLimits);
+        config.withSoftwareLimitSwitch(MotorConfigConstants.Wrist.normalSoftLimits);
 
         // Hardware Limit Switch Configuration
         HardwareLimitSwitchConfigs hardwareLimitConfigs = new HardwareLimitSwitchConfigs();
-        hardwareLimitConfigs.withReverseLimitSource(Constants.Wrist.reverseLimitSource);
-        hardwareLimitConfigs.withReverseLimitType(Constants.Wrist.reverseLimitType);
-        hardwareLimitConfigs.withReverseLimitEnable(Constants.Wrist.reverseLimitEnabled);
-        hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(Constants.Wrist.reverseLimitAutosetPositionEnabled);
-        hardwareLimitConfigs.withReverseLimitAutosetPositionValue(Constants.Wrist.reverseLimitAutosetPositionValue);
+        hardwareLimitConfigs.withReverseLimitSource(MotorConfigConstants.Wrist.reverseLimitSource);
+        hardwareLimitConfigs.withReverseLimitType(MotorConfigConstants.Wrist.reverseLimitType);
+        hardwareLimitConfigs.withReverseLimitEnable(MotorConfigConstants.Wrist.reverseLimitEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(MotorConfigConstants.Wrist.reverseLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionValue(MotorConfigConstants.Wrist.reverseLimitAutosetPositionValue);
 
-        hardwareLimitConfigs.withForwardLimitSource(Constants.Wrist.forwardLimitSource);
-        hardwareLimitConfigs.withForwardLimitType(Constants.Wrist.forwardLimitType);
-        hardwareLimitConfigs.withForwardLimitEnable(Constants.Wrist.forwardLimitEnabled);
-        hardwareLimitConfigs.withForwardLimitAutosetPositionEnable(Constants.Wrist.forwardLimitAutosetPositionEnabled);
-        hardwareLimitConfigs.withForwardLimitAutosetPositionValue(Constants.Wrist.forwardLimitAutosetPositionValue);
+        hardwareLimitConfigs.withForwardLimitSource(MotorConfigConstants.Wrist.forwardLimitSource);
+        hardwareLimitConfigs.withForwardLimitType(MotorConfigConstants.Wrist.forwardLimitType);
+        hardwareLimitConfigs.withForwardLimitEnable(MotorConfigConstants.Wrist.forwardLimitEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionEnable(MotorConfigConstants.Wrist.forwardLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionValue(MotorConfigConstants.Wrist.forwardLimitAutosetPositionValue);
         config.withHardwareLimitSwitch(hardwareLimitConfigs);
 
         return config;

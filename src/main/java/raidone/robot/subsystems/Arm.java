@@ -33,51 +33,19 @@ public class Arm extends SubsystemBase{
   
     public Arm(){
         limitCanifier = RobotContainer.getCANifier();
-        System.out.println("Arm init");
         isHomed = false;
 
-        
         m_arm = new TalonFX(Constants.Arm.ARM_MOTOR_ID, Constants.Arm.armCANbus);
         m_follower = new TalonFX(Constants.Arm.ARM_FOLLOW_ID, Constants.Arm.armCANbus);
 
         TalonFXConfiguration config = getDefaultConfig();
         m_arm.getConfigurator().apply(config);
         m_follower.getConfigurator().apply(config);
-        // var currentConfigs = new MotorOutputConfigs();
-        // m_arm.getConfigurator().apply(currentConfigs); //apply default config to factory reset
-        // m_follower.getConfigurator().apply(currentConfigs);
-
-        // // The left motor is CCW+
-        // currentConfigs.withInverted(Constants.Arm.inversion);
-        // currentConfigs.withNeutralMode(Constants.Arm.neutralMode);
-
-        // m_arm.getConfigurator().apply(currentConfigs);
-        // m_follower.getConfigurator().apply(currentConfigs);
-         
-        // HardwareLimitSwitchConfigs hardwareLimitConfigs = new HardwareLimitSwitchConfigs();
-        // hardwareLimitConfigs.withReverseLimitSource(ReverseLimitSourceValue.LimitSwitchPin);
-        // hardwareLimitConfigs.withReverseLimitType(ReverseLimitTypeValue.NormallyOpen);
-        // hardwareLimitConfigs.withReverseLimitEnable(false);
-        // hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(false);
-        // hardwareLimitConfigs.withReverseLimitAutosetPositionValue(0);
-
-        
-        // m_arm.getConfigurator().apply(hardwareLimitConfigs);
-        // m_follower.getConfigurator().apply(hardwareLimitConfigs);
-        // //
-
-        // SoftwareLimitSwitchConfigs softwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs();
-        // softwareLimitSwitchConfigs.withReverseSoftLimitEnable(false);
-        // softwareLimitSwitchConfigs.withReverseSoftLimitThreshold(-1);
-        // softwareLimitSwitchConfigs.withForwardSoftLimitEnable(true);
-        // softwareLimitSwitchConfigs.withForwardSoftLimitThreshold(36);
-
-        // m_arm.getConfigurator().apply(softwareLimitSwitchConfigs);
-        // m_follower.getConfigurator().apply(softwareLimitSwitchConfigs);
         
          // Ensure our followers are following their respective leader
          m_follower.setControl(new Follower(m_arm.getDeviceID(),true));
-       
+
+        System.out.println("Arm init");
         
     }
 
@@ -162,48 +130,48 @@ public class Arm extends SubsystemBase{
 
         // The left motor is CW+
         //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
-        motorOutputConfig.withInverted(Constants.Arm.inversion);
-        motorOutputConfig.withNeutralMode(Constants.Arm.neutralMode);
+        motorOutputConfig.withInverted(Constants.Arm.MotorOutput.inversion);
+        motorOutputConfig.withNeutralMode(Constants.Arm.MotorOutput.neutralMode);
         config.withMotorOutput(motorOutputConfig);
         
         CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
-        currentLimitsConfigs.withSupplyCurrentLimit(Constants.Arm.supplyCurrentLimit);
-        currentLimitsConfigs.withSupplyCurrentLimitEnable(Constants.Arm.supplyCurrentEnable);
-        currentLimitsConfigs.withSupplyCurrentThreshold(Constants.Arm.supplyCurrentThreshold);
-        currentLimitsConfigs.withSupplyTimeThreshold(Constants.Arm.supplyTimeThreshold);
+        currentLimitsConfigs.withSupplyCurrentLimit(Constants.Arm.CurrentLimits.supplyCurrentLimit);
+        currentLimitsConfigs.withSupplyCurrentLimitEnable(Constants.Arm.CurrentLimits.supplyCurrentEnable);
+        currentLimitsConfigs.withSupplyCurrentThreshold(Constants.Arm.CurrentLimits.supplyCurrentThreshold);
+        currentLimitsConfigs.withSupplyTimeThreshold(Constants.Arm.CurrentLimits.supplyTimeThreshold);
         config.withCurrentLimits(currentLimitsConfigs);
 
          // Velocity PID Configuration
         Slot0Configs slot0Configs = new Slot0Configs();
         // slot0Configs.withKV(Constants.Arm.kV);
-        slot0Configs.withKP(Constants.Arm.kP);
-        slot0Configs.withKI(Constants.Arm.kI);
-        slot0Configs.withKD(Constants.Arm.kD);
+        slot0Configs.withKP(Constants.Arm.PositionPID.kP);
+        slot0Configs.withKI(Constants.Arm.PositionPID.kI);
+        slot0Configs.withKD(Constants.Arm.PositionPID.kD);
         config.withSlot0(slot0Configs);
 
         // Motion Magic Configuration
         MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(Constants.Arm.motionMagicVelocity);
-        motionMagicConfigs.withMotionMagicAcceleration(Constants.Arm.motionMagicAccel);
-        motionMagicConfigs.withMotionMagicJerk(Constants.Arm.motionMagicJerk);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(Constants.Arm.MotionMagic.motionMagicVelocity);
+        motionMagicConfigs.withMotionMagicAcceleration(Constants.Arm.MotionMagic.motionMagicAccel);
+        motionMagicConfigs.withMotionMagicJerk(Constants.Arm.MotionMagic.motionMagicJerk);
         config.withMotionMagic(motionMagicConfigs);
 
         // Software Limit Switch Configuration 
-        config.withSoftwareLimitSwitch(Constants.Arm.normalSoftLimits);
+        config.withSoftwareLimitSwitch(Constants.Arm.SoftwareLimits.normalSoftLimits);
 
         // Hardware Limit Switch Configuration
         HardwareLimitSwitchConfigs hardwareLimitConfigs = new HardwareLimitSwitchConfigs();
-        hardwareLimitConfigs.withReverseLimitSource(Constants.Arm.reverseLimitSource);
-        hardwareLimitConfigs.withReverseLimitType(Constants.Arm.reverseLimitType);
-        hardwareLimitConfigs.withReverseLimitEnable(Constants.Arm.reverseLimitEnabled);
-        hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(Constants.Arm.reverseLimitAutosetPositionEnabled);
-        hardwareLimitConfigs.withReverseLimitAutosetPositionValue(Constants.Arm.reverseLimitAutosetPositionValue);
+        hardwareLimitConfigs.withReverseLimitSource(Constants.Arm.HardWareLimits.reverseLimitSource);
+        hardwareLimitConfigs.withReverseLimitType(Constants.Arm.HardWareLimits.reverseLimitType);
+        hardwareLimitConfigs.withReverseLimitEnable(Constants.Arm.HardWareLimits.reverseLimitEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(Constants.Arm.HardWareLimits.reverseLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionValue(Constants.Arm.HardWareLimits.reverseLimitAutosetPositionValue);
 
-        hardwareLimitConfigs.withForwardLimitSource(Constants.Arm.forwardLimitSource);
-        hardwareLimitConfigs.withForwardLimitType(Constants.Arm.forwardLimitType);
-        hardwareLimitConfigs.withForwardLimitEnable(Constants.Arm.forwardLimitEnabled);
-        hardwareLimitConfigs.withForwardLimitAutosetPositionEnable(Constants.Arm.forwardLimitAutosetPositionEnabled);
-        hardwareLimitConfigs.withForwardLimitAutosetPositionValue(Constants.Arm.forwardLimitAutosetPositionValue);
+        hardwareLimitConfigs.withForwardLimitSource(Constants.Arm.HardWareLimits.forwardLimitSource);
+        hardwareLimitConfigs.withForwardLimitType(Constants.Arm.HardWareLimits.forwardLimitType);
+        hardwareLimitConfigs.withForwardLimitEnable(Constants.Arm.HardWareLimits.forwardLimitEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionEnable(Constants.Arm.HardWareLimits.forwardLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionValue(Constants.Arm.HardWareLimits.forwardLimitAutosetPositionValue);
         config.withHardwareLimitSwitch(hardwareLimitConfigs);
 
         return config;

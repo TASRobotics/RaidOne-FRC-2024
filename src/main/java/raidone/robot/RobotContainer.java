@@ -32,7 +32,7 @@ import raidone.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
-    
+    //private static RobotContainer robotContainer = new RobotContainer();
     /* Subsystems */
     private final static CANifier limitCanifier = new CANifier(0);
     private final Wrist wrist = Wrist.system();
@@ -70,16 +70,16 @@ public class RobotContainer {
     CommandSequences sequences = new CommandSequences(this.arm, this.wrist, this.intake);
 
    
-    // public enum State {
-    //     IDLE,
-    //     HOMED_NO_NOTE,
-    //     HOMED_HAS_NOTE,
-    //     INTAKE_NO_NOTE,
-    //     INTAKE_HAS_NOTE,
-    //     SCORING_NO_NOTE,
-    //     SCORING_HAS_NOTE
-    // }
-    // private static State robotState = State.IDLE; 
+    public enum RobotState {
+         IDLE,
+         HOMED_NO_NOTE,
+         HOMED_HAS_NOTE,
+         INTAKE_NO_NOTE,
+         INTAKE_HAS_NOTE,
+         SCORING_NO_NOTE,
+         SCORING_HAS_NOTE
+     }
+     private RobotState robotState = RobotState.IDLE; 
     
 
     /**
@@ -154,7 +154,14 @@ public class RobotContainer {
         return limitCanifier;
     }
 
+    public void setState(RobotState robotState){
+        this.robotState = robotState;
+    }
 
+    public RobotState getState(){
+        return robotState;
+    }
+    
     
 
 }
