@@ -56,8 +56,8 @@ public class RobotContainer {
     private final JoystickButton bothHome = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private final JoystickButton runIntake = new JoystickButton(driver, XboxController.Button.kRightStick.value);
     //private final Joystick test = new Joystick(1);
-    private final BooleanSupplier leftTrigger;
-    
+    private final BooleanSupplier leftTrigger = () -> driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.2;
+    private final BooleanSupplier rightTrigger = () -> driver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.2;
 
     //private SendableChooser<Command> autoChooser;
 
@@ -85,7 +85,7 @@ public class RobotContainer {
         //                 () -> -driver.getRawAxis(strafeAxis),
         //                 () -> driver.getRawAxis(rotationAxis) * 0.5,
         //                 () -> robotCentric.getAsBoolean()));
-        leftTrigger = () -> driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.2;
+        
         // Configure the button bindings
         configureButtonBindings();
         arm.setDefaultCommand(new ArmGo(0));
@@ -108,20 +108,22 @@ public class RobotContainer {
         Command wristHomeSequence = sequences.wristHomeSequence();
         Command armHomeSequence = sequences.armHomeSequence();
         Command bothHomeSequence = sequences.bothHomeSequence();
-        
+        Command scoreAndHome = sequences.scoreSequence();
 
         wristgo.whileTrue(new WristGo(0.1));
         wristgoreverse.whileTrue(new WristGo(-0.1));
         //wristhome.onTrue(new WristHome().andThen(Commands.waitSeconds(0.5)).andThen(new WristHome()));
         wristhome.onTrue(wristHomeSequence);
-        armgo.whileTrue(new ArmGo(0.1));
+        armgo.whileTrue(new ArmGo(0.1));    
         armhome.onTrue(armHomeSequence);    
         //armhome.onTrue(new ArmHome().andThen(Commands.waitSeconds(0.1)).andThen(new ArmHome()));
         armgoreverse.whileTrue(new ArmGo(-0.1));
         bothHome.onTrue(bothHomeSequence);
-        runIntake.whileTrue(new IntakeIn(Constants.Intake.IntakePercent));
+        runIntake.whileTrue(new IntakeIn(Constants.Intake.intakePercent));
         Trigger leftTriggerBoolean = new Trigger(leftTrigger);
-        leftTriggerBoolean.onTrue(new IntakeIn(1.0));
+        leftTriggerBoolean.whileTrue(new IntakeIn(1.0));
+        Trigger rightTriggerBoolean = new Trigger(rightTrigger);
+        rightTriggerBoolean.onTrue(scoreAndHome);
         //setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new AutoWrist(wrist)));
         //home.onTrue(new ArmHome(arm, wrist));
 
