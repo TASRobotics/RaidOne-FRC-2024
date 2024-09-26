@@ -67,7 +67,7 @@ public class RobotContainer {
 
 
 
-    CommandSequences sequences = new CommandSequences(this.arm, this.wrist);
+    CommandSequences sequences = new CommandSequences(this.arm, this.wrist, this.intake);
 
    
     // public enum State {
