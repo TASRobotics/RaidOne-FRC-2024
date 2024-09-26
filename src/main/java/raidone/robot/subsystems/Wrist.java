@@ -17,13 +17,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import raidone.robot.Constants;
-import raidone.robot.Robot;
 import raidone.robot.RobotContainer;
 
 //import static raidone.robot.Constants.Wrist.*;
 
 
 public class Wrist extends SubsystemBase{
+    // private static WristState wrSt = new enum thingy
     private static Wrist wrist = new Wrist();
     private TalonFX m_wrist;
     private TalonFX m_follower;

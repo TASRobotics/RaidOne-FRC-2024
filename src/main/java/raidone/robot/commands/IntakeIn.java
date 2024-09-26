@@ -35,5 +35,6 @@ public class IntakeIn extends Command {
     @Override
     public void end(boolean interrupted) {
         intake.stop();
+        
     }
 }

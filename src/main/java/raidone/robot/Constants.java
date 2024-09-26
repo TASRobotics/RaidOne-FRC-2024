@@ -133,7 +133,7 @@ public final class Constants {
         public static final State CONSTRAINTPOS = new State(-13, 0);
 
         public static final double homeSpeed = -0.3;
-
+        
         // Current Limit Constants
         public static final double supplyCurrentLimit = 40.0;
         public static final boolean supplyCurrentEnable = true;
@@ -265,5 +265,9 @@ public final class Constants {
         public static final double BOTTOM_POS_ROT = 0.0;
         public static final double HALFWAY_POS_ROT = 45.0;
         public static final double TOP_POS_ROT = 90.0;
+    }
+
+    public static final class Lights {
+        public static final int CANdleID = 0;
     }
 }

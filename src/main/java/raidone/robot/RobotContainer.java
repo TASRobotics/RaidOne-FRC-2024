@@ -1,7 +1,6 @@
 package raidone.robot;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import com.ctre.phoenix.CANifier;
 //import edu.wpi.first.math.geometry.Pose2d;
@@ -33,7 +32,12 @@ import raidone.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    
+    /* Subsystems */
     private final static CANifier limitCanifier = new CANifier(0);
+    private final Wrist wrist = Wrist.system();
+    private final Arm arm = Arm.system();
+    private final Intake intake = Intake.system();
 
     /* Drive Controls */
     //private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -61,18 +65,22 @@ public class RobotContainer {
 
     //private SendableChooser<Command> autoChooser;
 
-    /* Subsystems */
-    private final Wrist wrist = Wrist.system();
-    private final Arm arm = Arm.system();
-    private final Intake intake = Intake.system();
+
 
     CommandSequences sequences = new CommandSequences(this.arm, this.wrist);
-    //private final Swerve swerve = Swerve.system();  //new Swerve();
-    //private final Wrist wrist = new Wrist();
-    //private final Arm arm = new Arm(limitCanifier);
-    //private final raidone.robot.subsystems.Arm arm = raidone.robot.subsystems.Arm.system();
-    
 
+   
+    // public enum State {
+    //     IDLE,
+    //     HOMED_NO_NOTE,
+    //     HOMED_HAS_NOTE,
+    //     INTAKE_NO_NOTE,
+    //     INTAKE_HAS_NOTE,
+    //     SCORING_NO_NOTE,
+    //     SCORING_HAS_NOTE
+    // }
+    // private static State robotState = State.IDLE; 
+    
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -145,6 +153,7 @@ public class RobotContainer {
     public static CANifier getCANifier() {
         return limitCanifier;
     }
+
 
     
 

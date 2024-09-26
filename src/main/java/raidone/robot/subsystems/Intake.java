@@ -15,12 +15,21 @@ import au.grapplerobotics.ConfigurationFailedException;
 import static raidone.robot.Constants.Intake.*;
 
 public class Intake extends SubsystemBase {
+    // private static IntakeState inSt = new enum thingy
     private CANSparkMax roller;
     private SparkLimitSwitch beam;
     private LaserCan laserCan;
 
     private static Intake intakeSys = new Intake();
     int distance = 9999;
+
+    enum IntakeStateEnum {
+        RUNNING_NO_NOTE,
+        RUNNING_HAS_NOTE,
+        IDLE_NO_NOTE,
+        IDLE_HAS_NOTE,
+    }
+    private static IntakeStateEnum intakeState = IntakeStateEnum.IDLE_NO_NOTE;
 
     private Intake() {
         System.out.println("Intake Subsystem Init");
@@ -90,10 +99,30 @@ public class Intake extends SubsystemBase {
         return intakeSys;
     }
 
+    public IntakeStateEnum getState(){
+        return intakeState;
+    }
+
     @Override
     public void periodic(){
+        // state machine code here
+
+        // if Wrist.system().wrSt.getValue == 8 and inSt.getV
+        //Wrist.system().isHomed();
+        //Arm.system().isHomed()
+        // update IntakeState enum
         distance = getDistancePeriodic();
         SmartDashboard.putNumber("LaserCAN", distance);
         SmartDashboard.putBoolean("Beam Break", getLaserLimit());
+
+        if(roller.getAppliedOutput() == 0.0 && distance < distanceThreshold){
+            intakeState = IntakeStateEnum.IDLE_HAS_NOTE;
+        } else if (roller.getAppliedOutput() == 0.0 && distance >= distanceThreshold){
+            intakeState = IntakeStateEnum.IDLE_NO_NOTE;
+        } else if(roller.getAppliedOutput() != 0 && distance >= distanceThreshold){
+            intakeState = IntakeStateEnum.RUNNING_NO_NOTE;
+        } else if(roller.getAppliedOutput() < 0 && distance < distanceThreshold){
+            intakeState = IntakeStateEnum.RUNNING_HAS_NOTE;
+        }
     }
 }
