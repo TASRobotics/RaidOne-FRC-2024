@@ -1,11 +1,7 @@
 package raidone.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import raidone.robot.Robot;
-import raidone.robot.RobotContainer;
+import raidone.robot.Constants;
 import raidone.robot.subsystems.Intake;
 
 public class IntakeIn extends Command {
@@ -26,14 +22,15 @@ public class IntakeIn extends Command {
 
     @Override
     public void execute() {
-        intake.run(percent);
-
+        if(!intake.getLaserLimit()){ 
+            intake.run(percent);
+        }
     }
 
-    @Override
-    public boolean isFinished() {
-        return intake.getLimit();
-    }
+     @Override
+     public boolean isFinished() {
+         return intake.getLaserLimit();
+     }
 
     @Override
     public void end(boolean interrupted) {

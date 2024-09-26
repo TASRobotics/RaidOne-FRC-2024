@@ -17,6 +17,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import raidone.robot.Constants;
+import raidone.robot.Robot;
 import raidone.robot.RobotContainer;
 
 //import static raidone.robot.Constants.Wrist.*;
@@ -93,6 +94,7 @@ public class Wrist extends SubsystemBase{
 
     @Override
     public void periodic(){
+        
         getCANifierValues();
         SmartDashboard.putNumber("wrist encoder", m_wrist.getPosition().getValueAsDouble());
         if(keepReseting){

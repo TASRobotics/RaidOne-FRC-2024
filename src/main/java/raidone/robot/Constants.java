@@ -249,8 +249,9 @@ public final class Constants {
 
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 13;
-        public static final double PERCENT = 1.0;
+        public static final double IntakePercent = 1.0;
         public static final int CURRENT_LIMIT = 20;
+        public static final int distanceThreshold = 100;
     }
 
     public static final class Climb {

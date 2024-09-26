@@ -1,5 +1,8 @@
 package raidone.robot;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.CANifier;
 //import edu.wpi.first.math.geometry.Pose2d;
 //import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import raidone.robot.commands.*;
 import raidone.robot.subsystems.*;
 
@@ -51,11 +54,17 @@ public class RobotContainer {
     private final JoystickButton armgo = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton armgoreverse = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton bothHome = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
+    private final JoystickButton runIntake = new JoystickButton(driver, XboxController.Button.kRightStick.value);
+    //private final Joystick test = new Joystick(1);
+    private final BooleanSupplier leftTrigger;
+    
+
     //private SendableChooser<Command> autoChooser;
 
     /* Subsystems */
     private final Wrist wrist = Wrist.system();
     private final Arm arm = Arm.system();
+    private final Intake intake = Intake.system();
 
     CommandSequences sequences = new CommandSequences(this.arm, this.wrist);
     //private final Swerve swerve = Swerve.system();  //new Swerve();
@@ -69,17 +78,19 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        
         // swerve.setDefaultCommand(
         //         new TeleopSwerve(
         //                 () -> -driver.getRawAxis(translationAxis),
         //                 () -> -driver.getRawAxis(strafeAxis),
         //                 () -> driver.getRawAxis(rotationAxis) * 0.5,
         //                 () -> robotCentric.getAsBoolean()));
-
+        leftTrigger = () -> driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.2;
         // Configure the button bindings
         configureButtonBindings();
         arm.setDefaultCommand(new ArmGo(0));
         wrist.setDefaultCommand(new WristGo(0));
+        intake.setDefaultCommand(new IntakeIn(0));
     }
 
     /**
@@ -108,6 +119,9 @@ public class RobotContainer {
         //armhome.onTrue(new ArmHome().andThen(Commands.waitSeconds(0.1)).andThen(new ArmHome()));
         armgoreverse.whileTrue(new ArmGo(-0.1));
         bothHome.onTrue(bothHomeSequence);
+        runIntake.whileTrue(new IntakeIn(Constants.Intake.IntakePercent));
+        Trigger leftTriggerBoolean = new Trigger(leftTrigger);
+        leftTriggerBoolean.onTrue(new IntakeIn(1.0));
         //setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new AutoWrist(wrist)));
         //home.onTrue(new ArmHome(arm, wrist));
 
