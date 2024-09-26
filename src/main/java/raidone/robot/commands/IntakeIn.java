@@ -1,7 +1,6 @@
 package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import raidone.robot.Constants;
 import raidone.robot.subsystems.Intake;
 
 public class IntakeIn extends Command {

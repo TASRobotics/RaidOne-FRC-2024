@@ -8,16 +8,16 @@ import raidone.robot.subsystems.Intake;
 import raidone.robot.subsystems.Wrist;
 
 public class CommandSequences {
-    private Arm arm;
-    private Wrist wrist;
-    private Intake intake;
+    //private Arm arm;
+    //private Wrist wrist;
+    //private Intake intake;
 
     
     
-    public CommandSequences(Arm arm, Wrist wrist) {
-        this.arm = arm;
-        this.wrist = wrist;
-       
+    public CommandSequences(Arm arm, Wrist wrist, Intake intake) {
+        //this.arm = arm;
+        //this.wrist = wrist;
+        //this.intake = intake;
       }
   
      public Command armHomeSequence() {

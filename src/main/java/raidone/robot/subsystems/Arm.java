@@ -3,7 +3,6 @@ package raidone.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import raidone.robot.Constants;
-import raidone.robot.Robot;
 import raidone.robot.RobotContainer;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
