@@ -60,11 +60,10 @@ public class Lights extends SubsystemBase {
         configAll.stripType = LEDStripType.GRB;
         configAll.brightnessScalar = 1.0;
         configAll.vBatOutputMode = VBatOutputMode.Modulated;
-        //m_candle.configV5Enabled(m_last5V);
         m_candle.configAllSettings(configAll, 100);
-        //robotState = RobotState.IDLE;
         System.out.println("Lights init");
-
+        m_clearAllAnims = true;
+        
         
     }
 
@@ -146,6 +145,7 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println("Lights!!!");
         IntakeStateEnum intakeState = intake.getState();
         
         if(intakeState == IntakeStateEnum.IDLE_NO_NOTE || intakeState == IntakeStateEnum.RUNNING_NO_NOTE){
@@ -157,7 +157,7 @@ public class Lights extends SubsystemBase {
             RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
             //RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
         }
-        
+        m_candle.animate(m_toAnimate);
 
 
         if(m_toAnimate == null) {

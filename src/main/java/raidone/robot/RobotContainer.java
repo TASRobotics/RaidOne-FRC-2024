@@ -38,6 +38,7 @@ public class RobotContainer {
     private final Wrist wrist = Wrist.system();
     private final Arm arm = Arm.system();
     private final Intake intake = Intake.system();
+    private final Lights lights = Lights.system();
 
     /* Drive Controls */
     //private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -99,6 +100,7 @@ public class RobotContainer {
         arm.setDefaultCommand(new ArmGo(0));
         wrist.setDefaultCommand(new WristGo(0));
         intake.setDefaultCommand(new IntakeIn(0));
+       
     }
 
     /**
