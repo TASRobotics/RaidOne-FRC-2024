@@ -33,7 +33,8 @@ public class Lights extends SubsystemBase {
     //private AnimationTypes m_currentAnimation;
     private boolean m_setAnim = false; //used to prevent unneccesary refreshes in periodic()
     private Intake intake = Intake.system(); 
-    //RobotContainer.RobotState robotState = RobotContainer.getRobotState();
+    RobotContainer.RobotState robotState = RobotContainer.getRobotState();
+
 
     public enum AnimationTypes { //list of all possible animations by name
         ColorFlow,
@@ -62,7 +63,7 @@ public class Lights extends SubsystemBase {
         //m_candle.configV5Enabled(m_last5V);
         m_candle.configAllSettings(configAll, 100);
         //robotState = RobotState.IDLE;
-        System.out.println("Arm init");
+        System.out.println("Lights init");
 
         
     }
@@ -149,11 +150,12 @@ public class Lights extends SubsystemBase {
         
         if(intakeState == IntakeStateEnum.IDLE_NO_NOTE || intakeState == IntakeStateEnum.RUNNING_NO_NOTE){
             changeAnimation(AnimationTypes.ColorFlow);
-            RobotContainer.setRobotState( RobotContainer.RobotState.HOMED_NO_NOTE);
-
+            //RobotContainer.setRobotState( RobotContainer.RobotState.HOMED_NO_NOTE);
+            RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_NO_NOTE);
         } else if (intakeState == IntakeStateEnum.IDLE_HAS_NOTE || intakeState == IntakeStateEnum.RUNNING_HAS_NOTE){
             changeAnimation(AnimationTypes.Fire);
             RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
+            //RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
         }
         
 
