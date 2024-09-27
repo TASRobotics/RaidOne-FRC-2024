@@ -22,6 +22,7 @@ import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
 public class Lights extends SubsystemBase {
+    private static Lights lights = new Lights();
     private final CANdle m_candle = new CANdle(Constants.Lights.CANdleID, "rio"); 
     private final int NUM_LEDS= 128;
     private int hue = 0; //hue is used to set all colors to a particular hue, google CHSV for colors->numbers
@@ -32,7 +33,7 @@ public class Lights extends SubsystemBase {
     //private AnimationTypes m_currentAnimation;
     private boolean m_setAnim = false; //used to prevent unneccesary refreshes in periodic()
     private Intake intake = Intake.system(); 
-    RobotContainer.RobotState robotState;
+    //RobotContainer.RobotState robotState = RobotContainer.getRobotState();
 
     public enum AnimationTypes { //list of all possible animations by name
         ColorFlow,
@@ -60,7 +61,7 @@ public class Lights extends SubsystemBase {
         configAll.vBatOutputMode = VBatOutputMode.Modulated;
         //m_candle.configV5Enabled(m_last5V);
         m_candle.configAllSettings(configAll, 100);
-        robotState = RobotState.IDLE;
+        //robotState = RobotState.IDLE;
         System.out.println("Arm init");
 
         
@@ -146,14 +147,13 @@ public class Lights extends SubsystemBase {
     public void periodic() {
         IntakeStateEnum intakeState = intake.getState();
         
-        
-
         if(intakeState == IntakeStateEnum.IDLE_NO_NOTE || intakeState == IntakeStateEnum.RUNNING_NO_NOTE){
             changeAnimation(AnimationTypes.ColorFlow);
-            robotState = RobotContainer.RobotState.HOMED_NO_NOTE;
+            RobotContainer.setRobotState( RobotContainer.RobotState.HOMED_NO_NOTE);
+
         } else if (intakeState == IntakeStateEnum.IDLE_HAS_NOTE || intakeState == IntakeStateEnum.RUNNING_HAS_NOTE){
             changeAnimation(AnimationTypes.Fire);
-            robotState = RobotContainer.RobotState.HOMED_HAS_NOTE;
+            RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
         }
         
 
@@ -182,4 +182,10 @@ public class Lights extends SubsystemBase {
       
         // This method will be called once per scheduler run during simulation
     }
+
+    public static Lights system() {
+        return lights;
+    }
+
+    
 }

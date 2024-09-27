@@ -79,7 +79,7 @@ public class RobotContainer {
          SCORING_NO_NOTE,
          SCORING_HAS_NOTE
      }
-     private RobotState robotState = RobotState.IDLE; 
+     private static RobotState robotState = RobotState.IDLE; 
     
 
     /**
@@ -154,11 +154,11 @@ public class RobotContainer {
         return limitCanifier;
     }
 
-    public void setState(RobotState robotState){
-        this.robotState = robotState;
+    public static void setRobotState(RobotState rs){
+        robotState = rs;
     }
 
-    public RobotState getState(){
+    public static RobotState getRobotState(){
         return robotState;
     }
     
