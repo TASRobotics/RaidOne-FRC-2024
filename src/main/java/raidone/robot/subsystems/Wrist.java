@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -30,12 +31,12 @@ public class Wrist extends SubsystemBase{
     private boolean isHomed;
     private static CANifier limitCanifier;
     private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
-
+    private final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
     private boolean reverseLimit = false;
 
     private boolean keepReseting = false;
     private int count = 0;
-    private int countsToReset = 20;
+    private int countsToReset = 5;
 
     public Wrist() {
         limitCanifier = RobotContainer.getCANifier();
@@ -71,8 +72,8 @@ public class Wrist extends SubsystemBase{
         m_wrist.stopMotor();
     }
 
-    public void setPos() {
-   
+    public void moveTo(double target) {
+        m_wrist.setControl(m_request.withPosition(target).withLimitReverseMotion(reverseLimit));
     }
 
     public void home(){

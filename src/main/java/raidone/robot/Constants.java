@@ -191,14 +191,14 @@ public final class Constants {
         public static final String wristCANbus = "rio";
 
         public static final State SCORINGPOS = new State(-23.0, 0);
-        public static final State INTAKEPOS = new State(-47.0, 0);
+        public static final double INTAKEPOS = 50.0;
         public static final State HOMEPOS = new State(0.0, 0);
 
-        public static final double homeSpeed = -0.4;
+        public static final double homeSpeed = -0.75;
 
         
         // Current Limit Constants
-        public static final double supplyCurrentLimit = 40.0;
+        public static final double supplyCurrentLimit = 8.0;
         public static final boolean supplyCurrentEnable = true;
         public static final double supplyCurrentThreshold = 50.0;
         public static final double supplyTimeThreshold = 0.2;
@@ -209,7 +209,7 @@ public final class Constants {
         // Position PID Constants
         public static final int positionPIDSlot = 0;
         public static final double kV = 12.0 / (6000.0 / sensorToMechanismRatio / 60.0); // 12.0 V / max speed rps
-        public static final double kP = 80.0;
+        public static final double kP = 0.33;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kPIDUpdateHz = 1000;
@@ -226,8 +226,8 @@ public final class Constants {
         // Software Limit Switch Constants
         public static SoftwareLimitSwitchConfigs normalSoftLimits = new SoftwareLimitSwitchConfigs();
         static {
-            normalSoftLimits.ForwardSoftLimitEnable = false;
-            normalSoftLimits.ForwardSoftLimitThreshold = 1000; //280.0 / 360.0; // rotations
+            normalSoftLimits.ForwardSoftLimitEnable = true;
+            normalSoftLimits.ForwardSoftLimitThreshold = 55; //280.0 / 360.0; // rotations
             normalSoftLimits.ReverseSoftLimitEnable = false;
             normalSoftLimits.ReverseSoftLimitThreshold = 1000; // 0.0;
         }

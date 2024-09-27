@@ -47,9 +47,9 @@ public class RobotContainer {
     //private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kX.value);
     //private final JoystickButton setArm = new JoystickButton(driver, XboxController.Button.kStart.value);
     //private final JoystickButton home = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton wristhome = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton wristgo = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton wristgoreverse = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton btnIntake = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton btnScore = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton wristgo = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton armhome = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton armgo = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton armgoreverse = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
@@ -110,10 +110,10 @@ public class RobotContainer {
         Command bothHomeSequence = sequences.bothHomeSequence();
         Command scoreAndHome = sequences.scoreSequence();
 
+        btnIntake.onTrue(new WristPID(Constants.Wrist.INTAKEPOS));
         wristgo.whileTrue(new WristGo(0.1));
-        wristgoreverse.whileTrue(new WristGo(-0.1));
         //wristhome.onTrue(new WristHome().andThen(Commands.waitSeconds(0.5)).andThen(new WristHome()));
-        wristhome.onTrue(wristHomeSequence);
+        //wristhome.onTrue(wristHomeSequence);
         armgo.whileTrue(new ArmGo(0.1));    
         armhome.onTrue(armHomeSequence);    
         //armhome.onTrue(new ArmHome().andThen(Commands.waitSeconds(0.1)).andThen(new ArmHome()));
