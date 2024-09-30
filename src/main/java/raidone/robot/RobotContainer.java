@@ -60,7 +60,6 @@ public class RobotContainer {
     private final JoystickButton armgoreverse = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton bothHome = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
     private final JoystickButton runIntake = new JoystickButton(driver, XboxController.Button.kRightStick.value);
-    //private final Joystick test = new Joystick(1);
     private final BooleanSupplier leftTrigger = () -> driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.2;
     private final BooleanSupplier rightTrigger = () -> driver.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.2;
 
@@ -71,16 +70,7 @@ public class RobotContainer {
     CommandSequences sequences = new CommandSequences(this.arm, this.wrist, this.intake);
 
    
-    // public enum RobotState {
-    //      IDLE,
-    //      HOMED_NO_NOTE,
-    //      HOMED_HAS_NOTE,
-    //      INTAKE_NO_NOTE,
-    //      INTAKE_HAS_NOTE,
-    //      SCORING_NO_NOTE,
-    //      SCORING_HAS_NOTE
-    //  }
-    //  private static RobotState robotState = RobotState.IDLE; 
+
     
 
     /**
@@ -157,6 +147,7 @@ public class RobotContainer {
     }
 
 
+    
     
 
 }

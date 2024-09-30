@@ -30,6 +30,14 @@ public class Arm extends SubsystemBase{
     private boolean keepReseting = false;
     private int count = 0;
     private int countsToReset = 20;
+
+    public enum ArmStateEnum {
+        AT_INTAKE_POS,
+        AT_SCORE_POS,
+        AT_HOME_POS,
+        MOVING
+    }
+    private static ArmStateEnum armState = ArmStateEnum.AT_HOME_POS;
   
     public Arm(){
         limitCanifier = RobotContainer.getCANifier();
@@ -120,6 +128,10 @@ public class Arm extends SubsystemBase{
         SmartDashboard.putBoolean("Arm_Left",reverseLeftLimit);
         SmartDashboard.putBoolean("Arm_Right",reverseRightLimit);
         SmartDashboard.putBoolean("Arm_Limits",reverseLimit);
+    }
+
+    public ArmStateEnum getState(){
+        return armState;
     }
 
     private TalonFXConfiguration getDefaultConfig() {

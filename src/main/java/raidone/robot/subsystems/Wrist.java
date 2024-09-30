@@ -36,7 +36,15 @@ public class Wrist extends SubsystemBase{
 
     private boolean keepReseting = false;
     private int count = 0;
-    private int countsToReset = 20;
+    private int countsToReset = 5;
+
+    enum WristStateEnum {
+        AT_INTAKE_POS,
+        AT_SCORE_POS,
+        AT_HOME_POS,
+        MOVING
+    }
+    private static WristStateEnum wristState = WristStateEnum.AT_HOME_POS;
 
     public Wrist() {
         limitCanifier = RobotContainer.getCANifier();
@@ -150,6 +158,10 @@ public class Wrist extends SubsystemBase{
         
          // Ensure our followers are following their respective leader
          m_follower.setControl(new Follower(m_wrist.getDeviceID(), true));
+    }
+
+    public WristStateEnum getState(){
+        return wristState;
     }
 
     private TalonFXConfiguration getDefaultConfig() {
