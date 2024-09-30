@@ -39,8 +39,8 @@ public class Intake extends SubsystemBase {
         roller.setIdleMode(IdleMode.kBrake);
         roller.setSmartCurrentLimit(CURRENT_LIMIT);
 
-        beam = roller.getForwardLimitSwitch(Type.kNormallyOpen);
-        beam.enableLimitSwitch(false);
+        // beam = roller.getForwardLimitSwitch(Type.kNormallyOpen);
+        // beam.enableLimitSwitch(false);
 
         laserCan = new LaserCan(20);
         // Optionally initialise the settings of the LaserCAN, if you haven't already done so in GrappleHook
@@ -68,7 +68,7 @@ public class Intake extends SubsystemBase {
 
     public int getDistancePeriodic(){
         LaserCan.Measurement measurement = laserCan.getMeasurement();
-        int distance = 9999;
+        int distance = 501;
         if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
             distance = measurement.distance_mm;
         } 

@@ -71,16 +71,16 @@ public class RobotContainer {
     CommandSequences sequences = new CommandSequences(this.arm, this.wrist, this.intake);
 
    
-    public enum RobotState {
-         IDLE,
-         HOMED_NO_NOTE,
-         HOMED_HAS_NOTE,
-         INTAKE_NO_NOTE,
-         INTAKE_HAS_NOTE,
-         SCORING_NO_NOTE,
-         SCORING_HAS_NOTE
-     }
-     private static RobotState robotState = RobotState.IDLE; 
+    // public enum RobotState {
+    //      IDLE,
+    //      HOMED_NO_NOTE,
+    //      HOMED_HAS_NOTE,
+    //      INTAKE_NO_NOTE,
+    //      INTAKE_HAS_NOTE,
+    //      SCORING_NO_NOTE,
+    //      SCORING_HAS_NOTE
+    //  }
+    //  private static RobotState robotState = RobotState.IDLE; 
     
 
     /**
@@ -156,14 +156,7 @@ public class RobotContainer {
         return limitCanifier;
     }
 
-    public static void setRobotState(RobotState rs){
-        robotState = rs;
-    }
 
-    public static RobotState getRobotState(){
-        return robotState;
-    }
-    
     
 
 }

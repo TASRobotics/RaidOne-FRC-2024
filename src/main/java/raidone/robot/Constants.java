@@ -210,7 +210,7 @@ public final class Constants {
         public static final double intakePercent = 1.0;
         public static final double scorePercent = 0.6;
         public static final int CURRENT_LIMIT = 20;
-        public static final int distanceThreshold = 100;
+        public static final int distanceThreshold = 500;
     }
 
     public static final class Climb {

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import raidone.lib.util.ColorConverter;
 import raidone.robot.Constants;
 import raidone.robot.RobotContainer;
-import raidone.robot.RobotContainer.RobotState;
+
 import raidone.robot.subsystems.Intake.IntakeStateEnum;
 
 import com.ctre.phoenix.led.*;
@@ -33,8 +33,8 @@ public class Lights extends SubsystemBase {
     //private AnimationTypes m_currentAnimation;
     private boolean m_setAnim = false; //used to prevent unneccesary refreshes in periodic()
     private Intake intake = Intake.system(); 
-    RobotContainer.RobotState robotState = RobotContainer.getRobotState();
-
+    //RobotContainer.RobotState robotState = RobotContainer.getRobotState();
+    StateBuilder.RobotState robotState = StateBuilder.getRobotState();
 
     public enum AnimationTypes { //list of all possible animations by name
         ColorFlow,
@@ -43,7 +43,7 @@ public class Lights extends SubsystemBase {
         Rainbow,
         RgbFade,
         SingleFade,
-        Strobe,
+        StrobeGreen,
         Twinkle,
         TwinkleOff,
         SetAllRed,
@@ -121,8 +121,8 @@ public class Lights extends SubsystemBase {
             case SingleFade:
                 m_toAnimate = new SingleFadeAnimation(50, 2, 200, 0, 0.5, NUM_LEDS);
                 break;
-            case Strobe:
-                m_toAnimate = new StrobeAnimation(240, 10, 180, 0, 98.0 / 256.0, NUM_LEDS);
+            case StrobeGreen:
+                m_toAnimate = new StrobeAnimation(0, 255, 32, 0, 200.0 / 256.0, NUM_LEDS);
                 break;
             case Twinkle:
                 m_toAnimate = new TwinkleAnimation(30, 70, 60, 0, 0.4, NUM_LEDS, TwinklePercent.Percent6);
@@ -145,16 +145,16 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("Lights!!!");
+        //System.out.println("Lights!!!");
         IntakeStateEnum intakeState = intake.getState();
         
         if(intakeState == IntakeStateEnum.IDLE_NO_NOTE || intakeState == IntakeStateEnum.RUNNING_NO_NOTE){
-            changeAnimation(AnimationTypes.ColorFlow);
+            changeAnimation(AnimationTypes.SetAllRed);
             //RobotContainer.setRobotState( RobotContainer.RobotState.HOMED_NO_NOTE);
-            RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_NO_NOTE);
+            StateBuilder.setRobotState(StateBuilder.RobotState.HOMED_NO_NOTE);
         } else if (intakeState == IntakeStateEnum.IDLE_HAS_NOTE || intakeState == IntakeStateEnum.RUNNING_HAS_NOTE){
-            changeAnimation(AnimationTypes.Fire);
-            RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
+            changeAnimation(AnimationTypes.StrobeGreen);
+            StateBuilder.setRobotState(StateBuilder.RobotState.HOMED_HAS_NOTE);
             //RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
         }
         m_candle.animate(m_toAnimate);
