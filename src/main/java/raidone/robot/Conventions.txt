@@ -1,0 +1,11 @@
+Raid One Code Conventions
+
+When creating buttons, append "Btn" to the name:
+
+    private final JoystickButton wristHomeBtn = new JoystickButton(driver, XboxController.Button.kA.value);
+
+Abbreviate parameters to avoid using "this."
+
+    public static void setRobotState(RobotState rs){
+        robotState = rs;
+    }
