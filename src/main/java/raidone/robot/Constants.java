@@ -122,10 +122,14 @@ public final class Constants {
         public static final int ARM_FOLLOW_ID = 10;
         public static final String armCANbus = "rio";
 
-        public static final State SCORINGPOS = new State(-33, 0);
-        public static final double SOFTLIMIT = SCORINGPOS.position - 2;
-        public static final State INTAKEPOS = new State(0.0, 0);
-        public static final State CONSTRAINTPOS = new State(-13, 0);
+        //public static final State SCORINGPOS = new State(-33, 0);
+        //public static final double SOFTLIMIT = SCORINGPOS.position - 2;
+        //public static final State INTAKEPOS = new State(0.0, 0);
+        //public static final State CONSTRAINTPOS = new State(-13, 0);
+
+        public static final double scoringPosition = 33;
+        public static final double intakePosition = 0;
+        public static final double positionTolerance = 1; //arm is in position if it is +- 1 from target
 
         public static final double homeSpeed = -0.3;
         public static final class MotorOutput {

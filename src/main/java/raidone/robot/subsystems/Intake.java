@@ -14,6 +14,8 @@ import au.grapplerobotics.ConfigurationFailedException;
 
 import static raidone.robot.Constants.Intake.*;
 
+
+
 public class Intake extends SubsystemBase {
     // private static IntakeState inSt = new enum thingy
     private CANSparkMax roller;
@@ -105,12 +107,6 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic(){
-        // state machine code here
-
-        // if Wrist.system().wrSt.getValue == 8 and inSt.getV
-        //Wrist.system().isHomed();
-        //Arm.system().isHomed()
-        // update IntakeState enum
         distance = getDistancePeriodic();
         SmartDashboard.putNumber("LaserCAN", distance);
         SmartDashboard.putBoolean("Beam Break", getLaserLimit());

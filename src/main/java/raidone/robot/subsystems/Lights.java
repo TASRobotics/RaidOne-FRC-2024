@@ -4,7 +4,6 @@
 
 package raidone.robot.subsystems;
 
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import raidone.lib.util.ColorConverter;
@@ -21,22 +20,25 @@ import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
+import raidone.robot.subsystems.StateBuilder.RobotState;
+
 public class Lights extends SubsystemBase {
     private static Lights lights = new Lights();
-    private final CANdle m_candle = new CANdle(Constants.Lights.CANdleID, "rio"); 
-    private final int NUM_LEDS= 128;
-    private int hue = 0; //hue is used to set all colors to a particular hue, google CHSV for colors->numbers
-    private Animation m_toAnimate = null;  //the animation that is currently playing
+    private final CANdle m_candle = new CANdle(Constants.Lights.CANdleID, "rio");
+    private final int NUM_LEDS = 128;
+    private int hue = 0; // hue is used to set all colors to a particular hue, google CHSV for
+                         // colors->numbers
+    private Animation m_toAnimate = null; // the animation that is currently playing
     private boolean m_clearAllAnims = false;
-    //private int m_candleChannel = 0;
-    //private boolean m_last5V = false;
-    //private AnimationTypes m_currentAnimation;
-    private boolean m_setAnim = false; //used to prevent unneccesary refreshes in periodic()
-    private Intake intake = Intake.system(); 
-    //RobotContainer.RobotState robotState = RobotContainer.getRobotState();
+    // private int m_candleChannel = 0;
+    // private boolean m_last5V = false;
+    // private AnimationTypes m_currentAnimation;
+    private boolean m_setAnim = false; // used to prevent unneccesary refreshes in periodic()
+    private Intake intake = Intake.system();
+    // RobotContainer.RobotState robotState = RobotContainer.getRobotState();
     StateBuilder.RobotState robotState = StateBuilder.getRobotState();
 
-    public enum AnimationTypes { //list of all possible animations by name
+    public enum AnimationTypes { // list of all possible animations by name
         ColorFlow,
         Fire,
         Larson,
@@ -49,11 +51,9 @@ public class Lights extends SubsystemBase {
         SetAllRed,
         SetAllBlue
     }
-    
-    
 
     private Lights() {
-        changeAnimation(AnimationTypes.Twinkle); //set default animation to Twinkle
+        changeAnimation(AnimationTypes.Twinkle); // set default animation to Twinkle
         CANdleConfiguration configAll = new CANdleConfiguration();
         configAll.statusLedOffWhenActive = false;
         configAll.disableWhenLOS = false;
@@ -63,45 +63,67 @@ public class Lights extends SubsystemBase {
         m_candle.configAllSettings(configAll, 100);
         System.out.println("Lights init");
         m_clearAllAnims = true;
-        
-        
+
     }
 
-
     // public void decrementAnimation() {
-    //     switch(m_currentAnimation) {
-    //         case ColorFlow: changeAnimation(AnimationTypes.TwinkleOff); break;
-    //         case Fire: changeAnimation(AnimationTypes.ColorFlow); break;
-    //         case Larson: changeAnimation(AnimationTypes.Fire); break;
-    //         case Rainbow: changeAnimation(AnimationTypes.Larson); break;
-    //         case RgbFade: changeAnimation(AnimationTypes.Rainbow); break;
-    //         case SingleFade: changeAnimation(AnimationTypes.RgbFade); break;
-    //         case Strobe: changeAnimation(AnimationTypes.SingleFade); break;
-    //         case Twinkle: changeAnimation(AnimationTypes.Strobe); break;
-    //         case TwinkleOff: changeAnimation(AnimationTypes.Twinkle); break;
-    //         case SetAll: changeAnimation(AnimationTypes.ColorFlow); break;
-    //     }
+    // switch(m_currentAnimation) {
+    // case ColorFlow: changeAnimation(AnimationTypes.TwinkleOff); break;
+    // case Fire: changeAnimation(AnimationTypes.ColorFlow); break;
+    // case Larson: changeAnimation(AnimationTypes.Fire); break;
+    // case Rainbow: changeAnimation(AnimationTypes.Larson); break;
+    // case RgbFade: changeAnimation(AnimationTypes.Rainbow); break;
+    // case SingleFade: changeAnimation(AnimationTypes.RgbFade); break;
+    // case Strobe: changeAnimation(AnimationTypes.SingleFade); break;
+    // case Twinkle: changeAnimation(AnimationTypes.Strobe); break;
+    // case TwinkleOff: changeAnimation(AnimationTypes.Twinkle); break;
+    // case SetAll: changeAnimation(AnimationTypes.ColorFlow); break;
+    // }
     // }
     public void setColors() {
 
-
-        //changeAnimation()
+        // changeAnimation()
     }
 
     /* Wrappers so we can access the CANdle from the subsystem */
-    public double getVbat() { return m_candle.getBusVoltage(); }
-    public double get5V() { return m_candle.get5VRailVoltage(); }
-    public double getCurrent() { return m_candle.getCurrent(); }
-    public double getTemperature() { return m_candle.getTemperature(); }
-    public void configBrightness(double percent) { m_candle.configBrightnessScalar(percent, 0); }
-    public void configLos(boolean disableWhenLos) { m_candle.configLOSBehavior(disableWhenLos, 0); }
-    public void configLedType(LEDStripType type) { m_candle.configLEDType(type, 0); }
-    public void configStatusLedBehavior(boolean offWhenActive) { m_candle.configStatusLedState(offWhenActive, 0); }
+    public double getVbat() {
+        return m_candle.getBusVoltage();
+    }
+
+    public double get5V() {
+        return m_candle.get5VRailVoltage();
+    }
+
+    public double getCurrent() {
+        return m_candle.getCurrent();
+    }
+
+    public double getTemperature() {
+        return m_candle.getTemperature();
+    }
+
+    public void configBrightness(double percent) {
+        m_candle.configBrightnessScalar(percent, 0);
+    }
+
+    public void configLos(boolean disableWhenLos) {
+        m_candle.configLOSBehavior(disableWhenLos, 0);
+    }
+
+    public void configLedType(LEDStripType type) {
+        m_candle.configLEDType(type, 0);
+    }
+
+    public void configStatusLedBehavior(boolean offWhenActive) {
+        m_candle.configStatusLedState(offWhenActive, 0);
+    }
 
     public void changeAnimation(AnimationTypes toChange) {
-        //m_currentAnimation = toChange; //this is only used when working with multiple animations on the same strip
-        
-        switch(toChange) //this is where the enum is converted into the actual animation type, if adding new animation, configure here
+        // m_currentAnimation = toChange; //this is only used when working with multiple
+        // animations on the same strip
+
+        switch (toChange) // this is where the enum is converted into the actual animation type, if adding
+                          // new animation, configure here
         {
             case ColorFlow:
                 m_toAnimate = new ColorFlowAnimation(128, 20, 70, 0, 0.7, NUM_LEDS, Direction.Forward);
@@ -132,7 +154,7 @@ public class Lights extends SubsystemBase {
                 break;
             case SetAllRed:
                 hue = 0;
-                m_toAnimate = null; //set to null because no animation is playing
+                m_toAnimate = null; // set to null because no animation is playing
                 break;
             case SetAllBlue:
                 hue = 160;
@@ -140,40 +162,34 @@ public class Lights extends SubsystemBase {
                 break;
         }
         SmartDashboard.putString("Animation", toChange.toString());
-        //System.out.println("Changed to " + m_currentAnimation.toString());
+        // System.out.println("Changed to " + m_currentAnimation.toString());
     }
 
     @Override
     public void periodic() {
-        //System.out.println("Lights!!!");
-        IntakeStateEnum intakeState = intake.getState();
-        
-        if(intakeState == IntakeStateEnum.IDLE_NO_NOTE || intakeState == IntakeStateEnum.RUNNING_NO_NOTE){
+
+        StateBuilder.RobotState robotState = StateBuilder.getRobotState();
+        if (robotState == RobotState.HOMED_NO_NOTE) {
             changeAnimation(AnimationTypes.SetAllRed);
-            //RobotContainer.setRobotState( RobotContainer.RobotState.HOMED_NO_NOTE);
-            StateBuilder.setRobotState(StateBuilder.RobotState.HOMED_NO_NOTE);
-        } else if (intakeState == IntakeStateEnum.IDLE_HAS_NOTE || intakeState == IntakeStateEnum.RUNNING_HAS_NOTE){
+        } else if (robotState == RobotState.HOMED_HAS_NOTE) {
             changeAnimation(AnimationTypes.StrobeGreen);
-            StateBuilder.setRobotState(StateBuilder.RobotState.HOMED_HAS_NOTE);
-            //RobotContainer.setRobotState(RobotContainer.RobotState.HOMED_HAS_NOTE);
         }
         m_candle.animate(m_toAnimate);
 
-
-        if(m_toAnimate == null) {
-            if(!m_setAnim) {   /* Only setLEDs once, because every set will transmit a frame */
-                int[] rgb = ColorConverter.hueToRGB(hue); //convert hue to RGB
-                m_candle.setLEDs(rgb[0], rgb[1], rgb[2]); 
+        if (m_toAnimate == null) {
+            if (!m_setAnim) { /* Only setLEDs once, because every set will transmit a frame */
+                int[] rgb = ColorConverter.hueToRGB(hue); // convert hue to RGB
+                m_candle.setLEDs(rgb[0], rgb[1], rgb[2]);
                 m_setAnim = true;
             }
         } else {
             m_candle.animate(m_toAnimate);
             m_setAnim = false;
         }
-        
-        if(m_clearAllAnims) {
+
+        if (m_clearAllAnims) {
             m_clearAllAnims = false;
-            for(int i = 0; i < 10; ++i) {
+            for (int i = 0; i < 10; ++i) {
                 m_candle.clearAnimation(i);
             }
         }
@@ -181,7 +197,7 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-      
+
         // This method will be called once per scheduler run during simulation
     }
 
@@ -189,5 +205,4 @@ public class Lights extends SubsystemBase {
         return lights;
     }
 
-    
 }

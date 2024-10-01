@@ -31,8 +31,11 @@ public class Arm extends SubsystemBase{
     private int count = 0;
     private int countsToReset = 20;
 
+    private boolean moving = false;
+
+    
+
     public enum ArmStateEnum {
-        AT_INTAKE_POS,
         AT_SCORE_POS,
         AT_HOME_POS,
         MOVING
@@ -67,6 +70,15 @@ public class Arm extends SubsystemBase{
         //m_arm.setControl(dutyCycle.withOutput(speed));
         m_arm.setControl(dutyCycle.withOutput(speed).withLimitReverseMotion(reverseLimit));
 
+    }
+
+    public boolean isMoving(){
+        if(m_arm.getVelocity().getValueAsDouble() > 0.1 || m_arm.getVelocity().getValueAsDouble() < 0.1){
+            moving = true;
+        } else {
+            moving = false;
+        }
+        return moving;
     }
 
     public void setPos(){
@@ -116,6 +128,17 @@ public class Arm extends SubsystemBase{
                 keepReseting = false;
             }
         }
+
+        if(isMoving()){
+            armState = ArmStateEnum.MOVING;
+        } else if (isHomed){
+            armState = ArmStateEnum.AT_HOME_POS;
+        } else if (m_arm.getPosition().getValueAsDouble() < Constants.Arm.scoringPosition + Constants.Arm.positionTolerance &&
+                   m_arm.getPosition().getValueAsDouble() > Constants.Arm.scoringPosition - Constants.Arm.positionTolerance){
+            armState = ArmStateEnum.AT_SCORE_POS;            
+        }
+
+        
      
     }
 
