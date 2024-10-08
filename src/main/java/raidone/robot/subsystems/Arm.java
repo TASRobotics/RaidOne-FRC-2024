@@ -13,9 +13,10 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-public class Arm extends SubsystemBase{
+public class Arm extends SubsystemBase {
 
     private static Arm armSys = new Arm();
 
@@ -31,18 +32,20 @@ public class Arm extends SubsystemBase{
     private int count = 0;
     private int countsToReset = 20;
 
-    private boolean moving = false;
+    
 
     
 
     public enum ArmStateEnum {
+        AT_INTAKE_POS,
         AT_SCORE_POS,
         AT_HOME_POS,
         MOVING
     }
+
     private static ArmStateEnum armState = ArmStateEnum.AT_HOME_POS;
-  
-    public Arm(){
+
+    public Arm() {
         limitCanifier = RobotContainer.getCANifier();
         isHomed = false;
 
@@ -52,62 +55,61 @@ public class Arm extends SubsystemBase{
         TalonFXConfiguration config = getDefaultConfig();
         m_arm.getConfigurator().apply(config);
         m_follower.getConfigurator().apply(config);
-        
-         // Ensure our followers are following their respective leader
-         m_follower.setControl(new Follower(m_arm.getDeviceID(),true));
+
+        // Ensure our followers are following their respective leader
+        m_follower.setControl(new Follower(m_arm.getDeviceID(), true));
 
         System.out.println("Arm init");
-        
+
     }
 
-    public void stopMotors(){
+    public void stopMotors() {
         m_arm.stopMotor();
     }
 
-
-    public void percentOut(double speed){
-        //dutyCycle.Output = speed;
-        //m_arm.setControl(dutyCycle.withOutput(speed));
+    public void percentOut(double speed) {
+        // dutyCycle.Output = speed;
+        // m_arm.setControl(dutyCycle.withOutput(speed));
         m_arm.setControl(dutyCycle.withOutput(speed).withLimitReverseMotion(reverseLimit));
 
     }
 
-    public boolean isMoving(){
-        if(m_arm.getVelocity().getValueAsDouble() > 0.1 || m_arm.getVelocity().getValueAsDouble() < 0.1){
-            moving = true;
-        } else {
-            moving = false;
-        }
-        return moving;
-    }
-
-    public void setPos(){
+    public void setPos(double setpoint) {
         
         // if(driver.getRawButton(XboxController.Button.kA.value)){
         //     //setpoint = SCORINGPOS;
         // }else if(driver.getRawButton(XboxController.Button.kB.value)){
         //     //setpoint = INTAKEPOS;
         // }
+
+        // Leo added: Create a Dynamic Motion Magic request 
+        final DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, 
+            Constants.Arm.MotionMagic.motionMagicVelocity, 
+            Constants.Arm.MotionMagic.motionMagicAccel, 
+            Constants.Arm.MotionMagic.motionMagicJerk);
+
+        // Set the target position to the peram setpoint value
+        m_arm.setControl(m_request.withPosition(setpoint));
     }
 
-    public void home(){
-      //  m_arm.set(0.1);
-      percentOut(Constants.Arm.homeSpeed);
+    public void home() {
+        // m_arm.set(0.1);
+        percentOut(Constants.Arm.homeSpeed);
     }
 
-    public boolean isHomed(){
-        if(reverseLimit){
+    public boolean isHomed() {
+        if (reverseLimit) {
             isHomed = true;
             m_arm.setPosition(0);
             count = 0;
             keepReseting = true;
-        }else{
+        } else {
             isHomed = false;
         }
-         return isHomed;
+        return isHomed;
     }
 
-    public static Arm system(){
+    public static Arm system() {
         return armSys;
     }
 
@@ -129,31 +131,22 @@ public class Arm extends SubsystemBase{
             }
         }
 
-        if(isMoving()){
-            armState = ArmStateEnum.MOVING;
-        } else if (isHomed){
-            armState = ArmStateEnum.AT_HOME_POS;
-        } else if (m_arm.getPosition().getValueAsDouble() < Constants.Arm.scoringPosition + Constants.Arm.positionTolerance &&
-                   m_arm.getPosition().getValueAsDouble() > Constants.Arm.scoringPosition - Constants.Arm.positionTolerance){
-            armState = ArmStateEnum.AT_SCORE_POS;            
-        }
-
         
      
     }
 
-    public void getCANifierValues(){
+    public void getCANifierValues() {
         CANifier.PinValues values = new CANifier.PinValues();
         limitCanifier.getGeneralInputs(values);
         boolean reverseLeftLimit = values.LIMF;
         boolean reverseRightLimit = values.QUAD_A;
         reverseLimit = !reverseLeftLimit || !reverseRightLimit;
-        SmartDashboard.putBoolean("Arm_Left",reverseLeftLimit);
-        SmartDashboard.putBoolean("Arm_Right",reverseRightLimit);
-        SmartDashboard.putBoolean("Arm_Limits",reverseLimit);
+        SmartDashboard.putBoolean("Arm_Left", reverseLeftLimit);
+        SmartDashboard.putBoolean("Arm_Right", reverseRightLimit);
+        SmartDashboard.putBoolean("Arm_Limits", reverseLimit);
     }
 
-    public ArmStateEnum getState(){
+    public ArmStateEnum getState() {
         return armState;
     }
 
@@ -164,7 +157,7 @@ public class Arm extends SubsystemBase{
         m_arm.getConfigurator().apply(motorOutputConfig);
 
         // The left motor is CW+
-        //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
+        // currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
         motorOutputConfig.withInverted(Constants.Arm.MotorOutput.inversion);
         motorOutputConfig.withNeutralMode(Constants.Arm.MotorOutput.neutralMode);
         config.withMotorOutput(motorOutputConfig);
@@ -176,7 +169,7 @@ public class Arm extends SubsystemBase{
         currentLimitsConfigs.withSupplyTimeThreshold(Constants.Arm.CurrentLimits.supplyTimeThreshold);
         config.withCurrentLimits(currentLimitsConfigs);
 
-         // Velocity PID Configuration
+        // Velocity PID Configuration
         Slot0Configs slot0Configs = new Slot0Configs();
         // slot0Configs.withKV(Constants.Arm.kV);
         slot0Configs.withKP(Constants.Arm.PositionPID.kP);
@@ -210,6 +203,8 @@ public class Arm extends SubsystemBase{
         config.withHardwareLimitSwitch(hardwareLimitConfigs);
 
         return config;
-     
     }
+
+
 }
+

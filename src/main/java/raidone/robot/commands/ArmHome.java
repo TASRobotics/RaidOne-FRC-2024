@@ -5,16 +5,17 @@ import raidone.robot.subsystems.Arm;
 
 public class ArmHome extends Command {
     private Arm arm;
-
-    public ArmHome() {
+    private double setpoint;
+    public ArmHome(double setpoint) {
         this.arm = Arm.system();
-        
+        this.setpoint = setpoint;
         addRequirements(this.arm);
     }
 
     @Override
     public void execute() {
-        arm.home();
+        
+        arm.setPos(setpoint);
     }
 
     @Override

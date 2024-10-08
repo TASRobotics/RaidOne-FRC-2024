@@ -7,19 +7,19 @@ import raidone.robot.subsystems.Arm;
 public class ArmGo extends Command {
     private Arm arm;
     private double speed;
-    //private double setpoint;
+    private double setpoint;
 
-    public ArmGo(double speed) {
+    public ArmGo(double setpoint) {
         this.arm = Arm.system();
-        this.speed = speed;
+        this.setpoint = setpoint;
         
         addRequirements(this.arm);
     }
 
     @Override
     public void execute() {
-        //arm.setPos(setpoint);
-        arm.percentOut(speed);
+        arm.setPos(setpoint);
+        
     }
 
     //@Override

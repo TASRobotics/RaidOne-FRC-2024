@@ -23,9 +23,9 @@ public class CommandSequences {
      public Command armHomeSequence() {
         return Commands.sequence(
             //new WristCoast(true),
-            new ArmHome(),
+            new ArmHome(Constants.Arm.intakePosition),
             Commands.waitSeconds(0.25),
-            new ArmHome()
+            new ArmHome(Constants.Arm.intakePosition)
             //new WristCoast(false)
         );
     }
@@ -48,7 +48,7 @@ public class CommandSequences {
             Commands.parallel( armHomeSequence(),
                  wristHomeSequence()),
             Commands.waitSeconds(0.1),
-            new ArmHome(),
+            new ArmHome(Constants.Arm.intakePosition),
             Commands.waitSeconds(0.1),
             new WristHome(),
             new WristCoast(false)

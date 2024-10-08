@@ -74,7 +74,7 @@ public class Wrist extends SubsystemBase{
     }
 
     public void setPos() {
-   
+        //profile once done with arm
     }
 
     public void home(){

@@ -114,10 +114,10 @@ public class RobotContainer {
         wristgoreverse.whileTrue(new WristGo(-0.1));
         //wristhome.onTrue(new WristHome().andThen(Commands.waitSeconds(0.5)).andThen(new WristHome()));
         wristhome.onTrue(wristHomeSequence);
-        armgo.whileTrue(new ArmGo(0.1));    
-        armhome.onTrue(armHomeSequence);    
+        armgo.onTrue(new ArmGo(Constants.Arm.scoringPosition)); // leo added    
+        armhome.onTrue(armHomeSequence); // leo added
         //armhome.onTrue(new ArmHome().andThen(Commands.waitSeconds(0.1)).andThen(new ArmHome()));
-        armgoreverse.whileTrue(new ArmGo(-0.1));
+        //armgoreverse.whileTrue(new ArmGo(-0.1)); // leo commented out
         bothHome.onTrue(bothHomeSequence);
         runIntake.whileTrue(new IntakeIn(Constants.Intake.intakePercent));
         Trigger leftTriggerBoolean = new Trigger(leftTrigger);
