@@ -2,6 +2,7 @@ package raidone.robot.subsystems;
 
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -9,9 +10,11 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.Encoder;
 //import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +31,7 @@ public class Wrist extends SubsystemBase{
     private static Wrist wrist = new Wrist();
     private TalonFX m_wrist;
     private TalonFX m_follower;
+    
     private boolean isHomed;
     private static CANifier limitCanifier;
     private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
@@ -54,6 +58,7 @@ public class Wrist extends SubsystemBase{
         m_wrist = new TalonFX(Constants.Wrist.WRIST_MOTOR_ID, Constants.Wrist.wristCANbus);
         m_follower = new TalonFX(Constants.Wrist.WRIST_FOLLOW_ID, Constants.Wrist.wristCANbus);
 
+        
          TalonFXConfiguration config = getDefaultConfig();
          m_wrist.getConfigurator().apply(config);
          m_follower.getConfigurator().apply(config);
@@ -73,8 +78,11 @@ public class Wrist extends SubsystemBase{
         m_wrist.stopMotor();
     }
 
-    public void setPos() {
-        //profile once done with arm
+    public void setPos( double setpoint) {
+        //leo added
+        MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(setpoint);
+        m_request = m_request.withLimitReverseMotion(reverseLimit);
+        m_wrist.setControl(m_request.withPosition(setpoint));
     }
 
     public void home(){
@@ -163,12 +171,17 @@ public class Wrist extends SubsystemBase{
     public WristStateEnum getState(){
         return wristState;
     }
+    
 
     private TalonFXConfiguration getDefaultConfig() {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         var motorOutputConfig = new MotorOutputConfigs();
         m_wrist.getConfigurator().apply(motorOutputConfig);
+
+        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        feedbackConfigs.withSensorToMechanismRatio(MotorConfigConstants.Wrist.sensorToMechanismRatio);
+        config.withFeedback(feedbackConfigs);
 
         // The left motor is CW+
         //currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
@@ -185,7 +198,8 @@ public class Wrist extends SubsystemBase{
 
          // Velocity PID Configuration
         Slot0Configs slot0Configs = new Slot0Configs();
-        // slot0Configs.withKV(Constants.Wrist.kV);
+        slot0Configs.withKV(MotorConfigConstants.Wrist.kV);
+        slot0Configs.withKS(MotorConfigConstants.Wrist.kS);
         slot0Configs.withKP(MotorConfigConstants.Wrist.kP);
         slot0Configs.withKI(MotorConfigConstants.Wrist.kI);
         slot0Configs.withKD(MotorConfigConstants.Wrist.kD);
@@ -193,9 +207,8 @@ public class Wrist extends SubsystemBase{
 
         // Motion Magic Configuration
         MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(MotorConfigConstants.Wrist.motionMagicVelocity);
-        motionMagicConfigs.withMotionMagicAcceleration(MotorConfigConstants.Wrist.motionMagicAccel);
-        motionMagicConfigs.withMotionMagicJerk(MotorConfigConstants.Wrist.motionMagicJerk);
+        motionMagicConfigs.withMotionMagicExpo_kV(MotorConfigConstants.Wrist.motionMagicExpoVelocity);
+        motionMagicConfigs.withMotionMagicExpo_kA(MotorConfigConstants.Wrist.motionMagicExpoAccel);
         config.withMotionMagic(motionMagicConfigs);
 
         // Software Limit Switch Configuration 

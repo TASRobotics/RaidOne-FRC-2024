@@ -8,6 +8,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
 import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
+import raidone.robot.Constants.Arm.Feedback;
+
 
 
 public final class MotorConfigConstants {
@@ -27,19 +29,20 @@ public final class MotorConfigConstants {
         // Position PID Constants
         public static final int positionPIDSlot = 0;
         public static final double kV = 12.0 / (6000.0 / sensorToMechanismRatio / 60.0); // 12.0 V / max speed rps
-        public static final double kP = 80.0;
+        public static final double kS = 0.18;
+        public static final double kP = 50.0;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kD = 2.5;
         public static final double kPIDUpdateHz = 1000;
 
         public static final double kTolerance = 2.0 / 360.0; // rotations
 
         // Motion Magic Constants
-        public static final double theoreticalMaxSpeedRPS = 6000.0 / sensorToMechanismRatio / 60.0 * 10;
+        public static final double theoreticalMaxSpeedRPS = 6000.0 / sensorToMechanismRatio / 60.0;
         // public static final double kTheoreticalMaxSpeedRPS = 100.0;
-        public static final double motionMagicVelocity = theoreticalMaxSpeedRPS * 0.30;
-        public static final double motionMagicAccel = theoreticalMaxSpeedRPS * 3.0;
-        public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
+        public static final double motionMagicExpoVelocity = 12.0 / theoreticalMaxSpeedRPS * 1.0;
+        public static final double motionMagicExpoAccel = 1.5;
+        // public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
 
         // Software Limit Switch Constants
         public static SoftwareLimitSwitchConfigs normalSoftLimits = new SoftwareLimitSwitchConfigs();
@@ -62,4 +65,51 @@ public final class MotorConfigConstants {
         public static final boolean forwardLimitAutosetPositionEnabled = false; // check
         public static final double forwardLimitAutosetPositionValue = 0.0;
     }
+
+    public static final class Arm{
+
+         // Feedback Constants
+        public static final double sensorToMechanismRatio = 100; // rotor rotations to wrist rotations
+
+        // Position PID Constants
+        public static final int positionPIDSlot = 0;
+        public static final double kV = 11; // 12.0 V / max speed rps
+        public static final double kS = 0.3;
+        public static final double kP = 20.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kPIDUpdateHz = 1000;
+
+        public static final double kTolerance = 0.01; 
+
+        // Motion Magic Constants
+        public static final double theoreticalMaxSpeedRPS = 6000.0 / sensorToMechanismRatio / 60.0;
+        
+        // public static final double kTheoreticalMaxSpeedRPS = 100.0;
+        public static final double motionMagicVelocity = 1.8;
+        public static final double motionMagicAccel = 3.6;
+        // public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
+
+        // public static final class UpMotionMagicConfigs {
+        //     // Motion Magic Constants
+        //     public static final double theoreticalMaxSpeedRPS = 6000.0 / sensorToMechanismRatio / 60.0;
+        //     // public static final double kTheoreticalMaxSpeedRPS = 100.0;
+        //     public static final double motionMagicExpoVelocity = 12.0 / theoreticalMaxSpeedRPS * 1.0;
+        //     public static final double motionMagicExpoAccel = 1.5;
+        //     // public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
+
+        // }
+
+        // // leo added if necessary cuz R0 has the same thang
+        // public static final class DownMotionMagicConfigs {
+        //     // Motion Magic Constants
+        //     public static final double theoreticalMaxSpeedRPS = 6000.0 / sensorToMechanismRatio / 60.0;
+        //     // public static final double kTheoreticalMaxSpeedRPS = 100.0;
+        //     public static final double motionMagicExpoVelocity = 12.0 / theoreticalMaxSpeedRPS * 1.0;
+        //     public static final double motionMagicExpoAccel = 1.5;
+        //     // public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
+
+        // }
+    }
 }
+

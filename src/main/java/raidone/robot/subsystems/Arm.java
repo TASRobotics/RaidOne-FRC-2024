@@ -3,9 +3,11 @@ package raidone.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import raidone.robot.Constants;
+import raidone.robot.MotorConfigConstants;
 import raidone.robot.RobotContainer;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -13,6 +15,8 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -76,20 +80,11 @@ public class Arm extends SubsystemBase {
 
     public void setPos(double setpoint) {
         
-        // if(driver.getRawButton(XboxController.Button.kA.value)){
-        //     //setpoint = SCORINGPOS;
-        // }else if(driver.getRawButton(XboxController.Button.kB.value)){
-        //     //setpoint = INTAKEPOS;
-        // }
 
-        // Leo added: Create a Dynamic Motion Magic request 
-        final DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, 
-            Constants.Arm.MotionMagic.motionMagicVelocity, 
-            Constants.Arm.MotionMagic.motionMagicAccel, 
-            Constants.Arm.MotionMagic.motionMagicJerk);
-
-        // Set the target position to the peram setpoint value
+        
+        MotionMagicVoltage m_request = new MotionMagicVoltage(setpoint);
         m_arm.setControl(m_request.withPosition(setpoint));
+
     }
 
     public void home() {
@@ -169,20 +164,33 @@ public class Arm extends SubsystemBase {
         currentLimitsConfigs.withSupplyTimeThreshold(Constants.Arm.CurrentLimits.supplyTimeThreshold);
         config.withCurrentLimits(currentLimitsConfigs);
 
-        // Velocity PID Configuration
+        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        feedbackConfigs.withSensorToMechanismRatio(MotorConfigConstants.Wrist.sensorToMechanismRatio);
+        config.withFeedback(feedbackConfigs);
+
+         // Velocity PID Configuration
         Slot0Configs slot0Configs = new Slot0Configs();
-        // slot0Configs.withKV(Constants.Arm.kV);
-        slot0Configs.withKP(Constants.Arm.PositionPID.kP);
-        slot0Configs.withKI(Constants.Arm.PositionPID.kI);
-        slot0Configs.withKD(Constants.Arm.PositionPID.kD);
+        slot0Configs.withKV(MotorConfigConstants.Arm.kV);
+        slot0Configs.withKS(MotorConfigConstants.Arm.kS);
+        slot0Configs.withKP(MotorConfigConstants.Arm.kP);
+        slot0Configs.withKI(MotorConfigConstants.Arm.kI);
+        slot0Configs.withKD(MotorConfigConstants.Arm.kD);
         config.withSlot0(slot0Configs);
 
+        
         // Motion Magic Configuration
+        //MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+        //motionMagicConfigs.withMotionMagicCruiseVelocity(Constants.Arm.MotionMagic.motionMagicVelocity);
+        //motionMagicConfigs.withMotionMagicAcceleration(Constants.Arm.MotionMagic.motionMagicAccel);
+        //motionMagicConfigs.withMotionMagicJerk(Constants.Arm.MotionMagic.motionMagicJerk);
+        //config.withMotionMagic(motionMagicConfigs);
+
+        // Motion Magic Configuration(how are we gon intetegrate 2 diff motion magic arm constants)
         MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(Constants.Arm.MotionMagic.motionMagicVelocity);
-        motionMagicConfigs.withMotionMagicAcceleration(Constants.Arm.MotionMagic.motionMagicAccel);
-        motionMagicConfigs.withMotionMagicJerk(Constants.Arm.MotionMagic.motionMagicJerk);
+        motionMagicConfigs.withMotionMagicAcceleration(MotorConfigConstants.Arm.motionMagicAccel);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(MotorConfigConstants.Arm.motionMagicVelocity);
         config.withMotionMagic(motionMagicConfigs);
+
 
         // Software Limit Switch Configuration 
         config.withSoftwareLimitSwitch(Constants.Arm.SoftwareLimits.normalSoftLimits);
@@ -203,6 +211,10 @@ public class Arm extends SubsystemBase {
         config.withHardwareLimitSwitch(hardwareLimitConfigs);
 
         return config;
+    }
+
+    public double getPosition() {
+        return m_arm.getRotorPosition().getValue();
     }
 
 

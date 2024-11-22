@@ -1,5 +1,6 @@
 package raidone.robot;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
@@ -15,7 +16,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-        public static final String CANIVORE_NAME = "seCANdary";
+    public static final String CANIVORE_NAME = "seCANdary";
 
     public static final class Swerve {
 
@@ -122,60 +123,50 @@ public final class Constants {
         public static final int ARM_FOLLOW_ID = 10;
         public static final String armCANbus = "rio";
 
-        //public static final State SCORINGPOS = new State(-33, 0);
-        //public static final double SOFTLIMIT = SCORINGPOS.position - 2;
-        //public static final State INTAKEPOS = new State(0.0, 0);
-        //public static final State CONSTRAINTPOS = new State(-13, 0);
+        // public static final State SCORINGPOS = new State(-33, 0);
+        // public static final double SOFTLIMIT = SCORINGPOS.position - 2;
+        // public static final State INTAKEPOS = new State(0.0, 0);
+        // public static final State CONSTRAINTPOS = new State(-13, 0);
 
-        public static final double scoringPosition = 33;
+        public static final double scoringPosition = 0.33;
         public static final double intakePosition = 0;
-        public static final double positionTolerance = 1; //arm is in position if it is +- 1 from target
+        public static final double positionTolerance = 0.01; // arm is in position if it is +- 0.01 of a rotation from target
+        public static final double constrainPosition = 0.13;
 
         public static final double homeSpeed = -0.3;
+
         public static final class MotorOutput {
             public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
             public static final InvertedValue inversion = InvertedValue.CounterClockwise_Positive;
         }
-        public static final class CurrentLimits{
+
+        public static final class CurrentLimits {
             // Current Limit Constants
             public static final double supplyCurrentLimit = 40.0;
             public static final boolean supplyCurrentEnable = true;
             public static final double supplyCurrentThreshold = 50.0;
             public static final double supplyTimeThreshold = 0.2;
         }
+
         public static final class Feedback {
             // Feedback Constants
             public static final double sensorToMechanismRatio = 100; // rotor rotations to wrist rotations
-         }
-        public static final class PositionPID {
-            // Position PID Constants
-            public static final int positionPIDSlot = 0;
-            public static final double kV = 12.0 / (6000.0 / Feedback.sensorToMechanismRatio / 60.0); // 12.0 V / max speed rps
-            public static final double kP = 80.0;
-            public static final double kI = 0.0;
-            public static final double kD = 0.0;
-            public static final double kPIDUpdateHz = 1000;
-            public static final double kTolerance = 2.0 / 360.0; // rotations
         }
-        public static final class MotionMagic {
-            // Motion Magic Constants
-            public static final double theoreticalMaxSpeedRPS = 6000.0 / Feedback.sensorToMechanismRatio / 60.0 * 10;
-            // public static final double kTheoreticalMaxSpeedRPS = 100.0;
-            public static final double motionMagicVelocity = theoreticalMaxSpeedRPS * 0.30;
-            public static final double motionMagicAccel = theoreticalMaxSpeedRPS * 3.0;
-            public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
-         }
+
+        
+
         public static final class SoftwareLimits {
             // Software Limit Switch Constants
             public static SoftwareLimitSwitchConfigs normalSoftLimits = new SoftwareLimitSwitchConfigs();
             static {
                 normalSoftLimits.ForwardSoftLimitEnable = true;
-                normalSoftLimits.ForwardSoftLimitThreshold = 36; //108.0/360.0; // rotations
+                normalSoftLimits.ForwardSoftLimitThreshold = 36; // 108.0/360.0; // rotations
                 normalSoftLimits.ReverseSoftLimitEnable = false;
-                //normalSoftLimits.ReverseSoftLimitThreshold = -1000;
+                // normalSoftLimits.ReverseSoftLimitThreshold = -1000;
             }
         }
-        public static final class HardWareLimits { 
+
+        public static final class HardWareLimits {
             // Hardware Limit Switch Constants
             public static final ReverseLimitSourceValue reverseLimitSource = ReverseLimitSourceValue.Disabled;
             public static final ReverseLimitTypeValue reverseLimitType = ReverseLimitTypeValue.NormallyOpen;
@@ -194,20 +185,15 @@ public final class Constants {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        
         public static final String wristCANbus = "rio";
 
-        public static final State SCORINGPOS = new State(-23.0, 0);
-        public static final State INTAKEPOS = new State(-47.0, 0);
+        public static final State SCORINGPOS = new State(0.23, 0);
+        public static final State INTAKEPOS = new State(0.5, 0);
         public static final State HOMEPOS = new State(0.0, 0);
 
         public static final double homeSpeed = -0.4;
-
-        
-        
+        public static final double outputRatio = 100;                                                                    
     }
-
-    
 
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 13;

@@ -2,7 +2,9 @@ package raidone.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import raidone.robot.Constants;
+import raidone.robot.MotorConfigConstants;
 import raidone.robot.subsystems.Arm;
 import raidone.robot.subsystems.Intake;
 import raidone.robot.subsystems.Wrist;
@@ -21,21 +23,39 @@ public class CommandSequences {
       }
   
      public Command armHomeSequence() {
+        
         return Commands.sequence(
-            //new WristCoast(true),
-            new ArmHome(Constants.Arm.intakePosition),
-            Commands.waitSeconds(0.25),
-            new ArmHome(Constants.Arm.intakePosition)
-            //new WristCoast(false)
+            
+        
+            //leo added/changed
+            //new ArmHome(Constants.Arm.intakePosition),//double check 
+            new ArmHome(),
+             Commands.waitSeconds(0.25),
+             new ArmHome()
+             //new ArmHome(Constants.Arm.intakePosition)
+  
         );
     }
 
     public Command wristHomeSequence() {
         return Commands.sequence(
-            new WristHome(),
+            new SequentialCommandGroup(
+            new ArmMotionProfile(Constants.Arm.constrainPosition)).withTimeout(0.5),
+            new WristHome(Constants.Wrist.HOMEPOS.position),
             Commands.waitSeconds(0.5),
-            new WristHome()
+            new WristHome(Constants.Wrist.HOMEPOS.position)
+        
         );
+    }
+
+
+    public Command intakePos(){
+        return Commands.sequence(new SequentialCommandGroup(
+                new ArmMotionProfile(Constants.Arm.constrainPosition)).withTimeout(1),
+                new WristMotionMagic(Constants.Wrist.INTAKEPOS.position).withTimeout(1),
+                new ArmHome()
+        );
+        
     }
 
     public Command bothHomeSequence(){
@@ -48,9 +68,18 @@ public class CommandSequences {
             Commands.parallel( armHomeSequence(),
                  wristHomeSequence()),
             Commands.waitSeconds(0.1),
-            new ArmHome(Constants.Arm.intakePosition),
+            
+            new WristCoast(false)
+        );
+    }
+
+    public Command bothMotionProfile(double armsetpoint, double wristsetpoint){
+        return Commands.sequence(
+            new WristCoast(true),
+            Commands.parallel( new ArmMotionProfile(armsetpoint),
+                new WristMotionMagic(wristsetpoint)),
             Commands.waitSeconds(0.1),
-            new WristHome(),
+            
             new WristCoast(false)
         );
     }

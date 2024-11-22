@@ -5,22 +5,23 @@ import raidone.robot.subsystems.Wrist;
 
 public class WristHome extends Command {
     private Wrist wrist;
-
-    public WristHome() {
+    private double setpoint;
+    public WristHome(double setpoint) {
         this.wrist = Wrist.system();
-        
+        this.setpoint = setpoint;
         addRequirements(this.wrist);
     }
 
     @Override
     public void execute() {
+        //wrist.setPos(setpoint);
         wrist.home();
     }
 
+    //leo add
     @Override
     public boolean isFinished() {
         return wrist.isHomed();
-        //return true;
     }
 
     @Override
