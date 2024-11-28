@@ -128,10 +128,10 @@ public final class Constants {
         // public static final State INTAKEPOS = new State(0.0, 0);
         // public static final State CONSTRAINTPOS = new State(-13, 0);
 
-        public static final double scoringPosition = 0.33;
+        public static final double scoringPosition = 0.3;
         public static final double intakePosition = 0;
-        public static final double positionTolerance = 0.01; // arm is in position if it is +- 0.01 of a rotation from target
-        public static final double constrainPosition = 0.13;
+        public static final double positionTolerance = 0.01; 
+        public static final double constrainPosition = 0.1;
 
         public static final double homeSpeed = -0.3;
 
@@ -190,6 +190,7 @@ public final class Constants {
         public static final State SCORINGPOS = new State(0.23, 0);
         public static final State INTAKEPOS = new State(0.5, 0);
         public static final State HOMEPOS = new State(0.0, 0);
+        public static final State CONSTRAINTPOS = new State(0.45, 0);
 
         public static final double homeSpeed = -0.4;
         public static final double outputRatio = 100;                                                                    

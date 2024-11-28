@@ -23,10 +23,10 @@ public class ArmGo extends Command {
     }
 
     //@Override
-    //public boolean isFinished() {
+    public boolean isFinished() {
         //return Math.abs(arm.getEncoder().getPosition() - setpoint) <= 0.2;
-    //    return true;
-    //}
+        return true;
+    }
 
     @Override
     public void end(boolean interrupted) {

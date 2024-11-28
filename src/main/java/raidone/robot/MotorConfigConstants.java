@@ -30,7 +30,7 @@ public final class MotorConfigConstants {
         public static final int positionPIDSlot = 0;
         public static final double kV = 12.0 / (6000.0 / sensorToMechanismRatio / 60.0); // 12.0 V / max speed rps
         public static final double kS = 0.18;
-        public static final double kP = 50.0;
+        public static final double kP = 70.0;
         public static final double kI = 0.0;
         public static final double kD = 2.5;
         public static final double kPIDUpdateHz = 1000;
@@ -80,14 +80,14 @@ public final class MotorConfigConstants {
         public static final double kD = 0.0;
         public static final double kPIDUpdateHz = 1000;
 
-        public static final double kTolerance = 0.01; 
+        
 
         // Motion Magic Constants
         public static final double theoreticalMaxSpeedRPS = 6000.0 / sensorToMechanismRatio / 60.0;
         
         // public static final double kTheoreticalMaxSpeedRPS = 100.0;
-        public static final double motionMagicVelocity = 1.8;
-        public static final double motionMagicAccel = 3.6;
+        public static final double motionMagicVelocity = 0.5;
+        public static final double motionMagicAccel = 1;
         // public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
 
         // public static final class UpMotionMagicConfigs {
