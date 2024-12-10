@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import raidone.robot.Constants;
-import raidone.robot.MotorConfigConstants;
 import raidone.robot.subsystems.Arm;
 import raidone.robot.subsystems.Intake;
 import raidone.robot.subsystems.Wrist;
@@ -39,8 +38,7 @@ public class CommandSequences {
 
     public Command wristHomeSequence() {
         return Commands.sequence(
-            new SequentialCommandGroup(
-            new ArmMotionProfile(Constants.Arm.constrainPosition)).withTimeout(0.5),
+            // new ArmMotionProfile(Constants.Arm.constrainPosition)).withTimeout(0.5),
             new WristHome(Constants.Wrist.HOMEPOS.position),
             Commands.waitSeconds(0.5),
             new WristHome(Constants.Wrist.HOMEPOS.position)
@@ -58,17 +56,37 @@ public class CommandSequences {
         
     }
 
+    
+    public Command intakeInSequence(){
+        return Commands.sequence(new SequentialCommandGroup(
+                new IntakeIn(Constants.Intake.intakePercent),
+                new IntakeOut(0.2).withTimeout(0.1)
+        )
+    );
+        
+    }
+
+
     public Command bothHomeSequence(){
         // return Commands.parallel(
         //     armHomeSequence(),
         //     wristHomeSequence()
         // );
+        // return Commands.sequence(
+        //     new WristCoast(true),
+        //     Commands.parallel( armHomeSequence(),
+        //          wristHomeSequence()),
+        //     Commands.waitSeconds(0.1),
+            
+        //     new WristCoast(false)
+        // )
         return Commands.sequence(
             new WristCoast(true),
-            Commands.parallel( armHomeSequence(),
-                 wristHomeSequence()),
+            armHomeSequence(),
+            wristHomeSequence(),
             Commands.waitSeconds(0.1),
-            
+            armHomeSequence(),
+            Commands.waitSeconds(0.1),
             new WristCoast(false)
         );
     }

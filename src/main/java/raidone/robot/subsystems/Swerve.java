@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static raidone.robot.Constants.Swerve.*;
 
 import raidone.robot.Constants;
-import raidone.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
     

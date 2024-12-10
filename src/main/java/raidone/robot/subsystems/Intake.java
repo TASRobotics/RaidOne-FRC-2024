@@ -41,8 +41,8 @@ public class Intake extends SubsystemBase {
         roller.setIdleMode(IdleMode.kBrake);
         roller.setSmartCurrentLimit(CURRENT_LIMIT);
 
-        // beam = roller.getForwardLimitSwitch(Type.kNormallyOpen);
-        // beam.enableLimitSwitch(false);
+        beam = roller.getForwardLimitSwitch(Type.kNormallyOpen);
+        beam.enableLimitSwitch(false);
 
         laserCan = new LaserCan(20);
         // Optionally initialise the settings of the LaserCAN, if you haven't already done so in GrappleHook

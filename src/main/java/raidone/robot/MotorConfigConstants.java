@@ -86,8 +86,8 @@ public final class MotorConfigConstants {
         public static final double theoreticalMaxSpeedRPS = 6000.0 / sensorToMechanismRatio / 60.0;
         
         // public static final double kTheoreticalMaxSpeedRPS = 100.0;
-        public static final double motionMagicVelocity = 1.8;
-        public static final double motionMagicAccel = 3.6;
+        public static final double motionMagicVelocity = 0.9; //1.8
+        public static final double motionMagicAccel = 1.8;
         // public static final double motionMagicJerk = theoreticalMaxSpeedRPS * 30.0;
 
         // public static final class UpMotionMagicConfigs {
