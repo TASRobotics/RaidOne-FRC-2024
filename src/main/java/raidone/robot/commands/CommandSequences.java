@@ -49,9 +49,13 @@ public class CommandSequences {
 
     public Command intakePos(){
         return Commands.sequence(new SequentialCommandGroup(
-                new ArmMotionProfile(Constants.Arm.constrainPosition)).withTimeout(1),
-                new WristMotionMagic(Constants.Wrist.INTAKEPOS.position).withTimeout(1),
-                new ArmHome()
+                new ArmMotionProfile(Constants.Arm.constrainPosition)).withTimeout(0.5),
+                
+                new WristMotionMagic(Constants.Wrist.CONSTRAINTPOS.position).withTimeout(0.5),
+                
+               
+                armHomeSequence(),
+                new WristMotionMagic(Constants.Wrist.INTAKEPOS.position).withTimeout(0.5)
         );
         
     }
@@ -94,8 +98,8 @@ public class CommandSequences {
     public Command bothMotionProfile(double armsetpoint, double wristsetpoint){
         return Commands.sequence(
             new WristCoast(true),
-            Commands.parallel( new ArmMotionProfile(armsetpoint),
-                new WristMotionMagic(wristsetpoint)),
+            Commands.parallel( new ArmMotionProfile(armsetpoint).withTimeout(1.0),
+                new WristMotionMagic(wristsetpoint).withTimeout(1.0)),
             Commands.waitSeconds(0.1),
             
             new WristCoast(false)

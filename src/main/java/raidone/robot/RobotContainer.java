@@ -152,6 +152,7 @@ public class RobotContainer {
         // () -> robotCentric.getAsBoolean()));
 
         // Configure the button bindings
+        configureBindings();
         configureButtonBindings();
         arm.setDefaultCommand(new ArmGo(0));
         wrist.setDefaultCommand(new WristGo(0));
@@ -167,6 +168,27 @@ public class RobotContainer {
      * it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
+    
+    private void configureBindings() {
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
+
+    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    joystick.b().whileTrue(drivetrain
+        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+
+    // reset the field-centric heading on left bumper press
+    joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    if (Utils.isSimulation()) {
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    }
+    drivetrain.registerTelemetry(logger::telemeterize);
+  }
     private void configureButtonBindings() {
         /* Driver Buttons */
         // zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
