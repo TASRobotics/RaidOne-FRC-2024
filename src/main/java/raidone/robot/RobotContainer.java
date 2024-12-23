@@ -1,25 +1,37 @@
 package raidone.robot;
 
-import static raidone.robot.commands.TrapezoidGenerator.armProfile;
-import static raidone.robot.commands.TrapezoidGenerator.wristProfile;
+import java.util.function.BooleanSupplier;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-
+import com.ctre.phoenix.CANifier;
+//import edu.wpi.first.math.geometry.Pose2d;
+//import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.XboxController.Axis;
+//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+//import edu.wpi.first.wpilibj2.command.Commands;
+//import edu.wpi.first.wpilibj2.command.InstantCommand;
+//import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import raidone.robot.Constants.*;
 import raidone.robot.commands.*;
+import raidone.robot.subsystems.*;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import raidone.robot.TunerConstants;
+import raidone.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -31,176 +43,229 @@ import raidone.robot.commands.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    // Controllers
-    public static final XboxController driver = new XboxController(0);
-    // public static final Joystick driver2 = new Joystick(1);
-    public static final XboxController driver2 = new XboxController(1);
+    /* Controllers */
+    // private static RobotContainer robotContainer = new RobotContainer();
+    /* Subsystems */
+    private final static CANifier limitCanifier = new CANifier(0);
+    private final Wrist wrist = Wrist.system();
+    private final Arm arm = Arm.system();
+    private final Intake intake = Intake.system();
+    private final Lights lights = Lights.system();
+    private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+    private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
-    // Driver joystick axes
-    private final int translationAxis = XboxController.Axis.kLeftY.value;
-    private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    private final int rotationAxis = XboxController.Axis.kRightX.value;
+    /* Setting up bindings for necessary control of the swerve drive platform */
+    private final CommandXboxController joystick = new CommandXboxController(1); // My joystick
+    private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
-    // Button board bindings
-    // private final int pinkButton = XboxController.Button.kY.value;
-    // private final int greenButtonL = XboxController.Button.kB.value;
-    // private final int greenButtonR = XboxController.Button.kA.value;
-    // private final int yellowButtonL = XboxController.Button.kX.value;
-    // private final int yellowButtonR = XboxController.Button.kStart.value;
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+                                                                     // driving in open loop
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    // 2nd controller bindings
-    // start = home
-    // y = amp
-    // a = ground
-    // LB = score out
-    // RB = intake
+    private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final int pinkButton = XboxController.Button.kY.value;
-    private final int greenButtonL = XboxController.Button.kRightBumper.value;
-    private final int greenButtonR = XboxController.Button.kLeftBumper.value;
-    private final int yellowButtonL = XboxController.Button.kA.value;
-    private final int yellowButtonR = XboxController.Button.kStart.value;
+    // private void configureBindings() {
+    // drivetrain.setDefaultCommand( // Drivetrain will execute this command
+    // periodically
+    // drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() *
+    // MaxSpeed) // Drive forward with
+    // // negative Y (forward)
+    // .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X
+    // (left)
+    // .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive
+    // counterclockwise with negative X (left)
+    // ));
 
-    // Reset for field oriented
-    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
+    // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    // joystick.b().whileTrue(drivetrain
+    // .applyRequest(() -> point.withModuleDirection(new
+    // Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-    // Intake buttons
-    private final JoystickButton intakeIn = new JoystickButton(driver2, greenButtonL);
-    private final JoystickButton intakeOut = new JoystickButton(driver2, greenButtonR);
-    private final JoystickButton intakeEject = new JoystickButton(driver2, XboxController.Button.kB.value);
+    // // reset the field-centric heading on left bumper press
+    // joystick.leftBumper().onTrue(drivetrain.runOnce(() ->
+    // drivetrain.seedFieldRelative()));
 
-    // Arm & wrist position buttons
-    private final JoystickButton stow = new JoystickButton(driver2, yellowButtonR);
+    // if (Utils.isSimulation()) {
+    // drivetrain.seedFieldRelative(new Pose2d(new Translation2d(),
+    // Rotation2d.fromDegrees(90)));
+    // }
+    // drivetrain.registerTelemetry(logger::telemeterize);
+    // }
+
+    /* Drive Controls */
+    // private final int translationAxis = XboxController.Axis.kLeftY.value;
+    // private final int strafeAxis = XboxController.Axis.kLeftX.value;
+    // private final int rotationAxis = XboxController.Axis.kRightX.value; // For
+    // controller
+    // private final int rotationAxis = Joystick.kDefaultTwistChannel; // For
+    // joystick
+
+    /* Driver Buttons */
+    // private final JoystickButton zeroGyro = new JoystickButton(driver,
+    // XboxController.Button.kY.value);
+    // private final JoystickButton robotCentric = new JoystickButton(driver,
+    // XboxController.Button.kLeftBumper.value);
+    // private final JoystickButton zeroPose = new JoystickButton(driver,
+    // XboxController.Button.kX.value);
+    // private final JoystickButton setArm = new JoystickButton(driver,
+    // XboxController.Button.kStart.value);
     // private final JoystickButton home = new JoystickButton(driver,
     // XboxController.Button.kRightBumper.value);
-    private final JoystickButton amp = new JoystickButton(driver2, pinkButton);
-    private final JoystickButton intakePos = new JoystickButton(driver2, yellowButtonL);
+    private final Trigger intakePos = joystick.a();
+    private final Trigger scoringPos = joystick.b();
+    private final Trigger bothHome = joystick.back();
+    // private final JoystickButton intakePos = new JoystickButton(driver, XboxController.Button.kA.value);
+    // private final JoystickButton scoringPos = new JoystickButton(driver, XboxController.Button.kB.value);
+    // private final JoystickButton armMotionProfile = new JoystickButton(driver,
+    // XboxController.Button.kY.value);
+    // private final JoystickButton armhome = new JoystickButton(driver,
+    // XboxController.Button.kX.value);
+    // private final JoystickButton bothMotionMagic = new JoystickButton(driver,
+    // XboxController.Button.kRightBumper.value);
+    // private final JoystickButton armgoreverse = new JoystickButton(driver,
+    // XboxController.Button.kLeftBumper.value);
+    // private final JoystickButton bothHome = new JoystickButton(driver, XboxController.Button.kBack.value);
+    // private final JoystickButton runIntake = new JoystickButton(driver,
+    // XboxController.Button.kRightStick.value);
+    // private final BooleanSupplier leftTrigger = () ->
+    // driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.2;
+    private final Trigger rightTrigger = joystick.axisGreaterThan(Axis.kRightTrigger.value, 0.2);
+    private final Trigger leftTrigger = joystick.axisGreaterThan(Axis.kLeftTrigger.value, 0.2);
 
-    // Ordinal turn buttons
-    // private final POVButton ordinalTurnUp = new POVButton(driver, 0);
-    // private final POVButton ordinalTurnDown = new POVButton(driver, 180);
-    // private final POVButton ordinalTurnLeft = new POVButton(driver, 270);
-    // private final POVButton ordinalTurnRight = new POVButton(driver, 90);
-    // private final Trigger turnToSource = new Trigger(() -> getTrigger(true));
-    // private final Trigger turnToAmp = new Trigger(() -> getTrigger(false));
+    // private SendableChooser<Command> autoChooser;
 
-    private final JoystickButton climbUp = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton climbHome = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    CommandSequences sequences = new CommandSequences(this.arm, this.wrist, this.intake);
 
-    // Autochooser
-    private final SendableChooser<Command> chooser;
-
-    // Subsystem references
-    private final raidone.robot.subsystems.Swerve swerve = raidone.robot.subsystems.Swerve.system();
-    private final raidone.robot.subsystems.Arm arm = raidone.robot.subsystems.Arm.system();
-
-    // Get the triggers
-    public boolean getTrigger(boolean isRight) {
-        if (isRight)
-            return driver.getRightTriggerAxis() > 0.5;
-        else
-
-            return driver.getLeftTriggerAxis() > 0.5;
-    }
-
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
     public RobotContainer() {
 
-        // Commands for auto
-        NamedCommands.registerCommand("ArmIntake", new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS, false),
-                wristProfile(Wrist.INTAKEPOS, false),
-                new ArmHome()));
+        // swerve.setDefaultCommand(
+        // new TeleopSwerve(
+        // () -> -driver.getRawAxis(translationAxis),
+        // () -> -driver.getRawAxis(strafeAxis),
+        // () -> driver.getRawAxis(rotationAxis) * 0.5,
+        // () -> robotCentric.getAsBoolean()));
 
-        NamedCommands.registerCommand("IntakeNote",
-                new IntakeIn(Constants.Intake.PERCENT).withTimeout(3.5));
-
-        NamedCommands.registerCommand("Amp", new ParallelCommandGroup(
-                armProfile(Arm.SCORINGPOS, false),
-                wristProfile(Wrist.SCORINGPOS, false)));
-
-        NamedCommands.registerCommand("AmpScore", new IntakeOut(Constants.Intake.PERCENT).withTimeout(1));
-
-        NamedCommands.registerCommand("Home", new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS, false),
-                new WristHome(),
-                new ArmHome()));
-
-        NamedCommands.registerCommand("IntakeEject", new IntakeEject().withTimeout(0.5));
-
-        NamedCommands.registerCommand("TurnTo0", new OrdinalTurn(0));
-        NamedCommands.registerCommand("TurnTo90", new OrdinalTurn(90));
-
-        chooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto", chooser);
-
-        swerve.setDefaultCommand(
-                new TeleopSwerve(
-                        () -> -driver.getRawAxis(translationAxis),
-                        () -> -driver.getRawAxis(strafeAxis),
-                        () -> -driver.getRawAxis(rotationAxis),
-                        () -> false));
-
-        arm.setDefaultCommand(new ResetArmEncoder());
-
+        // Configure the button bindings
+        configureBindings();
         configureButtonBindings();
+        arm.setDefaultCommand(new ArmGo(0));
+        wrist.setDefaultCommand(new WristGo(0));
+        intake.setDefaultCommand(new IntakeIn(0));
+
     }
 
+    /**
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by
+     * instantiating a {@link GenericHID} or one of its subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+     * it to a {@link
+     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    
+    private void configureBindings() {
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
+
+    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    joystick.b().whileTrue(drivetrain
+        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+
+    // reset the field-centric heading on left bumper press
+    joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    if (Utils.isSimulation()) {
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    }
+    drivetrain.registerTelemetry(logger::telemeterize);
+  }
     private void configureButtonBindings() {
-        zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
+        /* Driver Buttons */
+        // zeroGyro.onTrue(new InstantCommand(() -> swerve.zeroHeading()));
+        // zeroPose.onTrue(new InstantCommand(() -> swerve.setPose(new Pose2d(new
+        // Translation2d(0,0), new Rotation2d(0)))));
+        // Command wristHomeSequence = sequences.wristHomeSequence();
+        // Command armHomeSequence = sequences.armHomeSequence();
+        // Command bothHomeSequence = sequences.bothHomeSequence();
+        // Command scoreAndHome = sequences.scoreSequence();
 
-        intakeIn.toggleOnTrue(new IntakeIn(Intake.PERCENT).andThen(new IntakeRetract())
-                .andThen(new ParallelCommandGroup(
-                        new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble, 1)),
-                        new WaitCommand(0.987)))
-                .andThen(new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble, 0))));
+        drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+                drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                                   // negative Y
+                                                                                                   // (forward)
+                        .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
+                                                                                    // negative X (left)
+                ));
 
-        intakeOut.onTrue(new IntakeOut(Intake.PERCENT).withTimeout(1));
+        joystick.x().whileTrue(drivetrain.applyRequest(() -> brake));
+        joystick.y().whileTrue(drivetrain
+                .applyRequest(
+                        () -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-        intakeEject.toggleOnTrue(new IntakeEject().withTimeout(0.5));
+        // reset the field-centric heading on left bumper press
+        joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-        stow.onTrue(new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS, false),
-                new WristHome(),
-                new ArmHome()));
+        if (Utils.isSimulation()) {
+            drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+        }
+        drivetrain.registerTelemetry(logger::telemeterize);
 
-        amp.onTrue(new ParallelCommandGroup(
-                armProfile(Arm.SCORINGPOS, false),
-                wristProfile(Wrist.SCORINGPOS, false)));
+        intakePos.onTrue(sequences.bothMotionProfile(Constants.Arm.intakePosition, Constants.Wrist.INTAKEPOS.position));
+        scoringPos.onTrue(
+                sequences.bothMotionProfile(Constants.Arm.scoringPosition, Constants.Wrist.SCORINGPOS.position));
 
-        intakePos.onTrue(new SequentialCommandGroup(
-                armProfile(Arm.CONSTRAINTPOS, false).withTimeout(0.75),
-                wristProfile(Wrist.INTAKEPOS, false),
-                new ArmHome(),
-                new IntakeIn(Constants.Intake.PERCENT),
-                new IntakeRetract(),
-                armProfile(Arm.CONSTRAINTPOS, false),
-                new WristHome(),
-                new ArmHome()));
-        // new ParallelCommandGroup(
-        // new InstantCommand(() -> driver.setRumble(GenericHID.RumbleType.kRightRumble,
-        // 1)),
-        // new WaitCommand(0.987))
-        // .andThen(new InstantCommand(() ->
-        // driver.setRumble(GenericHID.RumbleType.kRightRumble, 0)))));
+        // wristgoreverse.whileTrue(new WristGo(-0.1));
+        // wristhome.onTrue(new
+        // WristHome().andThen(Commands.waitSeconds(0.5)).andThen(new WristHome()));
+        // wristhome.onTrue(sequences.wristHomeSequence().withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+        // armMotionProfile.onTrue(new
+        // ArmMotionProfile(Constants.Arm.scoringPosition).withTimeout(1.5)); // leo
+        // added
+        // armhome.onTrue(sequences.armHomeSequence().withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+        // ; // leo added
 
-        // ordinalTurnUp.onTrue(new OrdinalTurn(0));
-        // ordinalTurnDown.onTrue(new OrdinalTurn(180));
-        // ordinalTurnLeft.onTrue(new OrdinalTurn(270));
-        // ordinalTurnRight.onTrue(new OrdinalTurn(90));
-        // turnToSource.onTrue(
-        // new OrdinalTurn(225)); // blue = 135; red = 225
-        // turnToAmp.onTrue(
-        // new OrdinalTurn(90)); // blue = 270; red = 90
+        // bothMotionMagic.onTrue(sequences.bothMotionProfile(Constants.Arm.scoringPosition,
+        // Constants.Wrist.SCORINGPOS.position));
+        // armgoreverse.whileTrue(new ArmGo(-0.1)); // leo added/commented out
+        // temporarily
+        bothHome.onTrue(sequences.bothHomeSequence());
+        // runIntake.whileTrue(new IntakeIn(Constants.Intake.intakePercent));
+        // Trigger leftTriggerBoolean = new Trigger(leftTrigger);
+        // leftTriggerBoolean.whileTrue(new IntakeIn(1.0));
+        rightTrigger.whileTrue(sequences.intakeInSequence());
+        leftTrigger.whileTrue(new IntakeOut(Constants.Intake.scorePercent));
+        // setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new
+        // AutoWrist(wrist)));
+        // home.onTrue(new ArmHome(arm, wrist));
 
-        climbHome.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbHome(Constants.Climb.DOWN_SPEED_PCT),
-                new ClimbFollowHome(Constants.Climb.DOWN_SPEED_PCT)));
-        climbUp.toggleOnTrue(new ParallelCommandGroup(
-                new ClimbUp(Constants.Climb.UP_SPEED_PCT),
-                new ClimbFollowUp(Constants.Climb.UP_SPEED_PCT)));
     }
 
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
     public Command getAutonomousCommand() {
-        return chooser.getSelected();
+        return null;
     }
+
+    // public Swerve getSwerve() {
+    // return swerve;
+    // }
+
+    public static CANifier getCANifier() {
+        return limitCanifier;
+    }
+
 }

@@ -6,23 +6,26 @@ import raidone.robot.subsystems.Arm;
 
 public class ArmGo extends Command {
     private Arm arm;
-    private double setpoint;
+    private double speed;
+    //private double setpoint;
 
-    public ArmGo(double setpoint) {
+    public ArmGo(double speed) {
         this.arm = Arm.system();
-        this.setpoint = setpoint;
+        this.speed = speed;
         
         addRequirements(this.arm);
     }
 
     @Override
     public void execute() {
-        arm.setPos(setpoint);
+        //arm.setPos(setpoint);
+        arm.percentOut(speed);
     }
 
-    @Override
+    //@Override
     public boolean isFinished() {
-        return Math.abs(arm.getEncoder().getPosition() - setpoint) <= 0.2;
+        //return Math.abs(arm.getEncoder().getPosition() - setpoint) <= 0.2;
+        return true;
     }
 
     @Override

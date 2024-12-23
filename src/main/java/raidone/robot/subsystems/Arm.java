@@ -1,105 +1,222 @@
 package raidone.robot.subsystems;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkLimitSwitch.Type;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkBase.SoftLimitDirection;
-
-import static raidone.robot.Constants.Arm.*;
+import raidone.robot.Constants;
+import raidone.robot.MotorConfigConstants;
+import raidone.robot.RobotContainer;
+import com.ctre.phoenix.CANifier;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Arm extends SubsystemBase {
-    private CANSparkMax arm;
-    private CANSparkMax follow;
-
-    private RelativeEncoder encoder;
-    private SparkPIDController pid;
-    private SparkLimitSwitch limit1, limit2;
 
     private static Arm armSys = new Arm();
 
-    private Arm() {
-        System.out.println("Arm Subsystem init");
+    private TalonFX m_arm;
+    private TalonFX m_follower;
+    private boolean isHomed;
+    private static CANifier limitCanifier;
+    private final DutyCycleOut dutyCycle = new DutyCycleOut(0);
 
-        arm = new CANSparkMax(ARM_MOTOR_ID, MotorType.kBrushless);
-        arm.restoreFactoryDefaults();
-        arm.setIdleMode(IdleMode.kBrake);
-        arm.setSoftLimit(SoftLimitDirection.kReverse, (float) SOFTLIMIT);
-        arm.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        arm.setSmartCurrentLimit(CURRENT_LIMIT);
+    private boolean reverseLimit = false;
 
-        follow = new CANSparkMax(ARM_FOLLOW_ID, MotorType.kBrushless);
-        follow.restoreFactoryDefaults();
-        follow.setIdleMode(IdleMode.kBrake);
-        follow.follow(arm, true);
+    private boolean keepReseting = false;
+    private int count = 0;
+    private int countsToReset = 20;
 
-        pid = arm.getPIDController();
-        pid.setP(kP, 0);
-        pid.setI(kI, 0);
-        pid.setD(kD, 0);
-        pid.setIZone(kIz, 0);
-        pid.setFF(kFF, 0);
-        pid.setOutputRange(MIN_OUTPUT, MAX_OUTPUT);
+    
 
-        encoder = arm.getEncoder();
+    
 
-        limit1 = arm.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit1.enableLimitSwitch(true);
-
-        limit2 = follow.getForwardLimitSwitch(Type.kNormallyOpen);
-        limit2.enableLimitSwitch(true);
+    public enum ArmStateEnum {
+        AT_INTAKE_POS,
+        AT_SCORE_POS,
+        AT_HOME_POS,
+        MOVING
     }
 
-    public void trapezoidToPID(State output) {
-        pid.setReference(output.position, CANSparkMax.ControlType.kPosition);// 0,
-                                                                             // FEED_FORWARD.calculate(output.position,
-                                                                // output.velocity));
-        // SmartDashboard.putNumber("Arm Trapazoid setpoint", output.position);
-    }
+    private static ArmStateEnum armState = ArmStateEnum.AT_HOME_POS;
 
-    public State currentState() {
-        return new State(arm.getEncoder().getPosition(), arm.getEncoder().getVelocity());
+    public Arm() {
+        limitCanifier = RobotContainer.getCANifier();
+        isHomed = false;
+
+        m_arm = new TalonFX(Constants.Arm.ARM_MOTOR_ID, Constants.Arm.armCANbus);
+        m_follower = new TalonFX(Constants.Arm.ARM_FOLLOW_ID, Constants.Arm.armCANbus);
+
+        TalonFXConfiguration config = getDefaultConfig();
+        m_arm.getConfigurator().apply(config);
+        m_follower.getConfigurator().apply(config);
+
+        // Ensure our followers are following their respective leader
+        m_follower.setControl(new Follower(m_arm.getDeviceID(), true));
+
+        System.out.println("Arm init");
+
     }
 
     public void stopMotors() {
-        arm.stopMotor();
-        follow.stopMotor();
+        m_arm.stopMotor();
+    }
+
+    public void percentOut(double speed) {
+        // dutyCycle.Output = speed;
+        // m_arm.setControl(dutyCycle.withOutput(speed));
+        m_arm.setControl(dutyCycle.withOutput(speed).withLimitReverseMotion(reverseLimit));
+
     }
 
     public void setPos(double setpoint) {
-        pid.setReference(setpoint, CANSparkMax.ControlType.kPosition);
-        // SmartDashboard.putNumber("processVariable", encoder.getPosition());
+        
+
+        
+        MotionMagicVoltage m_request = new MotionMagicVoltage(setpoint);
+        m_arm.setControl(m_request.withPosition(setpoint));
+
     }
 
     public void home() {
-        arm.set(0.5);
+        // m_arm.set(0.1);
+        percentOut(Constants.Arm.homeSpeed);
     }
 
-    public RelativeEncoder getEncoder() {
-        return encoder;
-    }
-
-    public boolean getLimit() {
-        if (limit1.isPressed() || limit2.isPressed())
-            encoder.setPosition(0);
-        return limit1.isPressed() || limit2.isPressed();
-    }
-
-    @Override
-    public void periodic() {
-        // SmartDashboard.putNumber("Arm encoder pos", arm.getEncoder().getPosition());
-        // SmartDashboard.putBoolean("arm limit", limit1.isPressed());
-        // SmartDashboard.putBoolean("follow limit", limit2.isPressed());
+    public boolean isHomed() {
+        if (reverseLimit) {
+            isHomed = true;
+            m_arm.setPosition(0);
+            count = 0;
+            keepReseting = true;
+        } else {
+            isHomed = false;
+        }
+        return isHomed;
     }
 
     public static Arm system() {
         return armSys;
     }
+
+    @Override
+    public void periodic(){
+        //SmartDashboard.putNumber("arm position", m_encoder.getPosition());
+        //CANifier.PinValues values = new CANifier.PinValues();
+        getCANifierValues();
+        SmartDashboard.putNumber("arm encoder", m_arm.getPosition().getValueAsDouble());
+        SmartDashboard.putBoolean("reseting",keepReseting);
+        if(keepReseting){
+            if(reverseLimit){
+                m_arm.setPosition(0);
+            }
+            count++;
+            if(count >= countsToReset){
+                count = 0;
+                keepReseting = false;
+            }
+        }
+
+        
+     
+    }
+
+    public void getCANifierValues() {
+        CANifier.PinValues values = new CANifier.PinValues();
+        limitCanifier.getGeneralInputs(values);
+        boolean reverseLeftLimit = values.LIMF;
+        boolean reverseRightLimit = values.QUAD_A;
+        reverseLimit = !reverseLeftLimit || !reverseRightLimit;
+        SmartDashboard.putBoolean("Arm_Left", reverseLeftLimit);
+        SmartDashboard.putBoolean("Arm_Right", reverseRightLimit);
+        SmartDashboard.putBoolean("Arm_Limits", reverseLimit);
+    }
+
+    public ArmStateEnum getState() {
+        return armState;
+    }
+
+    private TalonFXConfiguration getDefaultConfig() {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        var motorOutputConfig = new MotorOutputConfigs();
+        m_arm.getConfigurator().apply(motorOutputConfig);
+
+        // The left motor is CW+
+        // currentConfigs.Inverted = InvertedValue.Clockwise_Positive;
+        motorOutputConfig.withInverted(Constants.Arm.MotorOutput.inversion);
+        motorOutputConfig.withNeutralMode(Constants.Arm.MotorOutput.neutralMode);
+        config.withMotorOutput(motorOutputConfig);
+        
+        CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
+        currentLimitsConfigs.withSupplyCurrentLimit(Constants.Arm.CurrentLimits.supplyCurrentLimit);
+        currentLimitsConfigs.withSupplyCurrentLimitEnable(Constants.Arm.CurrentLimits.supplyCurrentEnable);
+        currentLimitsConfigs.withSupplyCurrentThreshold(Constants.Arm.CurrentLimits.supplyCurrentThreshold);
+        currentLimitsConfigs.withSupplyTimeThreshold(Constants.Arm.CurrentLimits.supplyTimeThreshold);
+        config.withCurrentLimits(currentLimitsConfigs);
+
+        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        feedbackConfigs.withSensorToMechanismRatio(MotorConfigConstants.Wrist.sensorToMechanismRatio);
+        config.withFeedback(feedbackConfigs);
+
+         // Velocity PID Configuration
+        Slot0Configs slot0Configs = new Slot0Configs();
+        slot0Configs.withKV(MotorConfigConstants.Arm.kV);
+        slot0Configs.withKS(MotorConfigConstants.Arm.kS);
+        slot0Configs.withKP(MotorConfigConstants.Arm.kP);
+        slot0Configs.withKI(MotorConfigConstants.Arm.kI);
+        slot0Configs.withKD(MotorConfigConstants.Arm.kD);
+        config.withSlot0(slot0Configs);
+
+        
+        // Motion Magic Configuration
+        //MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+        //motionMagicConfigs.withMotionMagicCruiseVelocity(Constants.Arm.MotionMagic.motionMagicVelocity);
+        //motionMagicConfigs.withMotionMagicAcceleration(Constants.Arm.MotionMagic.motionMagicAccel);
+        //motionMagicConfigs.withMotionMagicJerk(Constants.Arm.MotionMagic.motionMagicJerk);
+        //config.withMotionMagic(motionMagicConfigs);
+
+        // Motion Magic Configuration(how are we gon intetegrate 2 diff motion magic arm constants)
+        MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+        motionMagicConfigs.withMotionMagicAcceleration(MotorConfigConstants.Arm.motionMagicAccel);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(MotorConfigConstants.Arm.motionMagicVelocity);
+        config.withMotionMagic(motionMagicConfigs);
+
+
+        // Software Limit Switch Configuration 
+        config.withSoftwareLimitSwitch(Constants.Arm.SoftwareLimits.normalSoftLimits);
+
+        // Hardware Limit Switch Configuration
+        HardwareLimitSwitchConfigs hardwareLimitConfigs = new HardwareLimitSwitchConfigs();
+        hardwareLimitConfigs.withReverseLimitSource(Constants.Arm.HardWareLimits.reverseLimitSource);
+        hardwareLimitConfigs.withReverseLimitType(Constants.Arm.HardWareLimits.reverseLimitType);
+        hardwareLimitConfigs.withReverseLimitEnable(Constants.Arm.HardWareLimits.reverseLimitEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionEnable(Constants.Arm.HardWareLimits.reverseLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withReverseLimitAutosetPositionValue(Constants.Arm.HardWareLimits.reverseLimitAutosetPositionValue);
+
+        hardwareLimitConfigs.withForwardLimitSource(Constants.Arm.HardWareLimits.forwardLimitSource);
+        hardwareLimitConfigs.withForwardLimitType(Constants.Arm.HardWareLimits.forwardLimitType);
+        hardwareLimitConfigs.withForwardLimitEnable(Constants.Arm.HardWareLimits.forwardLimitEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionEnable(Constants.Arm.HardWareLimits.forwardLimitAutosetPositionEnabled);
+        hardwareLimitConfigs.withForwardLimitAutosetPositionValue(Constants.Arm.HardWareLimits.forwardLimitAutosetPositionValue);
+        config.withHardwareLimitSwitch(hardwareLimitConfigs);
+
+        return config;
+    }
+
+    public double getPosition() {
+        return m_arm.getRotorPosition().getValue();
+    }
+
+
 }
+

@@ -16,6 +16,8 @@ public class TeleopSwerve extends Command {
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
 
+
+
     private double translationVal;
     private double strafeVal;
     private double rotationVal;
@@ -43,5 +45,12 @@ public class TeleopSwerve extends Command {
                 rotationVal*rotationVal*rotationVal * Swerve.MAX_ANGULAR_VELOCITY,
                 true,
                 true);
+    }
+
+
+
+
+        public BooleanSupplier getRobotCentricSup() {
+        return robotCentricSup;
     }
 }

@@ -1,16 +1,22 @@
 package raidone.robot;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+
+    public static final String CANIVORE_NAME = "seCANdary";
 
     public static final class Swerve {
 
@@ -115,89 +121,87 @@ public final class Constants {
     public static final class Arm {
         public static final int ARM_MOTOR_ID = 9;
         public static final int ARM_FOLLOW_ID = 10;
+        public static final String armCANbus = "rio";
 
-        public static final State SCORINGPOS = new State(-33, 0);
-        public static final double SOFTLIMIT = SCORINGPOS.position - 2;
-        public static final State INTAKEPOS = new State(0.0, 0);
+        // public static final State SCORINGPOS = new State(-33, 0);
+        // public static final double SOFTLIMIT = SCORINGPOS.position - 2;
+        // public static final State INTAKEPOS = new State(0.0, 0);
+        // public static final State CONSTRAINTPOS = new State(-13, 0);
 
-        public static final State CONSTRAINTPOS = new State(-13, 0);
+        public static final double scoringPosition = 0.3;
+        public static final double intakePosition = 0;
+        public static final double positionTolerance = 0.01; 
+        public static final double constrainPosition = 0.1;
 
-        public static final double kP = 0.17;
-        public static final double kI = 0.0;
-        public static final double kD = 0.01;
-        public static final double kIz = 0.0;
-        public static final double kFF = 0.0;
+        public static final double homeSpeed = -0.3;
 
-        public static final double kS = 0.25;
-        public static final double kG = 0.35;// 0.47;
-        public static final double kV = 12.24;// 0.6;
-        public static final double kA = 0.01;
+        public static final class MotorOutput {
+            public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
+            public static final InvertedValue inversion = InvertedValue.CounterClockwise_Positive;
+        }
 
-        public static final ArmFeedforward FEED_FORWARD = new ArmFeedforward(kS, kG, kV, kA);
+        public static final class CurrentLimits {
+            // Current Limit Constants
+            public static final double supplyCurrentLimit = 40.0;
+            public static final boolean supplyCurrentEnable = true;
+            public static final double supplyCurrentThreshold = 50.0;
+            public static final double supplyTimeThreshold = 0.2;
+        }
 
-        public static final double MAX_OUTPUT = 1.0;
-        public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_VEL_RPS = 24.5 / 2.0;
-        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS / 2.0;
-        public static final double ALLOWED_ERROR = 0.0;
-        public static final int CURRENT_LIMIT = 12;
+        public static final class Feedback {
+            // Feedback Constants
+            public static final double sensorToMechanismRatio = 100; // rotor rotations to wrist rotations
+        }
 
-        public static final double AUTO_MAX_ACCEL_RPSS = MAX_VEL_RPS / 1.0;
+        
 
-        public static final Constraints ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
-                Constants.Arm.MAX_ACCEL_RPSS);
+        public static final class SoftwareLimits {
+            // Software Limit Switch Constants
+            public static SoftwareLimitSwitchConfigs normalSoftLimits = new SoftwareLimitSwitchConfigs();
+            static {
+                normalSoftLimits.ForwardSoftLimitEnable = true;
+                normalSoftLimits.ForwardSoftLimitThreshold = 36; // 108.0/360.0; // rotations
+                normalSoftLimits.ReverseSoftLimitEnable = false;
+                // normalSoftLimits.ReverseSoftLimitThreshold = -1000;
+            }
+        }
 
-        public static final Constraints AUTO_ARM_CONSTRAINTS = new Constraints(Constants.Arm.MAX_VEL_RPS,
-                Constants.Arm.AUTO_MAX_ACCEL_RPSS);
-
-        public static TrapezoidProfile ARM_PROFILE = new TrapezoidProfile(ARM_CONSTRAINTS);
-        public static TrapezoidProfile AUTO_ARM_PROFILE = new TrapezoidProfile(AUTO_ARM_CONSTRAINTS);
+        public static final class HardWareLimits {
+            // Hardware Limit Switch Constants
+            public static final ReverseLimitSourceValue reverseLimitSource = ReverseLimitSourceValue.Disabled;
+            public static final ReverseLimitTypeValue reverseLimitType = ReverseLimitTypeValue.NormallyOpen;
+            public static final boolean reverseLimitEnabled = true; // check
+            public static final boolean reverseLimitAutosetPositionEnabled = false; // check
+            public static final double reverseLimitAutosetPositionValue = 0.0;
+            public static final ForwardLimitSourceValue forwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+            public static final ForwardLimitTypeValue forwardLimitType = ForwardLimitTypeValue.NormallyOpen;
+            public static final boolean forwardLimitEnabled = false; // check
+            public static final boolean forwardLimitAutosetPositionEnabled = false; // check
+            public static final double forwardLimitAutosetPositionValue = 0.0;
+        }
     }
 
     public static final class Wrist {
         public static final int WRIST_MOTOR_ID = 11;
         public static final int WRIST_FOLLOW_ID = 12;
 
-        public static final State SCORINGPOS = new State(-23.0, 0);
-        public static final State INTAKEPOS = new State(-47.0, 0);
+        public static final String wristCANbus = "rio";
+
+        public static final State SCORINGPOS = new State(0.23, 0);
+        public static final State INTAKEPOS = new State(0.5, 0);
         public static final State HOMEPOS = new State(0.0, 0);
+        public static final State CONSTRAINTPOS = new State(0.45, 0);
 
-        public static final double kP = 0.08;
-        public static final double kI = 0.0;
-        public static final double kD = 0.002;
-        public static final double kIz = 0.0;
-        public static final double kFF = 0.0;
-
-        public static final double kS = 0.3;
-        public static final double kG = 0.21;
-        public static final double kV = 4.9;
-        public static final double kA = 0.01;
-
-        public static final ArmFeedforward FEED_FORWARD = new ArmFeedforward(kS, kG, kV, kA);
-
-        public static final double MAX_OUTPUT = 1.0;
-        public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_VEL_RPS = 33.0 / 2.0;
-        public static final double MAX_ACCEL_RPSS = MAX_VEL_RPS / 2.0;
-        public static final double ALLOWED_ERROR = 2.0;
-        public static final int CURRENT_LIMIT = 10;
-
-        public static final double AUTO_MAX_ACCEL_RPSS = MAX_VEL_RPS / 1.0;
-
-        public static final Constraints WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
-                Constants.Wrist.MAX_ACCEL_RPSS);
-
-        public static final Constraints AUTO_WRIST_CONSTRAINTS = new Constraints(Constants.Wrist.MAX_VEL_RPS,
-                Constants.Wrist.AUTO_MAX_ACCEL_RPSS);
-
-        public static TrapezoidProfile WRIST_PROFILE = new TrapezoidProfile(WRIST_CONSTRAINTS);
-        public static TrapezoidProfile AUTO_WRIST_PROFILE = new TrapezoidProfile(AUTO_WRIST_CONSTRAINTS);
+        public static final double homeSpeed = -0.4;
+        public static final double outputRatio = 100;                                                                    
     }
 
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 13;
-        public static final double PERCENT = 1.0;
+        public static final double intakePercent = 1.0;
+        public static final double scorePercent = 0.6;
         public static final int CURRENT_LIMIT = 20;
+        public static final int distanceThreshold = 500;
     }
 
     public static final class Climb {
@@ -210,5 +214,9 @@ public final class Constants {
         public static final double BOTTOM_POS_ROT = 0.0;
         public static final double HALFWAY_POS_ROT = 45.0;
         public static final double TOP_POS_ROT = 90.0;
+    }
+
+    public static final class Lights {
+        public static final int CANdleID = 0;
     }
 }
