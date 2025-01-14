@@ -29,6 +29,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import raidone.robot.TunerConstants;
 import raidone.robot.subsystems.CommandSwerveDrivetrain;
@@ -56,6 +57,7 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final CommandXboxController joystick = new CommandXboxController(1); // My joystick
+    private final CommandXboxController joystick2 = new CommandXboxController(2); // My joystick
     private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -115,7 +117,7 @@ public class RobotContainer {
     // private final JoystickButton home = new JoystickButton(driver,
     // XboxController.Button.kRightBumper.value);
     private final Trigger intakePos = joystick.a();
-    private final Trigger scoringPos = joystick.b();
+    // private final Trigger scoringPos = joystick.b();
     private final Trigger bothHome = joystick.back();
     // private final JoystickButton intakePos = new JoystickButton(driver, XboxController.Button.kA.value);
     // private final JoystickButton scoringPos = new JoystickButton(driver, XboxController.Button.kB.value);
@@ -134,6 +136,8 @@ public class RobotContainer {
     // driver.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.2;
     private final Trigger rightTrigger = joystick.axisGreaterThan(Axis.kRightTrigger.value, 0.2);
     private final Trigger leftTrigger = joystick.axisGreaterThan(Axis.kLeftTrigger.value, 0.2);
+    private final Trigger rightTrigger2 = joystick2.axisGreaterThan(Axis.kRightTrigger.value, 0.2);
+    private final Trigger leftTrigger2 = joystick2.axisGreaterThan(Axis.kLeftTrigger.value, 0.2);
 
     // private SendableChooser<Command> autoChooser;
 
@@ -222,8 +226,7 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         intakePos.onTrue(sequences.bothMotionProfile(Constants.Arm.intakePosition, Constants.Wrist.INTAKEPOS.position));
-        scoringPos.onTrue(
-                sequences.bothMotionProfile(Constants.Arm.scoringPosition, Constants.Wrist.SCORINGPOS.position));
+        // scoringPos.onTrue(sequences.bothMotionProfile(Constants.Arm.scoringPosition, Constants.Wrist.SCORINGPOS.position));
 
         // wristgoreverse.whileTrue(new WristGo(-0.1));
         // wristhome.onTrue(new
@@ -245,6 +248,10 @@ public class RobotContainer {
         // leftTriggerBoolean.whileTrue(new IntakeIn(1.0));
         rightTrigger.whileTrue(sequences.intakeInSequence());
         leftTrigger.whileTrue(new IntakeOut(Constants.Intake.scorePercent));
+        Command xy = new StartEndCommand(() -> {arm.percentOut(1);}, () -> {arm.percentOut(0);}, Arm.system());
+        Command yx = new StartEndCommand(() -> {arm.percentOut(-1);}, () -> {arm.percentOut(0);}, Arm.system());
+        rightTrigger2.whileTrue(xy);
+        leftTrigger2.whileTrue(yx);
         // setArm.toggleOnTrue(new SequentialCommandGroup(new AutoArm(arm), new
         // AutoWrist(wrist)));
         // home.onTrue(new ArmHome(arm, wrist));
